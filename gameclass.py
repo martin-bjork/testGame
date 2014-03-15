@@ -25,7 +25,7 @@ class Game:
                 run = False
 
         # Handle keyboard events
-        if self._keys_pressed[loc.ESC]:
+        if self._keys_pressed[loc.K_ESCAPE]:
             run = False
 
         return run
