@@ -5,22 +5,37 @@ import pygame
 
 import view
 import gameclass
+import players
 
 FPS = 60
 
 
 def main():
-    game = gameclass.Game()
     clock = pygame.time.Clock()
     view.set_up_window()
+    player = players.Player()
+    game = gameclass.Game(player, clock)
 
     run = True
 
     # TODO: Add game logic here
     while run:
-        run = game.take_input()
-        clock.tick(FPS)
+        # Take input
+        run, direction, jump = game.take_input()
 
+        # Move the player
+        player.move(direction)
+        if jump:
+            player.jump()
+
+        # TODO Add physics here
+        # TODO: Add drawing of the screen here
+
+        # TODO: Use update instead? It's probably faster
+        pygame.display.flip()
+        
+        # Keep the desired fps
+        clock.tick(FPS)
 
 if __name__ == '__main__':
     try:
