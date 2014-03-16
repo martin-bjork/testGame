@@ -6,7 +6,7 @@ WIDTH = 600
 HEIGHT = 480
 
 
-def set_up_window():
+def init_window():
     '''Initializes a pygame window, sets caption, icon and background.
     Returns the pygame display surface.'''
     pygame.init()

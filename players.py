@@ -1,14 +1,35 @@
 import pygame
 import pygame.locals as loc
+import pymunk
+
+import scene
 
 
 class Player(pygame.sprite.Sprite):
 
-    def __init__(self):
+    def __init__(self, game):
         pygame.sprite.Sprite.__init__(self)
         self._keys = {'left': loc.K_a,
                       'right': loc.K_d,
                       'jump': loc.K_SPACE}
+
+        # Currently a circle, create a more interesting shape later
+        radius = 20
+        mass = 1
+        inertia = pymunk.moment_for_circle(mass, 0, radius, (0, 0))
+        self._body = pymunk.Body(mass, inertia)
+        self._shape = pymunk.Circle(self._body, radius, (0, 0))
+
+        space = game.get_space()
+        space.add(self._body, self._shape)
+
+        width, height = game.get_screen_size()
+        self._image = pygame.Surface((2*radius, 2*radius))
+        pygame.draw.circle(self._image, (255, 0, 0),
+                           scene.pymunk_to_pygame_coords(
+                               self._body.position.x,
+                               self._body.position.y, height),
+                           radius, 2)
 
         # TODO: Add more, such as image etc
 
@@ -33,3 +54,12 @@ class Player(pygame.sprite.Sprite):
 
     def get_keys(self):
         return self._keys
+
+    def get_body(self):
+        return self._body
+
+    def get_shape(self):
+        return self._shape
+
+    def get_image(self):
+        return self._image

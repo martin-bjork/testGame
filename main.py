@@ -6,15 +6,24 @@ import pygame
 import view
 import gameclass
 import players
+import scene
 
 FPS = 60
 
 
 def main():
+    game = gameclass.Game()
     clock = pygame.time.Clock()
-    screen = view.set_up_window()
-    player = players.Player()
-    game = gameclass.Game(player, clock, screen)
+    screen = view.init_window()
+
+    game.set_clock(clock)
+    game.set_screen(screen)
+
+    space = scene.init_scene(game)
+    game.set_space(space)
+
+    player = players.Player(game)
+    game.set_player(player)
 
     run = True
 
