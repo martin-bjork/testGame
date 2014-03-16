@@ -20,7 +20,7 @@ class Player(pygame.sprite.Sprite):
 
         width, height = game.get_screen_size()
 
-        # Currently a circle, create a more interesting shape later
+        # NOTE: Currently a smiley, create a more interesting shape later
         radius = 20
         mass = 1
         inertia = pymunk.moment_for_circle(mass, 0, radius, (0, 0))

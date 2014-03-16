@@ -45,7 +45,7 @@ class Game:
             self._keys_pressed[player_keys['left']]
 
         # Check if the player should jump
-        # The "keys pressed last frame"-part is there to prevent
+        # NOTE: The "keys pressed last frame"-part is there to prevent
         # multiple jump-calls from when you just press the button once.
         jump = False
         if self._keys_pressed[player_keys['jump']] and \

@@ -22,12 +22,9 @@ def init_window():
 
     # TODO: Add more stuff here
 
-    # Load background image
-    # background_image = load_image('smiley.png')
-    # screen.blit(background_image, (0, 0))
-    # A less intrusive, solid background
+    # Create background
     background = pygame.Surface((WIDTH, HEIGHT))
-    background.fill((200, 200, 200))
+    background.fill((200, 200, 200))    # TODO: Choose a better color
     screen.blit(background, (0, 0))
 
     # Draw window

@@ -34,7 +34,7 @@ def main():
 
     all_sprites.add(player)
 
-    # TODO: Add game logic here
+    # TODO: Add more game logic here
     run = True
     while run:
 
@@ -47,18 +47,15 @@ def main():
         # Move the player according to input
         player.move(direction, jump)
 
-        # TODO Add physics here
-
         # Update all sprites
         all_sprites.update()
 
         # Update the world's physics
         space.step(1/FPS)
 
-        # TODO: Add drawing of the screen here
         dirty_sprites = all_sprites.draw(screen)
         pygame.display.update(dirty_sprites)
-        
+
         # Keep the desired fps
         clock.tick(FPS)
 
