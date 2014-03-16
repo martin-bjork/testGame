@@ -1,5 +1,3 @@
-# This version also works for Erik :D
-
 import traceback
 import sys
 
