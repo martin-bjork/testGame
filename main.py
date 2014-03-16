@@ -1,3 +1,4 @@
+from __future__ import division
 import traceback
 import sys
 
@@ -14,10 +15,11 @@ FPS = 60
 def main():
     game = gameclass.Game()
     clock = pygame.time.Clock()
-    screen = view.init_window()
+    screen, background = view.init_window()
 
     game.set_clock(clock)
     game.set_screen(screen)
+    game.set_background(background)
 
     space = scene.init_scene(game)
     game.set_space(space)
@@ -25,21 +27,37 @@ def main():
     player = players.Player(game)
     game.set_player(player)
 
-    run = True
+    # Initialize Sprite Groups 
+    # (will be more useful when we have more moving sprites)
+    # TODO: Maybe move to other function?
+    all_sprites = pygame.sprite.RenderUpdates()
+
+    all_sprites.add(player)
 
     # TODO: Add game logic here
+    run = True
     while run:
+
+        # Clear the sprites
+        all_sprites.clear(screen, background)
+
         # Take input
         run, direction, jump = game.take_input()
 
-        # Move the player
+        # Move the player according to input
         player.move(direction, jump)
 
         # TODO Add physics here
-        # TODO: Add drawing of the screen here
 
-        # TODO: Use update instead? It's probably faster
-        pygame.display.flip()
+        # Update all sprites
+        all_sprites.update()
+
+        # Update the world's physics
+        space.step(1/FPS)
+
+        # TODO: Add drawing of the screen here
+        dirty_sprites = all_sprites.draw(screen)
+        pygame.display.update(dirty_sprites)
         
         # Keep the desired fps
         clock.tick(FPS)

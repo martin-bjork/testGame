@@ -13,6 +13,7 @@ class Game:
         self._screen = None
         self._screenrect = None
         self._space = None
+        self._background = None
 
         self._keys_pressed = None
         self._keys_pressed_last_frame = None
@@ -87,3 +88,9 @@ class Game:
 
     def set_space(self, space):
         self._space = space
+
+    def get_background(self):
+        return self._background
+
+    def set_background(self, background):
+        self._background = background

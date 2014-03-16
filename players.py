@@ -1,3 +1,5 @@
+from __future__ import division
+
 import pygame
 import pygame.locals as loc
 import pymunk
@@ -8,10 +10,13 @@ import scene
 class Player(pygame.sprite.Sprite):
 
     def __init__(self, game):
+        # TODO: Clean up this mess...
         pygame.sprite.Sprite.__init__(self)
         self._keys = {'left': loc.K_a,
                       'right': loc.K_d,
                       'jump': loc.K_SPACE}
+
+        width, height = game.get_screen_size()
 
         # Currently a circle, create a more interesting shape later
         radius = 20
@@ -19,36 +24,44 @@ class Player(pygame.sprite.Sprite):
         inertia = pymunk.moment_for_circle(mass, 0, radius, (0, 0))
         self._body = pymunk.Body(mass, inertia)
         self._shape = pymunk.Circle(self._body, radius, (0, 0))
+        self._body.position = width/2, radius + 10
+        self._shape.friction = 1.0
+        self._shape.elasticity = 0.5
 
         space = game.get_space()
         space.add(self._body, self._shape)
 
-        width, height = game.get_screen_size()
-        self._image = pygame.Surface((2*radius, 2*radius))
-        pygame.draw.circle(self._image, (255, 0, 0),
+        self.image = pygame.Surface((2*radius, 2*radius))
+        self.rect = self.image.get_rect()
+        self.image.fill((250, 250, 250))
+        pygame.draw.circle(self.image, (255, 0, 0),
                            scene.pymunk_to_pygame_coords(
                                self._body.position.x,
                                self._body.position.y, height),
                            radius, 2)
 
-        # TODO: Add more, such as image etc
+        # TODO: Tweak these to get good values
+        self._move_impulse = 20
+        self._jump_impulse = 500
 
     def move(self, direction, jump):
         '''Moves the player in the direction specified by "direction".
         "direction" is an integer: -1 for moving left, 1 for moving rigth,
         0 for not moving at all'''
-        # TODO: Add this
-        if direction != 0:
-            print 'Moved; direction: {dir}'.format(dir=direction)
+        self._body.apply_impulse((direction*self._move_impulse, 0))
         if jump:
             self._jump()
-        pass
 
     def _jump(self):
         '''Makes the player jump'''
-        # TODO: Add this
-        print 'Jumped'
-        pass
+        self._body.apply_impulse((0, self._jump_impulse))
+
+    def update(self):
+        '''Updates the position of the sprite to match
+        the position of it's body.'''
+        self.rect.center = scene.pymunk_to_pygame_coords(self._body.position[0],
+                                                         self._body.position[1],
+                                                         480)
 
     # Getters/setters
 
@@ -62,4 +75,7 @@ class Player(pygame.sprite.Sprite):
         return self._shape
 
     def get_image(self):
-        return self._image
+        return self.image
+
+    def get_acceleration(self):
+        return self._acceleration

@@ -33,7 +33,7 @@ def init_window():
     # Draw window
     pygame.display.flip()
 
-    return screen
+    return screen, background
 
 
 def load_image(file_name):

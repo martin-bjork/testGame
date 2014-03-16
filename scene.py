@@ -31,6 +31,16 @@ def init_scene(game):
     right_wall = pymunk.Segment(static_body, (width, 0), (width, height), 5.0)
     left_wall = pymunk.Segment(static_body, (0, 0), (0, height), 5.0)
 
+    # Physical properties of the boundaries
+    floor.friction = 1.0
+    floor.elasticity = 0.8
+    ceiling.friction = 1.0
+    ceiling.elasticity = 0.8
+    right_wall.friction = 1.0
+    right_wall.elasticity = 0.8
+    left_wall.friction = 1.0
+    left_wall.elasticity = 0.8
+
     # Add them to the space
     space.add(floor)
     space.add(ceiling)
