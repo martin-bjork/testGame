@@ -1,10 +1,12 @@
 from __future__ import division
+from math import pi
 
 import pygame
 import pygame.locals as loc
 import pymunk
 
 import scene
+import view
 
 
 class Player(pygame.sprite.Sprite):
@@ -31,14 +33,10 @@ class Player(pygame.sprite.Sprite):
         space = game.get_space()
         space.add(self._body, self._shape)
 
-        self.image = pygame.Surface((2*radius, 2*radius))
+        self._baseimage = pygame.transform.scale(view.load_image('smiley.png'),
+                                                 (2*radius, 2*radius))
+        self.image = self._baseimage
         self.rect = self.image.get_rect()
-        self.image.fill((250, 250, 250))
-        pygame.draw.circle(self.image, (255, 0, 0),
-                           scene.pymunk_to_pygame_coords(
-                               self._body.position.x,
-                               self._body.position.y, height),
-                           radius, 2)
 
         # TODO: Tweak these to get good values
         self._move_impulse = 20
@@ -59,6 +57,9 @@ class Player(pygame.sprite.Sprite):
     def update(self):
         '''Updates the position of the sprite to match
         the position of it's body.'''
+        self.image = pygame.transform.rotate(self._baseimage,
+                                             self._body.angle*180/pi)
+        self.rect = self.image.get_rect()
         self.rect.center = scene.pymunk_to_pygame_coords(self._body.position[0],
                                                          self._body.position[1],
                                                          480)

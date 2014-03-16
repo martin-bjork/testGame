@@ -46,4 +46,4 @@ def load_image(file_name):
         print 'Could not load image "{name}".\nError message: {message}'\
             .format(name=file_name, message=pygame.get_error())
         raise SystemExit
-    return surface.convert()
+    return surface.convert_alpha()
