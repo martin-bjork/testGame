@@ -6,10 +6,12 @@ import pygame.locals as loc
 
 class Game:
 
-    def __init__(self, player, clock):
+    def __init__(self, player, clock, screen):
         # TODO: Add more stuff
         self._player = player
         self._clock = clock
+        self._screen = screen
+        self._screenrect = screen.get_rect()
 
         self._keys_pressed = None
         self._keys_pressed_last_frame = None
@@ -59,3 +61,12 @@ class Game:
 
     def get_clock(self):
         return self._clock
+
+    def get_screen(self):
+        return self._screen
+
+    def get_screenrect(self):
+        return self._screenrect
+
+    def get_screen_size(self):
+        return self._screenrect.get_size()

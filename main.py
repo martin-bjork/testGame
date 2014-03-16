@@ -12,9 +12,9 @@ FPS = 60
 
 def main():
     clock = pygame.time.Clock()
-    view.set_up_window()
+    screen = view.set_up_window()
     player = players.Player()
-    game = gameclass.Game(player, clock)
+    game = gameclass.Game(player, clock, screen)
 
     run = True
 
@@ -24,9 +24,7 @@ def main():
         run, direction, jump = game.take_input()
 
         # Move the player
-        player.move(direction)
-        if jump:
-            player.jump()
+        player.move(direction, jump)
 
         # TODO Add physics here
         # TODO: Add drawing of the screen here
