@@ -49,7 +49,7 @@ def init_scene(game):
     space.add(left_wall)
 
     # Start background music
-    pygame.mixer.music.load('sound/trololo1.wav')
+    pygame.mixer.music.load('sound/sound_data/trololo1.wav')
     pygame.mixer.music.set_volume(0.8)
     pygame.mixer.music.play(-1)
 

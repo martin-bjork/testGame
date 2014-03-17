@@ -9,6 +9,9 @@ HEIGHT = 480
 def init_window():
     '''Initializes a pygame window, sets caption, icon and background.
     Returns the pygame display surface.'''
+
+    # Setup mixer to avoid sound lag (must be done before initializing pygame)
+    pygame.mixer.pre_init(44100, -16, 2, 1024)
     pygame.init()
 
     # Initialize the display

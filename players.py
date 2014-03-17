@@ -5,6 +5,7 @@ import pygame
 import pygame.locals as loc
 import pymunk
 
+from sound import sound_effects
 import scene
 import view
 
@@ -42,6 +43,9 @@ class Player(pygame.sprite.Sprite):
         self._move_impulse = 20
         self._jump_impulse = 500
 
+        self._jump_sound = sound_effects.load_sound('boing.wav')
+        self._jump_sound.set_volume(0.5)
+
     def move(self, direction, jump):
         '''Moves the player in the direction specified by "direction".
         "direction" is an integer: -1 for moving left, 1 for moving rigth,
@@ -52,6 +56,7 @@ class Player(pygame.sprite.Sprite):
 
     def _jump(self):
         '''Makes the player jump'''
+        self._jump_sound.play()
         self._body.apply_impulse((0, self._jump_impulse))
 
     def update(self):
