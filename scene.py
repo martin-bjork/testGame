@@ -1,6 +1,7 @@
 # TODO: Add a level constructing function so we don't have to
 # hard-code everything
 import pymunk
+import pygame
 
 
 def pymunk_to_pygame_coords(x, y, screen_height):
@@ -46,5 +47,10 @@ def init_scene(game):
     space.add(ceiling)
     space.add(right_wall)
     space.add(left_wall)
+
+    # Start background music
+    pygame.mixer.music.load('sound/trololo1.wav')
+    pygame.mixer.music.set_volume(0.8)
+    pygame.mixer.music.play(-1)
 
     return space

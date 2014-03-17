@@ -15,6 +15,7 @@ class Game:
         self._space = None
         self._background = None
         self._fps = None
+        # TODO: Add option for more sprite groups when needed
         self._sprite_group = None
 
         self._keys_pressed = None

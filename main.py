@@ -102,6 +102,11 @@ def main():
         else:
             run, toggle_pause = pause_loop(game)
 
+    # Fade out the music after quitting the game
+    if pygame.mixer.music.get_busy():
+        pygame.mixer.music.fadeout(500)
+        pygame.time.wait(500)
+
 
 if __name__ == '__main__':
     try:
