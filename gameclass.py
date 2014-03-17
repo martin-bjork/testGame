@@ -14,6 +14,8 @@ class Game:
         self._screenrect = None
         self._space = None
         self._background = None
+        self._fps = None
+        self._sprite_group = None
 
         self._keys_pressed = None
         self._keys_pressed_last_frame = None
@@ -47,14 +49,22 @@ class Game:
         # Check if the player should jump
         # NOTE: The "keys pressed last frame"-part is there to prevent
         # multiple jump-calls from when you just press the button once.
-        jump = False
         if self._keys_pressed[player_keys['jump']] and \
                 not self._keys_pressed_last_frame[player_keys['jump']]:
             jump = True
+        else:
+            jump = False
+
+        # Check if the game should be paused
+        if self._keys_pressed[loc.K_p] and \
+                not self._keys_pressed_last_frame[loc.K_p]:
+            toggle_pause = True
+        else:
+            toggle_pause = False
 
         self._keys_pressed_last_frame = self._keys_pressed
 
-        return run, direction, jump
+        return run, direction, jump, toggle_pause
 
     # Getters/setters
 
@@ -94,3 +104,15 @@ class Game:
 
     def set_background(self, background):
         self._background = background
+
+    def get_fps(self):
+        return self._fps
+
+    def set_fps(self, fps):
+        self._fps = fps
+
+    def get_sprite_group(self):
+        return self._sprite_group
+
+    def set_sprite_group(self, sprite_group):
+        self._sprite_group = sprite_group
