@@ -12,7 +12,7 @@ class Button(pygame.sprite.Sprite):
         # If set to None, the background is transparent
         self._background_color = (150, 150, 150, 1)
 
-        font = pygame.font.Font(None, 30)
+        font = pygame.font.Font(None, 50)
         self._text_object = font.render(self._text, True, self._text_color,
                                         self._background_color)
         self._rect = self._text_object.get_rect(center=self._pos)

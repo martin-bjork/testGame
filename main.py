@@ -122,8 +122,8 @@ def main():
     game.set_fps(FPS)
 
     # Create some buttons
-    play_button = buttons.Button('Play', 320, 180)
-    quit_button = buttons.Button('Quit', 320, 260)
+    play_button = buttons.Button('Play', 300, 200)
+    quit_button = buttons.Button('Quit', 300, 280)
     screen.blit(play_button.get_text_object(), play_button.get_rect())
     screen.blit(quit_button.get_text_object(), quit_button.get_rect())
 
