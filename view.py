@@ -21,7 +21,6 @@ def init_window():
     icon = load_image('smiley_small.png')
     pygame.display.set_caption('Test window')
     pygame.display.set_icon(icon)
-    pygame.mouse.set_visible(0)
 
     # TODO: Add more stuff here
 
