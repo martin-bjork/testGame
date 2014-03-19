@@ -152,6 +152,9 @@ def main():
             elif quit_button.pressed(mouse_pos):
                 run = False
 
+        # Keep the fps down
+        clock.tick(30)
+
 
 if __name__ == '__main__':
     try:
