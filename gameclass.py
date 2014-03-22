@@ -9,6 +9,7 @@ class Game:
     def __init__(self):
         # TODO: Add more stuff
         self._player = None
+        self.block = None               # in-game obstacle
         self._clock = None
         self._screen = None
         self._screenrect = None
@@ -92,6 +93,13 @@ class Game:
 
     def set_player(self, player):
         self._player = player
+    
+    ### gets and sets a rectangle block
+    def get_rectangle(self):
+        return self._block
+
+    def set_rectangle(self, block):
+        self._block = block
 
     def get_clock(self):
         return self._clock

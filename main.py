@@ -7,6 +7,7 @@ import pygame
 import view
 import gameclass
 import players
+import rectshapes   # movable rect obj
 import scene
 import buttons
 
@@ -20,6 +21,7 @@ def game_loop(game):
     background = game.get_background()
     all_sprites = game.get_sprite_group()
     player = game.get_player()
+    block = game.get_rectangle() # TODO: may need to delete this
     space = game.get_space()
     fps = game.get_fps()
     clock = game.get_clock()
@@ -78,6 +80,8 @@ def game_main(game):
 
     player = players.Player(game)
     game.set_player(player)
+    block = rectshapes.RectShape(game) 
+    game.set_rectangle(block)
 
     # Initialize Sprite Groups
     # (will be more useful when we have more moving sprites)
@@ -86,6 +90,7 @@ def game_main(game):
     game.set_sprite_group(all_sprites)
 
     all_sprites.add(player)
+    all_sprites.add(block)  # TODO: may need to delete this
 
     run = True
     pause = False
