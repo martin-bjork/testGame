@@ -1,13 +1,9 @@
 from __future__ import division
-from math import pi
 
 import pygame
-import pygame.locals as loc
 import pymunk
 
-from sound import sound_effects
 import scene
-import view
 
 
 class RectShape(pygame.sprite.Sprite):
@@ -23,10 +19,11 @@ class RectShape(pygame.sprite.Sprite):
         radius = 50
         mass = 1
         inertia = pymunk.inf      # No rotation
-        box_points = [(-radius/2, -radius/2), (radius/2, -radius/2), (radius/2, radius/2), (-radius/2, radius/2)]
+        box_points = [(-radius/2, -radius/2), (radius/2, -radius/2),
+                                    (radius/2, radius/2), (-radius/2, radius/2)]
         self._body = pymunk.Body(mass, inertia)
         self._shape = pymunk.Poly(self._body, box_points, (0, 0))
-        self._body.position = width-180, radius + 20
+        self._body.position = width - 180, radius + 20
         self._shape.friction = 1.0
         self._shape.elasticity = 0.5
         self._shape.collision_type = 1
@@ -34,16 +31,14 @@ class RectShape(pygame.sprite.Sprite):
         self._shape.ignore_draw = False
         space = game.get_space()
         space.add(self._body, self._shape)
-        
-        
-        self._baseimage = pygame.Surface((radius,radius))
+
+        self._baseimage = pygame.Surface((radius, radius))
         self.image = self._baseimage
         self.rect_width = radius
         self.rect_height = radius
         #self.rect = pygame.Rect((0, 0, self.rect_width, self.rect_height))
         self.rect = self.image.get_rect()
         print "created Rectangle"
-        
 
     def update(self):
         '''Updates the position of the sprite to match

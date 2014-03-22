@@ -21,7 +21,6 @@ def game_loop(game):
     background = game.get_background()
     all_sprites = game.get_sprite_group()
     player = game.get_player()
-    block = game.get_rectangle() # TODO: may need to delete this
     space = game.get_space()
     fps = game.get_fps()
     clock = game.get_clock()
@@ -39,7 +38,7 @@ def game_loop(game):
     all_sprites.update()
 
     # Update the world's physics
-    space.step(1/fps)
+    space.step(1 / fps)
 
     # Draw all sprites that have moved
     dirty_sprites = all_sprites.draw(screen)
@@ -80,7 +79,7 @@ def game_main(game):
 
     player = players.Player(game)
     game.set_player(player)
-    block = rectshapes.RectShape(game) 
+    block = rectshapes.RectShape(game)
     game.set_rectangle(block)
 
     # Initialize Sprite Groups

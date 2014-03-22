@@ -93,7 +93,7 @@ class Game:
 
     def set_player(self, player):
         self._player = player
-    
+
     ### gets and sets a rectangle block
     def get_rectangle(self):
         return self._block
