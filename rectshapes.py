@@ -19,8 +19,7 @@ class RectShape(pygame.sprite.Sprite):
         radius = 50
         mass = 1
         inertia = pymunk.inf      # No rotation
-        box_points = [(-radius/2, -radius/2), (radius/2, -radius/2),
-                                    (radius/2, radius/2), (-radius/2, radius/2)]
+        box_points = [(-radius/2, -radius/2), (radius/2, -radius/2), (radius/2, radius/2), (-radius/2, radius/2)]
         self._body = pymunk.Body(mass, inertia)
         self._shape = pymunk.Poly(self._body, box_points, (0, 0))
         self._body.position = width - 180, radius + 20
