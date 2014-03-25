@@ -9,7 +9,8 @@ class Game:
     def __init__(self):
         # TODO: Add more stuff
         self._player = None
-        self.block = None               # in-game obstacle
+        self._moving_objects = []
+        self._static_objects = []
         self._clock = None
         self._screen = None
         self._screenrect = None
@@ -94,13 +95,6 @@ class Game:
     def set_player(self, player):
         self._player = player
 
-    ### gets and sets a rectangle block
-    def get_rectangle(self):
-        return self._block
-
-    def set_rectangle(self, block):
-        self._block = block
-
     def get_clock(self):
         return self._clock
 
@@ -143,3 +137,17 @@ class Game:
 
     def set_sprite_group(self, sprite_group):
         self._sprite_group = sprite_group
+
+    def add_moving_objects(self, *objects):
+        for obj in objects:
+            self._moving_objects.append(obj)
+
+    def get_moving_objects(self):
+        return self._moving_objects
+
+    def add_static_objects(self, *objects):
+        for obj in objects:
+            self._static_objects.append(obj)
+
+    def get_static_objects(self):
+        return self._static_objects

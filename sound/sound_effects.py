@@ -21,3 +21,6 @@ def load_sound(file_name):
 class dummy_sound:
     def play(self):
         pass
+
+    def set_volume(self, level):
+        pass

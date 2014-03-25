@@ -74,22 +74,7 @@ def game_main(game):
     pygame.mouse.set_visible(False)
 
     # Set up the physics and player
-    space = scene.init_scene(game)
-    game.set_space(space)
-
-    player = players.Player(game)
-    game.set_player(player)
-    block = rectshapes.RectShape(game)
-    game.set_rectangle(block)
-
-    # Initialize Sprite Groups
-    # (will be more useful when we have more moving sprites)
-    # TODO: Maybe move to other function?
-    all_sprites = pygame.sprite.RenderUpdates()
-    game.set_sprite_group(all_sprites)
-
-    all_sprites.add(player)
-    all_sprites.add(block)  # TODO: may need to delete this
+    scene.init_scene(game)
 
     run = True
     pause = False
