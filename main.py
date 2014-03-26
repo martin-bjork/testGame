@@ -35,7 +35,7 @@ def game_loop(game):
     player.move(direction, jump)
 
     # Update all sprites
-    all_sprites.update()
+    all_sprites.update(game)
 
     # Update the world's physics
     space.step(1 / fps)

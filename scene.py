@@ -5,7 +5,8 @@ import pymunk
 import pygame
 
 import players
-import rectshapes
+# import rectshapes
+import shapes
 
 # TODO: Move these constants. Should be in the constructors for each shape type
 STATIC_SHAPE = 1
@@ -37,8 +38,22 @@ def player_static_collision_callback(space, arbiter):
         impulse = arbiter.total_impulse.get_length()
         player.play_bounce(impulse/1000)
 
+
 def player_moving_collision_callback(space, arbiter):
-    pass
+    # NOTE: Currently, this is identical to the above function...
+
+    # NOTE: A hack to be able to access the player object here,
+    # not sure if best method...
+    for shape in arbiter.shapes:
+        if shape.collision_type == PLAYER_SHAPE:
+            player = shape.obj
+
+    player.set_jumping(False)
+
+    # Play bounce sound depending on collision impulse
+    if arbiter.is_first_contact:
+        impulse = arbiter.total_impulse.get_length()
+        player.play_bounce(impulse/1000)
 
 
 def moving_static_collision_callback(space, arbiter):
@@ -91,14 +106,17 @@ def init_scene(game):
     game.add_static_objects(floor, ceiling, right_wall, left_wall)
 
     # Create the player
-    player = players.Player(game)
+    player_pos = (width/2, 30)
+    player = players.Player(space, position=player_pos)
     game.set_player(player)
-    player.get_shape().collision_type = PLAYER_SHAPE    # TODO: Move to constructor
 
     # Create moving objects
-    block = rectshapes.RectShape(game)
+    # block = rectshapes.RectShape(game)
+    # game.add_moving_objects(block)
+    # block.get_shape().collision_type = MOVING_SHAPE     # TODO: Move to constructor
+    rect_pos = (width/3, 30)
+    block = shapes.Rectangle(space, position=rect_pos, color=(0, 250, 0))
     game.add_moving_objects(block)
-    block.get_shape().collision_type = MOVING_SHAPE     # TODO: Move to constructor
 
     # Initialize Sprite Groups
     # (will be more useful when we have more moving sprites)
@@ -116,6 +134,8 @@ def init_scene(game):
     # Add post-collision handlers to the space
     # NOTE: In these, we can e.g. play collision sounds, reset jumping flags...
     space.add_collision_handler(PLAYER_SHAPE, STATIC_SHAPE,
+                                post_solve=player_static_collision_callback)
+    space.add_collision_handler(PLAYER_SHAPE, MOVING_SHAPE,
                                 post_solve=player_static_collision_callback)
 
     return space
