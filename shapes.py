@@ -129,6 +129,13 @@ class Rectangle(MovingShape):
         # Pygame properties
         self._color = color
         self._baseimage = pygame.Surface((width, height))
-        self._baseimage.fill((self._color))
+        # Set the background color
+        self._baseimage.fill((255, 255, 255))
+        # Set the color that is ignored when blitting (like a green screen)
+        self._baseimage.set_colorkey((255, 255, 255))
+        # Draw the image we want to actually draw onto the surface
+        baserect = pygame.Rect(0, 0, width, height)
+        pygame.draw.rect(self._baseimage, self._color, baserect)
+
         self.image = self._baseimage
         self.rect = self.image.get_rect()
