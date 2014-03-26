@@ -7,11 +7,12 @@ import pymunk
 from sound import sound_effects
 import view
 import shapes
+import collision_callbacks as col_call
 
 
 class Player(shapes.MovingShape):
 
-    collision_type = 3
+    collision_type = col_call.PLAYER_TYPE
 
     def __init__(self, space, mass=1, radius=20, position=(100, 50)):
         super(Player, self).__init__()

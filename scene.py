@@ -5,59 +5,17 @@ import pymunk
 import pygame
 
 import players
-# import rectshapes
 import shapes
-
-# TODO: Move these constants. Should be in the constructors for each shape type
-STATIC_SHAPE = 1
-MOVING_SHAPE = 2
-PLAYER_SHAPE = 3
+import collision_callbacks as col_call
 
 
+# TODO: Move these functions to another file
 def pymunk_to_pygame_coords(x, y, screen_height):
     return int(x), int(screen_height - y)
 
 
 def pygame_to_pymunk_coords(x, y, screen_height):
     return x, -y - screen_height
-
-
-# TODO: Move these to a "physics" file or something like that
-def player_static_collision_callback(space, arbiter):
-
-    # NOTE: A hack to be able to access the player object here,
-    # not sure if best method...
-    for shape in arbiter.shapes:
-        if shape.collision_type == PLAYER_SHAPE:
-            player = shape.obj
-
-    player.set_jumping(False)
-
-    # Play bounce sound depending on collision impulse
-    if arbiter.is_first_contact:
-        impulse = arbiter.total_impulse.get_length()
-        player.play_bounce(impulse/1000)
-
-
-def player_moving_collision_callback(space, arbiter):
-    # NOTE: Currently, this is identical to the above function...
-
-    # NOTE: A hack to be able to access the player object here,
-    # not sure if best method...
-    for shape in arbiter.shapes:
-        if shape.collision_type == PLAYER_SHAPE:
-            player = shape.obj
-
-    player.set_jumping(False)
-
-    # Play bounce sound depending on collision impulse
-    if arbiter.is_first_contact:
-        impulse = arbiter.total_impulse.get_length()
-        player.play_bounce(impulse/1000)
-
-
-def moving_static_collision_callback(space, arbiter):
-    pass
 
 
 def init_scene(game):
@@ -93,10 +51,10 @@ def init_scene(game):
 
     # Set collision types
     # TODO: Move to the constructors of each shape
-    floor.collision_type = STATIC_SHAPE
-    ceiling.collision_type = STATIC_SHAPE
-    right_wall.collision_type = STATIC_SHAPE
-    left_wall.collision_type = STATIC_SHAPE
+    floor.collision_type = col_call.STATIC_TYPE
+    ceiling.collision_type = col_call.STATIC_TYPE
+    right_wall.collision_type = col_call.STATIC_TYPE
+    left_wall.collision_type = col_call.STATIC_TYPE
 
     # Add them to the space and game
     space.add(floor)
@@ -111,9 +69,6 @@ def init_scene(game):
     game.set_player(player)
 
     # Create moving objects
-    # block = rectshapes.RectShape(game)
-    # game.add_moving_objects(block)
-    # block.get_shape().collision_type = MOVING_SHAPE     # TODO: Move to constructor
     rect_pos = (width/3, 30)
     block = shapes.Rectangle(space, position=rect_pos, color=(0, 250, 0))
     game.add_moving_objects(block)
@@ -133,9 +88,9 @@ def init_scene(game):
 
     # Add post-collision handlers to the space
     # NOTE: In these, we can e.g. play collision sounds, reset jumping flags...
-    space.add_collision_handler(PLAYER_SHAPE, STATIC_SHAPE,
-                                post_solve=player_static_collision_callback)
-    space.add_collision_handler(PLAYER_SHAPE, MOVING_SHAPE,
-                                post_solve=player_static_collision_callback)
+    space.add_collision_handler(col_call.PLAYER_TYPE, col_call.STATIC_TYPE,
+                                post_solve=col_call.player_static)
+    space.add_collision_handler(col_call.PLAYER_TYPE, col_call.MOVING_TYPE,
+                                post_solve=col_call.player_static)
 
     return space

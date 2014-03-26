@@ -6,8 +6,6 @@ import pygame
 
 import view
 import gameclass
-import players
-import rectshapes   # movable rect obj
 import scene
 import buttons
 

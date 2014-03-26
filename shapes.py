@@ -5,6 +5,9 @@ import pygame
 import pymunk
 
 import scene
+import collision_callbacks as col_call
+
+# TODO: Add more classes, such as wall
 
 
 class Shape(pygame.sprite.Sprite):
@@ -12,7 +15,7 @@ class Shape(pygame.sprite.Sprite):
     # TODO: Make abstract for real? With the abc module?
 
     # Set a base collision type for all objects
-    collision_type = 0
+    collision_type = col_call.BASE_TYPE
 
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
@@ -63,7 +66,7 @@ class StaticShape(Shape):
     # TODO: Make abstract for real? With the abc module?
 
     # The collision type for static objects
-    collision_type = 1
+    collision_type = col_call.STATIC_TYPE
 
     def __init__(self):
         super(StaticShape, self).__init__()
@@ -77,7 +80,7 @@ class MovingShape(Shape):
     # TODO: Make abstract for real? With the abc module?
 
     # The base collision type for moving objects
-    collision_type = 2
+    collision_type = col_call.MOVING_TYPE
 
     def __init__(self):
         super(MovingShape, self).__init__()
