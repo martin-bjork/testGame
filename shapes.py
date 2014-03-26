@@ -32,6 +32,10 @@ class Shape(pygame.sprite.Sprite):
         self.rect = None
         self._color = None
 
+    def __repr__(self):
+        # TODO: Make this better
+        return str(self.__class__)
+
     # Getters/Setters
 
     def get_body(self):
@@ -112,6 +116,8 @@ class Rectangle(MovingShape):
         self._body = pymunk.Body(mass, inertia)
         self._shape = pymunk.Poly(self._body, points)
         self._body.position = position
+        self._shape.friction = self._friction
+        self._shape.elasticity = self._elasticity
 
         space.add(self._body, self._shape)
 

@@ -22,6 +22,8 @@ class Player(shapes.MovingShape):
         self._body = pymunk.Body(mass, inertia)
         self._shape = pymunk.Circle(self._body, radius, (0, 0))
         self._body.position = position
+        self._shape.friction = self._friction
+        self._shape.elasticity = self._elasticity
 
         space.add(self._body, self._shape)
         self._shape.collision_type = Player.collision_type
