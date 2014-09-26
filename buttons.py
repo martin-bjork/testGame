@@ -1,7 +1,25 @@
 import pygame
+import yaml
 
+class Button(pygame.sprite.Sprite, yaml.YAMLObject):
 
-class Button(pygame.sprite.Sprite):
+    # The tag that YAML will use to identify this class
+    yaml_tag = '!Button'
+    # Tells YAML to use the safe loader so others can't execute 
+    # code through our code (not quite working yet)
+    #yaml_loader = yaml.SafeLoader
+
+    @staticmethod
+    def yaml_constructor(loader, node):
+        '''A constructor that YAML uses to create instances of this class'''
+        # Create a dict from the YAML code for the object,
+        # containing all its variables (wrong word...)
+        values = loader.construct_mapping(node)
+        # Extract the needed variables
+        text = values['_text']
+        pos = values['_pos']
+        # Return a new instance of the object
+        return Button(text, pos[0], pos[1])
 
     def __init__(self, text, x_pos, y_pos):
         pygame.sprite.Sprite.__init__(self)
