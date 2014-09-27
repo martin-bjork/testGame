@@ -1,10 +1,8 @@
 import pygame
 import yaml
 import buttons
-import init_yaml
 
 pygame.init()
-init_yaml.init()
 
 # Create a new Button instance
 b = buttons.Button('Hello', 1, 2)
