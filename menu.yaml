@@ -1,0 +1,11 @@
+  play_button: &play_button !MenuItem
+    action: !!python/name:main.play_button_callback
+    action_args: null
+    pos: !!python/tuple [300, 200]
+    text: Play
+
+  quit_button: &quit_button !MenuItem
+    action: null
+    action_args: null
+    pos: !!python/tuple [300, 280]
+    text: Quit

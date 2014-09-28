@@ -7,12 +7,92 @@ import pygame
 import view
 import gameclass
 import scene
-import buttons
+import load_yaml
 
 FPS = 60
 
 
+def main():
+    '''The main function for the game - everything starts here'''
+
+    # Create a game object and initialize the window
+    game = gameclass.Game()
+    screen, background = view.init_window()
+
+    game.set_screen(screen)
+    game.set_background(background)
+    clock = pygame.time.Clock()
+    game.set_clock(clock)
+    game.set_fps(FPS)
+
+    # Load the menu
+    items = load_yaml.load_menu('menu.yaml', screen, background)
+
+    # Assign names to the buttons in the menu
+    play_button = items['play_button']
+    quit_button = items['quit_button']
+
+    # NOTE: Have to manually add these here, don't know any other way...
+    play_button.set_action_args([game, screen, background])
+
+    pygame.display.flip()
+
+    run = True
+    while run:
+
+        run, mouse_pos = game.take_menu_input()
+
+        if mouse_pos:
+            if play_button.pressed(mouse_pos):
+                # Start the game
+                play_button.perform_action()
+
+            elif quit_button.pressed(mouse_pos):
+                run = False
+
+        # Keep the fps down
+        clock.tick(30)
+
+
+def game_main(game):
+    '''The main function of the game - loads a level and runs it'''
+
+    # Set up the background
+    screen = game.get_screen()
+    background = game.get_background()
+    screen.blit(background, (0, 0))
+    pygame.display.flip()
+    pygame.mouse.set_visible(False)
+
+    # Set up the physics and player
+    scene.init_scene(game)
+
+    run = True
+    pause = False
+    toggle_pause = False
+
+    while run:
+
+        if toggle_pause:
+            pause = not pause
+            # Show the mouse if paused, hide if running
+            pygame.mouse.set_visible(int(pause))
+
+        if not pause:
+            run, toggle_pause = game_loop(game)
+        else:
+            run, toggle_pause = pause_loop(game)
+
+    # Fade out the music after quitting the game
+    if pygame.mixer.music.get_busy():
+        pygame.mixer.music.fadeout(500)
+        pygame.time.wait(500)
+
+
 def game_loop(game):
+    '''The game loop - handles everything that should happen
+    in every frame of the game'''
+
     # TODO: Add more game logic
 
     screen = game.get_screen()
@@ -49,6 +129,8 @@ def game_loop(game):
 
 
 def pause_loop(game):
+    '''Everything that happens when the game is paused - it just waits
+        for input telling it not to pause any more'''
 
     clock = game.get_clock()
     fps = game.get_fps()
@@ -62,87 +144,18 @@ def pause_loop(game):
     return run, toggle_pause
 
 
-def game_main(game):
+# TODO: Move this function
+def play_button_callback(game, screen, background):
+    '''Function to be called when the play button is pressed'''
 
-    # Set up the background
-    screen = game.get_screen()
-    background = game.get_background()
-    screen.blit(background, (0, 0))
-    pygame.display.flip()
-    pygame.mouse.set_visible(False)
+    # Start the game
+    game_main(game)
 
-    # Set up the physics and player
-    scene.init_scene(game)
-
-    run = True
-    pause = False
-    toggle_pause = False
-
-    while run:
-
-        if toggle_pause:
-            pause = not pause
-            # Show the mouse if paused, hide if running
-            pygame.mouse.set_visible(int(pause))
-
-        if not pause:
-            run, toggle_pause = game_loop(game)
-        else:
-            run, toggle_pause = pause_loop(game)
-
-    # Fade out the music after quitting the game
-    if pygame.mixer.music.get_busy():
-        pygame.mixer.music.fadeout(500)
-        pygame.time.wait(500)
+    items = load_yaml.load_menu('menu.yaml', screen, background)
+    pygame.mouse.set_visible(True)
 
 
-def main():
-
-    # Create a game object and initialize the window
-    game = gameclass.Game()
-    screen, background = view.init_window()
-
-    game.set_screen(screen)
-    game.set_background(background)
-    clock = pygame.time.Clock()
-    game.set_clock(clock)
-    game.set_fps(FPS)
-
-    # Create some buttons
-    play_button = buttons.Button('Play', 300, 200)
-    quit_button = buttons.Button('Quit', 300, 280)
-    screen.blit(play_button.get_text_object(), play_button.get_rect())
-    screen.blit(quit_button.get_text_object(), quit_button.get_rect())
-
-    pygame.display.flip()
-
-    run = True
-    while run:
-
-        run, mouse_pos = game.take_menu_input()
-
-        if mouse_pos:
-            if play_button.pressed(mouse_pos):
-                # Start the game
-                game_main(game)
-
-                # Reset the screen after the game has ended
-                screen.blit(background, (0, 0))
-                screen.blit(play_button.get_text_object(),
-                            play_button.get_rect())
-                screen.blit(quit_button.get_text_object(),
-                            quit_button.get_rect())
-                pygame.mouse.set_visible(True)
-
-                pygame.display.flip()
-
-            elif quit_button.pressed(mouse_pos):
-                run = False
-
-        # Keep the fps down
-        clock.tick(30)
-
-
+# The magic!!
 if __name__ == '__main__':
     try:
         main()
