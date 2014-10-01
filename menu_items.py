@@ -64,7 +64,10 @@ class MenuItem(base_menu_item.BaseMenuItem, yaml.YAMLObject):
         return dumper.represent_mapping(cls.yaml_tag, mapping)
 
     def perform_action(self):
-        return self._action(*self._action_args)
+        if self._action_args is not None:
+            return self._action(*self._action_args)
+        else:
+            return self._action()
 
     def pressed(self, mouse_pos):
         if self._rect.collidepoint(mouse_pos):

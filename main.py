@@ -10,12 +10,18 @@ import scene
 import load_yaml
 
 FPS = 60
+# NOTE: Made game global for convenience, maybe consider other solutions?
+global game
 
 
 def main():
     '''The main function for the game - everything starts here'''
 
     # Create a game object and initialize the window
+    # FIXME: For some reason, the game object doesn't seem to have been
+    # initialized when game_main() is called. Might be since it is called
+    # from another module?
+    global game
     game = gameclass.Game()
     screen, background = view.init_window()
 
@@ -26,14 +32,14 @@ def main():
     game.set_fps(FPS)
 
     # Load the menu
-    items = load_yaml.load_menu('menu.yaml', screen, background)
+    items = load_yaml.load_menu('menu.yaml')
 
     # Assign names to the buttons in the menu
     play_button = items['play_button']
     quit_button = items['quit_button']
 
-    # NOTE: Have to manually add these here, don't know any other way...
-    play_button.set_action_args([game, screen, background])
+    # NOTE: Have to manually add this here, don't know any other way...
+    # play_button.set_action_args([game])
 
     pygame.display.flip()
 
@@ -54,8 +60,10 @@ def main():
         clock.tick(30)
 
 
-def game_main(game):
+def game_main():
     '''The main function of the game - loads a level and runs it'''
+
+    global game
 
     # Set up the background
     screen = game.get_screen()
@@ -145,13 +153,13 @@ def pause_loop(game):
 
 
 # TODO: Move this function
-def play_button_callback(game, screen, background):
+def play_button_callback():
     '''Function to be called when the play button is pressed'''
 
     # Start the game
-    game_main(game)
+    game_main()
 
-    items = load_yaml.load_menu('menu.yaml', screen, background)
+    items = load_yaml.load_menu('menu.yaml')
     pygame.mouse.set_visible(True)
 
 
