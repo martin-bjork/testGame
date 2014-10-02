@@ -6,7 +6,7 @@ import pygame
 
 import view
 import load_yaml
-import menu
+from menu import menus
 
 
 def main():
@@ -16,7 +16,7 @@ def main():
     screen, background = view.init_window()
 
     # Load the main menu
-    menu.run_menu('main_menu.yaml')
+    menus.run_menu('menu\menu_files\main_menu.yaml')
 
 
 def run_level(file_path):

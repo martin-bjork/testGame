@@ -1,6 +1,8 @@
 import yaml
 
-import base_menu_item
+from menu import base_menu_item
+
+# TODO: Merge with BaseMenuItem and TextBox so they are all in one single file
 
 
 class MenuItem(base_menu_item.BaseMenuItem, yaml.YAMLObject):

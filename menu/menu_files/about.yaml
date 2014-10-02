@@ -3,7 +3,7 @@
   text: "This is a small test game for\nlearning game programming.\nMore to come!"
 
 - !MenuItem
-  action: !!python/name:menu_button_callbacks.goto_menu
-  action_args: [main_menu.yaml]
+  action: !!python/name:menu.menu_button_callbacks.goto_menu
+  action_args: [menu\menu_files\main_menu.yaml]
   pos: !!python/tuple [300, 280]
   text: Back

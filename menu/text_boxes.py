@@ -1,6 +1,6 @@
 import yaml
 
-import base_menu_item
+from menu import base_menu_item
 
 
 class TextBox(base_menu_item.BaseMenuItem, yaml.YAMLObject):

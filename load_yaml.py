@@ -1,10 +1,9 @@
 import yaml
 import pygame
 
-import menu_items
-import text_boxes
 import gameclass
 import scene
+from menu import menu_items, text_boxes
 
 
 def load_menu(file_path):
