@@ -9,19 +9,11 @@ import gameclass
 import scene
 import load_yaml
 
-FPS = 60
-# NOTE: Made game global for convenience, maybe consider other solutions?
-global game
-
 
 def main():
     '''The main function for the game - everything starts here'''
 
     # Create a game object and initialize the window
-    # FIXME: For some reason, the game object doesn't seem to have been
-    # initialized when game_main() is called. Might be since it is called
-    # from another module?
-    global game
     game = gameclass.Game()
     screen, background = view.init_window()
 
@@ -29,7 +21,6 @@ def main():
     game.set_background(background)
     clock = pygame.time.Clock()
     game.set_clock(clock)
-    game.set_fps(FPS)
 
     # Load the menu
     items = load_yaml.load_menu('menu.yaml')
@@ -63,17 +54,8 @@ def main():
 def game_main():
     '''The main function of the game - loads a level and runs it'''
 
-    global game
-
-    # Set up the background
-    screen = game.get_screen()
-    background = game.get_background()
-    screen.blit(background, (0, 0))
-    pygame.display.flip()
-    pygame.mouse.set_visible(False)
-
-    # Set up the physics and player
-    scene.init_scene(game)
+    # Load the level
+    game = load_yaml.load_level('dummy_file_path.yaml')
 
     run = True
     pause = False
@@ -112,6 +94,8 @@ def game_loop(game):
     clock = game.get_clock()
 
     # Clear the sprites
+    # NOTE: Is this necessary? This makes the whole business with
+    # dirty sprites unnecessary?
     all_sprites.clear(screen, background)
 
     # Take input

@@ -92,5 +92,3 @@ def init_scene(game):
                                 post_solve=col_call.player_static)
     space.add_collision_handler(col_call.PLAYER_TYPE, col_call.MOVING_TYPE,
                                 post_solve=col_call.player_static)
-
-    return space
