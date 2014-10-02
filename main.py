@@ -5,57 +5,25 @@ import sys
 import pygame
 
 import view
-import gameclass
-import scene
 import load_yaml
+import menu
 
 
 def main():
     '''The main function for the game - everything starts here'''
 
-    # Create a game object and initialize the window
-    game = gameclass.Game()
+    # Initialize a window
     screen, background = view.init_window()
 
-    game.set_screen(screen)
-    game.set_background(background)
-    clock = pygame.time.Clock()
-    game.set_clock(clock)
-
-    # Load the menu
-    items = load_yaml.load_menu('menu.yaml')
-
-    # Assign names to the buttons in the menu
-    play_button = items['play_button']
-    quit_button = items['quit_button']
-
-    # NOTE: Have to manually add this here, don't know any other way...
-    # play_button.set_action_args([game])
-
-    pygame.display.flip()
-
-    run = True
-    while run:
-
-        run, mouse_pos = game.take_menu_input()
-
-        if mouse_pos:
-            if play_button.pressed(mouse_pos):
-                # Start the game
-                play_button.perform_action()
-
-            elif quit_button.pressed(mouse_pos):
-                run = False
-
-        # Keep the fps down
-        clock.tick(30)
+    # Load the main menu
+    menu.run_menu('main_menu.yaml')
 
 
-def game_main():
+def run_level(file_path):
     '''The main function of the game - loads a level and runs it'''
 
     # Load the level
-    game = load_yaml.load_level('dummy_file_path.yaml')
+    game = load_yaml.load_level(file_path)
 
     run = True
     pause = False
@@ -134,17 +102,6 @@ def pause_loop(game):
     clock.tick(fps)
 
     return run, toggle_pause
-
-
-# TODO: Move this function
-def play_button_callback():
-    '''Function to be called when the play button is pressed'''
-
-    # Start the game
-    game_main()
-
-    items = load_yaml.load_menu('menu.yaml')
-    pygame.mouse.set_visible(True)
 
 
 # The magic!!

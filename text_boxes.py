@@ -9,6 +9,9 @@ class TextBox(base_menu_item.BaseMenuItem, yaml.YAMLObject):
 
     def __init__(self, text, x_pos, y_pos):
 
+        # FIXME: Text boxes currently doesn't support
+        # newlines, this must be fixed!
+
         base_menu_item.BaseMenuItem.__init__(self, text, x_pos, y_pos)
 
     @classmethod

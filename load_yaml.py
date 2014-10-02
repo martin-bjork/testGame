@@ -17,16 +17,23 @@ def load_menu(file_path):
     background = pygame.Surface([info.current_w, info.current_h])
     background.fill((200, 200, 200))    # TODO: Get color from the YAML-file?
 
-    # Clear the screen
+    # Clear the screen and make the cursor visible
     screen.blit(background, (0, 0))
+    pygame.mouse.set_visible(True)
 
+    # Create list for storing buttons
+    buttons = []
+
+    # Load the YAML-file
     with open(file_path, 'r') as stream:
-        item_dict = yaml.load(stream)
+        item_list = yaml.load(stream)
 
-    for key in item_dict:
-        item = item_dict[key]
-        if isinstance(item, menu_items.MenuItem) or \
-                isinstance(item, text_boxes.TextBox):
+    # Handle the output from the YAML-file
+    for item in item_list:
+        if isinstance(item, menu_items.MenuItem):
+            screen.blit(item.get_text_object(), item.get_rect())
+            buttons.append(item)
+        elif isinstance(item, text_boxes.TextBox):
             screen.blit(item.get_text_object(), item.get_rect())
         else:
             print ('Unknown object found when loading menu: ',
@@ -34,7 +41,7 @@ def load_menu(file_path):
 
     pygame.display.flip()
 
-    return item_dict
+    return buttons
 
 
 def load_level(file_path):

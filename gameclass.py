@@ -23,11 +23,13 @@ class Game:
         self._keys_pressed = None
         self._keys_pressed_last_frame = None
 
-    def take_menu_input(self):
+    @staticmethod
+    def take_menu_input():
         '''Get input for the menu'''
 
         run = True
-        mouse_pos = None
+        clicked = False
+        mouse_pos = pygame.mouse.get_pos()
 
         current_events = pygame.event.get()
 
@@ -37,9 +39,9 @@ class Game:
             elif event.type == loc.KEYDOWN and event.key == loc.K_ESCAPE:
                 run = False
             elif event.type == loc.MOUSEBUTTONDOWN:
-                mouse_pos = pygame.mouse.get_pos()
+                clicked = True
 
-        return run, mouse_pos
+        return run, mouse_pos, clicked
 
     def take_game_input(self):
         '''Get input for the game loop and handle it.'''
