@@ -3,7 +3,7 @@ import pygame
 
 import gameclass
 import scene
-from menu import menu_items, text_boxes
+from menu import menu_items
 
 
 def load_menu(file_path):
@@ -29,14 +29,13 @@ def load_menu(file_path):
 
     # Handle the output from the YAML-file
     for item in item_list:
-        if isinstance(item, menu_items.MenuItem):
+        if isinstance(item, menu_items.Button):
             screen.blit(item.get_text_object(), item.get_rect())
             buttons.append(item)
-        elif isinstance(item, text_boxes.TextBox):
+        elif isinstance(item, menu_items.TextBox):
             screen.blit(item.get_text_object(), item.get_rect())
         else:
-            print ('Unknown object found when loading menu: ',
-                   item, ' with key ', key)
+            print ('Unknown object found when loading menu: ', item)
 
     pygame.display.flip()
 
