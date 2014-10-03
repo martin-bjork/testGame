@@ -16,7 +16,7 @@ def main():
     screen, background = view.init_window()
 
     # Load the main menu
-    menus.run_menu('menu\menu_files\main_menu.yaml')
+    menus.run_menu('main_menu.yaml')
 
 
 def run_level(file_path):

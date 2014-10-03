@@ -1,3 +1,5 @@
+import os
+
 import yaml
 import pygame
 
@@ -6,9 +8,12 @@ import scene
 from menu import menu_items
 
 
-def load_menu(file_path):
+def load_menu(file_name):
     '''Loads the menu defined in the YAML-file found at "file_path"
     and blits everything to "screen"'''
+
+    # Get the full relative path of the YAML-file
+    fullname = os.path.join('menu', 'menu_files', file_name)
 
     # Create a screen and background
     info = pygame.display.Info()
@@ -24,7 +29,7 @@ def load_menu(file_path):
     buttons = []
 
     # Load the YAML-file
-    with open(file_path, 'r') as stream:
+    with open(fullname, 'r') as stream:
         item_list = yaml.load(stream)
 
     # Handle the output from the YAML-file
@@ -42,10 +47,13 @@ def load_menu(file_path):
     return buttons
 
 
-def load_level(file_path):
+def load_level(file_name):
     '''Loads the level from the YAML-file found at "file_path".
     Returns a game-object'''
     # TODO: Add actual level loading
+
+    # Get the full relative path of the YAML-file
+    # fullname = os.path.join('level', 'level_files', file_name)
 
     # Create game object
     game = gameclass.Game()

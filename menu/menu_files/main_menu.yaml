@@ -1,11 +1,11 @@
 - !Button
   action: !!python/name:menu.menu_button_callbacks.play_level_goto_menu
-  action_args: [menu\menu_files\dummy_file_path.yaml, menu\menu_files\main_menu.yaml]
+  action_args: [dummy_file_path.yaml, main_menu.yaml]
   pos: !!python/tuple [300, 200]
   text: Play level 1
 
 - !Button
   action: !!python/name:menu.menu_button_callbacks.goto_menu
-  action_args: [menu\menu_files\about.yaml]
+  action_args: [about.yaml]
   pos: !!python/tuple [300, 280]
   text: About

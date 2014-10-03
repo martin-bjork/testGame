@@ -4,6 +4,6 @@
 
 - !Button
   action: !!python/name:menu.menu_button_callbacks.goto_menu
-  action_args: [menu\menu_files\main_menu.yaml]
+  action_args: [main_menu.yaml]
   pos: !!python/tuple [300, 280]
   text: Back

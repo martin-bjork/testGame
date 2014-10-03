@@ -8,7 +8,7 @@ def load_sound(file_name):
         print 'Warning: Unable to load module pygame.mixer'
         return DummySound()
 
-    fullname = os.path.join('sound/sound_data', file_name)
+    fullname = os.path.join('sound', 'sound_data', file_name)
     try:
         sound = pygame.mixer.Sound(fullname)
     except pygame.error, message:
