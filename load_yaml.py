@@ -5,7 +5,9 @@ import pygame
 
 import gameclass
 import scene
-from menu import menu_items
+
+# TODO: Add the option to use images as background of
+# the screen, textboxes and buttons
 
 
 def load_menu(file_name):
@@ -15,11 +17,17 @@ def load_menu(file_name):
     # Get the full relative path of the YAML-file
     fullname = os.path.join('menu', 'menu_files', file_name)
 
+    # Load the YAML-file
+    with open(fullname, 'r') as stream:
+        item_dict = yaml.load(stream)
+
+    background_color = item_dict['background']
+
     # Create a screen and background
     info = pygame.display.Info()
     screen = pygame.display.get_surface()
     background = pygame.Surface([info.current_w, info.current_h])
-    background.fill((200, 200, 200))    # TODO: Get color from the YAML-file?
+    background.fill(background_color)
 
     # Clear the screen and make the cursor visible
     screen.blit(background, (0, 0))
@@ -28,19 +36,23 @@ def load_menu(file_name):
     # Create list for storing buttons
     buttons = []
 
-    # Load the YAML-file
-    with open(fullname, 'r') as stream:
-        item_list = yaml.load(stream)
-
-    # Handle the output from the YAML-file
-    for item in item_list:
-        if isinstance(item, menu_items.Button):
-            screen.blit(item.get_text_object(), item.get_rect())
-            buttons.append(item)
-        elif isinstance(item, menu_items.TextBox):
-            screen.blit(item.get_text_object(), item.get_rect())
-        else:
-            print ('Unknown object found when loading menu: ', item)
+    # Handle the objects from the YAML-file
+    for key in item_dict:
+        for item in item_dict[key]:
+            if key == 'buttons':
+                # All buttons are blitted to the screen and added to the list
+                screen.blit(item.get_text_object(), item.get_rect())
+                buttons.append(item)
+            elif key == 'textboxes':
+                # All textboxes are blitted to the screen
+                screen.blit(item.get_text_object(), item.get_rect())
+            elif key == 'background':
+                # The background is already taken care of
+                pass
+            else:
+                # Something unknown encountered, print an error and ignore it
+                print ('Unknown object found when loading menu: ',
+                       item, ', with key: ', key)
 
     pygame.display.flip()
 
