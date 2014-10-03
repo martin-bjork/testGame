@@ -1,4 +1,5 @@
 # TODO: Change name? I don't like "gameclass"...
+from __future__ import division
 
 import pygame
 import pygame.locals as loc
@@ -88,6 +89,50 @@ class Game:
         self._keys_pressed_last_frame = self._keys_pressed
 
         return run, direction, jump, toggle_pause
+
+    def game_loop(self):
+        '''The game loop - handles everything that should happen
+        in every frame of the game'''
+
+        # TODO: Add more game logic
+
+        # Clear the sprites
+        # NOTE: Is this necessary? This makes the whole business with
+        # dirty sprites unnecessary?
+        self._sprite_group.clear(self._screen, self._background)
+
+        # Take input
+        run, direction, jump, toggle_pause = self.take_game_input()
+
+        # Move the player according to input
+        self._player.move(direction, jump)
+
+        # Update all sprites
+        self._sprite_group.update(self)
+
+        # Update the world's physics
+        self._space.step(1 / self._fps)
+
+        # Draw all sprites that have moved
+        dirty_sprites = self._sprite_group.draw(self._screen)
+        pygame.display.update(dirty_sprites)
+
+        # Keep the desired fps
+        self._clock.tick(self._fps)
+
+        return run, toggle_pause
+
+    def pause_loop(self):
+        '''Everything that happens when the game is paused - it just waits
+            for input telling it not to pause any more'''
+
+        # Take input
+        run, direction, jump, toggle_pause = self.take_game_input()
+
+        # Keep the desired fps
+        self._clock.tick(self._fps)
+
+        return run, toggle_pause
 
     # Getters/setters
 
