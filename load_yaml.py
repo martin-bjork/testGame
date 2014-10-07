@@ -8,6 +8,9 @@ import scene
 # YAML needs this import to be able to construct the MenuItem objects...
 from menu import menu_items
 
+# TODO: Add the option to use images as background of
+# the screen, textboxes and buttons
+
 
 def load_menu(file_name):
     '''Loads the menu defined in the YAML-file found at "file_path"
