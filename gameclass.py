@@ -126,8 +126,6 @@ class Game:
         '''Everything that happens when the game is paused - it just waits
             for input telling it not to pause any more'''
 
-        # TODO: Replace this with a pop-up menu
-
         # Take input
         run, direction, jump, toggle_pause = self.take_game_input()
 

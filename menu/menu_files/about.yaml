@@ -1,21 +1,9 @@
-background: !!python/tuple [172, 61, 58]
+- !TextBox
+  pos: !!python/tuple [300, 150]
+  text: "This is a small test game for\nlearning game programming.\nMore to come!"
 
-textboxes:
-  - !TextBox
-    background_color: !!python/tuple [149, 24, 21, 1]
-    font_file: null
-    font_size: 20
-    pos: !!python/tuple [300, 150]
-    text: "This is a small test game for\nlearning game programming.\nMore to come!"
-    text_color: !!python/tuple [0, 0, 0, 1]
-
-buttons:
-  - !Button
-    action: !!python/name:menu.menu_button_callbacks.goto_menu
-    action_args: [main_menu.yaml]
-    background_color: !!python/tuple [36, 101, 104, 1]
-    font_file: null
-    font_size: 50
-    pos: !!python/tuple [300, 280]
-    text: Back
-    text_color: !!python/tuple [0, 39, 41, 1]
+- !Button
+  action: !!python/name:menu.menu_button_callbacks.goto_menu
+  action_args: [main_menu.yaml]
+  pos: !!python/tuple [300, 280]
+  text: Back

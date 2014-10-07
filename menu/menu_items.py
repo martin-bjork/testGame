@@ -7,21 +7,19 @@ class MenuItem(pygame.sprite.Sprite):
     An abstract base class for menu items, such as buttons, text areas etc
     '''
 
-    def __init__(self, text='Default', x_pos=1, y_pos=1,
-                 text_color=(0, 0, 0, 1),
-                 background_color=(150, 150, 150, 1),
-                 font_size=20, font_file=None):
+    def __init__(self, text, x_pos, y_pos):
 
         pygame.sprite.Sprite.__init__(self)
         self._pos = (x_pos, y_pos)
         self._text = text
 
-        self._text_color = text_color
-        self._background_color = background_color     # None -> transparent
+        # TODO: Set these via kwargs?
+        self._text_color = (0, 0, 0, 1)
+        self._background_color = (150, 150, 150, 1)     # None -> transparent
 
-        self._font_size = font_size
-        # A file describing the font (e.g. *.ttf), None -> default
-        self._font_file = font_file
+        # TODO: Set these via kwargs too?
+        font_size = 50
+        font_file = None    # A file describing the font (e.g. *.ttf), None -> default
         font_obj = pygame.font.Font(font_file, font_size)
 
         self._text_obj = font_obj.render(self._text, True, self._text_color,
@@ -41,12 +39,6 @@ class MenuItem(pygame.sprite.Sprite):
 
     def get_background_color(self):
         return self._background_color
-
-    def get_font_size(self):
-        return self._font_size
-
-    def get_font_file(self):
-        return self._font_file
 
     def get_text_object(self):
         return self._text_obj
@@ -69,35 +61,21 @@ class MenuItem(pygame.sprite.Sprite):
         # TODO: Re-render the text object
         self._background_color = color
 
-    def set_font_size(self, font_size):
-        # TODO: Re-render the text object
-        self._font_size = font_size
-
-    def set_font_file(self, font_file):
-        # TODO: Re-render the text object
-        self._font_file = font_file
+    # TODO: Add getters/setters for font properties
 
 
 class Button(MenuItem, yaml.YAMLObject):
 
     yaml_tag = '!Button'
 
-    def __init__(self, text='Button', x_pos=1, y_pos=1,
-                 text_color=(0, 0, 0, 1),
-                 background_color=(150, 150, 150, 1),
-                 font_size=50, font_file=None,
-                 action=None, action_args=None):
+    def __init__(self, text, x_pos, y_pos):
 
-        MenuItem.__init__(self, text=text, x_pos=x_pos, y_pos=y_pos,
-                          text_color=text_color,
-                          background_color=background_color,
-                          font_size=font_size,
-                          font_file=font_file)
+        MenuItem.__init__(self, text, x_pos, y_pos)
 
-        # A function the Button should call when activated
-        self._action = action
-        # The arguments needed for the function that is called when activated
-        self._action_args = action_args
+        self._action = None         # A function the Button
+                                    # should call when activated
+        self._action_args = None    # The arguments needed for the
+                                    # function that is called when activated
 
     @classmethod
     def from_yaml(cls, loader, node):
@@ -109,21 +87,16 @@ class Button(MenuItem, yaml.YAMLObject):
         # Extract the needed properties
         text = values['text']
         pos = values['pos']
-        text_color = values['text_color']
-        background_color = values['background_color']
-        font_size = values['font_size']
-        font_file = values['font_file']
         action = values['action']
         action_args = values['action_args']
 
-        # Return an instance of the object
-        return Button(text=text, x_pos=pos[0], y_pos=pos[1],
-                      text_color=text_color,
-                      background_color=background_color,
-                      font_size=font_size,
-                      font_file=font_file,
-                      action=action,
-                      action_args=action_args)
+        # Create an instance of the object
+        m = Button(text, pos[0], pos[1])
+        m.set_action(action)
+        m.set_action_args(action_args)
+
+        # Return the object
+        return m
 
     @classmethod
     def to_yaml(cls, dumper, instance):
@@ -132,10 +105,6 @@ class Button(MenuItem, yaml.YAMLObject):
         # we want to use in the representation
         mapping = {'text': instance._text,
                    'pos': instance._pos,
-                   'text_color': instance._text_color,
-                   'background_color': instance._background_color,
-                   'font_size': instance._font_size,
-                   'font_file': instance._font_file,
                    'action': instance._action,
                    'action_args': instance._action_args}
 
@@ -174,19 +143,12 @@ class TextBox(MenuItem, yaml.YAMLObject):
 
     yaml_tag = '!TextBox'
 
-    def __init__(self, text='Button', x_pos=1, y_pos=1,
-                 text_color=(0, 0, 0, 1),
-                 background_color=(150, 150, 150, 1),
-                 font_size=20, font_file=None):
+    def __init__(self, text, x_pos, y_pos):
 
         # FIXME: Text boxes currently doesn't support
         # newlines, this must be fixed!
 
-        MenuItem.__init__(self, text=text, x_pos=x_pos, y_pos=y_pos,
-                          text_color=text_color,
-                          background_color=background_color,
-                          font_size=font_size,
-                          font_file=font_file)
+        MenuItem.__init__(self, text, x_pos, y_pos)
 
     @classmethod
     def from_yaml(cls, loader, node):
@@ -198,17 +160,12 @@ class TextBox(MenuItem, yaml.YAMLObject):
         # Extract the needed properties
         text = values['text']
         pos = values['pos']
-        text_color = values['text_color']
-        background_color = values['background_color']
-        font_size = values['font_size']
-        font_file = values['font_file']
 
-        # Return an instance of the object
-        return TextBox(text=text, x_pos=pos[0], y_pos=pos[1],
-                       text_color=text_color,
-                       background_color=background_color,
-                       font_size=font_size,
-                       font_file=font_file)
+        # Create an instance of the object
+        m = TextBox(text, pos[0], pos[1])
+
+        # Return the object
+        return m
 
     @classmethod
     def to_yaml(cls, dumper, instance):
@@ -216,11 +173,7 @@ class TextBox(MenuItem, yaml.YAMLObject):
         # Construct a dict containing only the properties
         # we want to use in the representation
         mapping = {'text': instance._text,
-                   'pos': instance._pos,
-                   'text_color': instance._text_color,
-                   'background_color': instance._background_color,
-                   'font_size': instance._font_size,
-                   'font_file': instance._font_file}
+                   'pos': instance._pos}
 
         # Use YAMLs default representation, but with the custom YAML-tag
         # and using only the properties in out custom mapping

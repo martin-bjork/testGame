@@ -1,22 +1,11 @@
-background: !!python/tuple [172, 61, 58]
+- !Button
+  action: !!python/name:menu.menu_button_callbacks.play_level_goto_menu
+  action_args: [dummy_file_path.yaml, main_menu.yaml]
+  pos: !!python/tuple [300, 200]
+  text: Play level 1
 
-buttons:
-  - !Button
-    action: !!python/name:menu.menu_button_callbacks.play_level_goto_menu
-    action_args: [dummy_file_path.yaml, main_menu.yaml]
-    background_color: !!python/tuple [36, 101, 104, 1]
-    font_file: null
-    font_size: 50
-    pos: !!python/tuple [300, 200]
-    text: Play level 1
-    text_color: !!python/tuple [0, 39, 41, 1]
-
-  - !Button
-    action: !!python/name:menu.menu_button_callbacks.goto_menu
-    action_args: [about.yaml]
-    background_color: !!python/tuple [36, 101, 104, 1]
-    font_file: null
-    font_size: 50
-    pos: !!python/tuple [300, 280]
-    text: About
-    text_color: !!python/tuple [0, 39, 41, 1]
+- !Button
+  action: !!python/name:menu.menu_button_callbacks.goto_menu
+  action_args: [about.yaml]
+  pos: !!python/tuple [300, 280]
+  text: About
