@@ -14,8 +14,13 @@ class Player(shapes.MovingShape):
 
     collision_type = col_call.PLAYER_TYPE
 
-    def __init__(self, space, mass=1, radius=20, position=(100, 50)):
-        super(Player, self).__init__()
+    yaml_tag = '!Player'
+
+    def __init__(self, mass=1, radius=20, position=(100, 50)):
+        shapes.MovingShape.__init__(self)
+
+        self._mass = mass
+        self._radius = radius
 
         # Pymunk properties
         inertia = pymunk.moment_for_circle(mass, 0, radius, (0, 0))
@@ -25,7 +30,6 @@ class Player(shapes.MovingShape):
         self._shape.friction = self._friction
         self._shape.elasticity = self._elasticity
 
-        space.add(self._body, self._shape)
         self._shape.collision_type = Player.collision_type
 
         # A hack to be able to access the player object via it's shape
@@ -50,9 +54,38 @@ class Player(shapes.MovingShape):
         self._jump_sound.set_volume(0.5)
         self._bounce_sound = sound_effects.load_sound('bounce_3.wav')
 
+    @classmethod
+    def from_yaml(cls, loader, node):
+        '''A constructor that YAML uses to create instances of this class'''
+        # Create a dict from the YAML code for the object,
+        # containing all its properties
+        values = loader.construct_mapping(node)
+
+        # Extract the needed properties
+        radius = values['radius']
+        mass = values['mass']
+        position = values['pos']
+
+        # Return an instance of the object
+        return Player(mass=mass, radius=radius, position=position)
+
+    @classmethod
+    def to_yaml(cls, dumper, instance):
+        '''A method used by YAML to represent an instance of this class'''
+        # Construct a dict containing only the properties (wrong word...)
+        # we want to use in the representation
+
+        mapping = {'radius': instance._radius,
+                   'mass': instance._mass,
+                   'pos': instance._body.position}
+
+        # Use YAMLs default representation, but with the custom YAML-tag
+        # and using only the properties in out custom mapping
+        return dumper.represent_mapping(cls.yaml_tag, mapping)
+
     def move(self, direction, jump):
         '''Moves the player in the direction specified by "direction".
-        "direction" is an integer: -1 for moving left, 1 for moving rigth,
+        "direction" is an integer: -1 for moving left, 1 for moving right,
         0 for not moving at all'''
         self._body.apply_impulse((direction*self._move_impulse, 0))
         if jump:

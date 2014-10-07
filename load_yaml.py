@@ -2,11 +2,14 @@ import os
 
 import yaml
 import pygame
+import pymunk
 
 import gameclass
-import scene
-# YAML needs this import to be able to construct the MenuItem objects...
+import collision_callbacks as col_call
+# YAML needs these imports to be able to create the objects
 from menu import menu_items
+import shapes
+import players
 
 # TODO: Add the option to use images as background of
 # the screen, textboxes and buttons
@@ -23,12 +26,11 @@ def load_menu(file_name):
     with open(fullname, 'r') as stream:
         item_dict = yaml.load(stream)
 
-    background_color = item_dict['background']
-
     # Create a screen and background
     info = pygame.display.Info()
     screen = pygame.display.get_surface()
     background = pygame.Surface([info.current_w, info.current_h])
+    background_color = item_dict['background']
     background.fill(background_color)
 
     # Clear the screen and make the cursor visible
@@ -67,16 +69,23 @@ def load_level(file_name):
     # TODO: Add actual level loading
 
     # Get the full relative path of the YAML-file
-    # fullname = os.path.join('level', 'level_files', file_name)
+    fullname = os.path.join('level', 'level_files', file_name)
+
+    # Load the YAML-file
+    with open(fullname, 'r') as stream:
+        item_dict = yaml.load(stream)
 
     # Create game object
     game = gameclass.Game()
 
     # Create a screen and background
     info = pygame.display.Info()
+    width = info.current_w
+    height = info.current_h
     screen = pygame.display.get_surface()
-    background = pygame.Surface([info.current_w, info.current_h])
-    background.fill((200, 200, 200))    # TODO: Get color from the YAML-file?
+    background = pygame.Surface([width, height])
+    background_color = item_dict['background']
+    background.fill(background_color)
 
     # Create other game related objects
     FPS = 60
@@ -88,14 +97,65 @@ def load_level(file_name):
     game.set_clock(clock)
     game.set_fps(FPS)
 
-    # TODO: Everything that is created in this function call should
-    # really be loaded from the YAML-file. In fact, I think that
-    # the entire module "scene" can be removed in favour of this module.
-    scene.init_scene(game)
+    # Initialize the pymunk space
+    space = pymunk.Space()
+    game.set_space(space)
+
+    # Add post-collision handlers to the space
+    # NOTE: In these, we can e.g. play collision sounds, reset jumping flags...
+    space.add_collision_handler(col_call.PLAYER_TYPE, col_call.STATIC_TYPE,
+                                post_solve=col_call.player_static)
+    space.add_collision_handler(col_call.PLAYER_TYPE, col_call.MOVING_TYPE,
+                                post_solve=col_call.player_static)
+
+    # Initialize Sprite Groups
+    # (will be more useful when we have more moving sprites)
+    all_sprites = pygame.sprite.RenderUpdates()
+    game.set_sprite_group(all_sprites)
+
+    # Handle the objects from the YAML-file
+    for key in item_dict:
+        for item in item_dict[key]:
+            if key == 'static_objects':
+                # All static objects should be added to the space and the game
+                space.add(item.get_shape())
+                game.add_static_objects(item)
+            elif key == 'moving_objects':
+                # All moving objects should be added to the space,
+                # the game and the sprite group
+                space.add(item.get_body(), item.get_shape())
+                game.add_moving_objects(item)
+                all_sprites.add(item)
+            elif key == 'player':
+                # Add the player to the game
+                space.add(item.get_body(), item.get_shape())
+                game.set_player(item)
+                all_sprites.add(item)
+            elif key == 'music':
+                # Extract the info
+                music_file = item['file']
+                vol = item['vol']
+            elif key == 'gravity':
+                # Set the gravity of the level
+                space.gravity = item
+            elif key == 'background':
+                # The background is already taken care of
+                pass
+            else:
+                # Something unknown encountered, print an error and ignore it
+                print ('Unknown object found when loading menu: ',
+                       item, ', with key: ', key)
 
     # Clear the screen and hide the cursor
     screen.blit(background, (0, 0))
     pygame.display.flip()
     pygame.mouse.set_visible(False)
+
+    # Start the music
+    if music_file is not None:
+        full_music_file = os.path.join('sound', 'sound_data', music_file)
+        pygame.mixer.music.load(full_music_file)
+        pygame.mixer.music.set_volume(vol)
+        pygame.mixer.music.play(-1)
 
     return game

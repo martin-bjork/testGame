@@ -3,14 +3,15 @@ from math import pi
 
 import pygame
 import pymunk
+import yaml
 
-import scene
+import conversion
 import collision_callbacks as col_call
 
 # TODO: Add more classes, such as wall
 
 
-class Shape(pygame.sprite.Sprite):
+class Shape(pygame.sprite.Sprite, yaml.YAMLObject):
     '''An abstract base class for all other shapes in the game'''
     # TODO: Make abstract for real? With the abc module?
 
@@ -63,8 +64,6 @@ class Shape(pygame.sprite.Sprite):
         self._color = color
 
 
-# NOTE: Needed? Maybe remove? If there is not any more
-# functionality we want to add here.
 class StaticShape(Shape):
     '''An abstract base class for all static shapes in the game'''
     # TODO: Make abstract for real? With the abc module?
@@ -72,11 +71,13 @@ class StaticShape(Shape):
     # The collision type for static objects
     collision_type = col_call.STATIC_TYPE
 
-    def __init__(self):
-        super(StaticShape, self).__init__()
+    def __init__(self, friction=1.0, elasticity=0.5):
+        Shape.__init__(self)
 
         # Pymunk properties
         self._body = pymunk.Body()
+        self._friction = friction
+        self._elasticity = elasticity
 
 
 class MovingShape(Shape):
@@ -87,17 +88,18 @@ class MovingShape(Shape):
     collision_type = col_call.MOVING_TYPE
 
     def __init__(self):
-        super(MovingShape, self).__init__()
+        Shape.__init__(self)
 
     def update(self, game):
         '''Updates the position of the sprite to match the Pymunk shape'''
         # NOTE: This will throw an exception if image, rect etc
         # are not initialized; Make sure all classes that inherit from this
         # class initializes all variables correctly
+
         self.image = pygame.transform.rotate(self._baseimage,
                                              self._body.angle*180/pi)
         self.rect = self.image.get_rect()
-        self.rect.center = scene.pymunk_to_pygame_coords(
+        self.rect.center = conversion.pymunk_to_pygame_coords(
             self._body.position[0], self._body.position[1],
             game.get_screen_size()[1])
 
@@ -105,9 +107,17 @@ class MovingShape(Shape):
 class Rectangle(MovingShape):
     '''A class for rectangles'''
 
-    def __init__(self, space, width=50, height=50, mass=1,
+    yaml_tag = '!Rectangle'
+
+    def __init__(self, width=50, height=50, mass=1,
                  position=(100, 100), color=(0, 0, 0)):
-        super(Rectangle, self).__init__()
+
+        MovingShape.__init__(self)
+
+        self._width = width
+        self._height = height
+        self._mass = mass
+        self._color = color
 
         # Pymunk properties
         points = [(-width/2, -height/2), (width/2, -height/2),
@@ -118,16 +128,12 @@ class Rectangle(MovingShape):
         self._body.position = position
         self._shape.friction = self._friction
         self._shape.elasticity = self._elasticity
-
-        space.add(self._body, self._shape)
-
-        self._shape.collision_type = Rectangle.collision_type
+        self._shape.collision_type = self.collision_type
 
         # A hack to be able to access the object via it's shape
         self._shape.__setattr__('obj', self)
 
         # Pygame properties
-        self._color = color
         self._baseimage = pygame.Surface((width, height))
         # Set the background color
         self._baseimage.fill((255, 255, 255))
@@ -139,3 +145,88 @@ class Rectangle(MovingShape):
 
         self.image = self._baseimage
         self.rect = self.image.get_rect()
+
+    @classmethod
+    def from_yaml(cls, loader, node):
+        '''A constructor that YAML uses to create instances of this class'''
+        # Create a dict from the YAML code for the object,
+        # containing all its properties
+        values = loader.construct_mapping(node)
+
+        # Extract the needed properties
+        width = values['width']
+        height = values['height']
+        mass = values['mass']
+        position = values['pos']
+        color = values['color']
+
+        # Return an instance of the object
+        return Rectangle(width=width, height=height, mass=mass,
+                         position=position, color=color)
+
+    @classmethod
+    def to_yaml(cls, dumper, instance):
+        '''A method used by YAML to represent an instance of this class'''
+        # Construct a dict containing only the properties (wrong word...)
+        # we want to use in the representation
+
+        mapping = {'width': instance._width,
+                   'height': instance._height,
+                   'mass': instance._mass,
+                   'pos': instance._body.position,
+                   'color': instance._color}
+
+        # Use YAMLs default representation, but with the custom YAML-tag
+        # and using only the properties in out custom mapping
+        return dumper.represent_mapping(cls.yaml_tag, mapping)
+
+
+class Boundary(StaticShape):
+    '''A class for the boundaries of the world'''
+
+    yaml_tag = '!Boundary'
+
+    def __init__(self, points=[(0, 0), (1, 1)], width=5.0,
+                 friction=1.0, elasticity=0.8):
+        StaticShape.__init__(self, friction=friction, elasticity=elasticity)
+
+        self._shape = pymunk.Segment(self._body, points[0], points[1], width)
+
+        self._shape.collision_type = self.collision_type
+
+        self._points = points
+        self._width = width
+        self._shape.friction = self._friction
+        self._shape.elasticity = self._elasticity
+
+    @classmethod
+    def from_yaml(cls, loader, node):
+        '''A constructor that YAML uses to create instances of this class'''
+        # Create a dict from the YAML code for the object,
+        # containing all its properties
+        values = loader.construct_mapping(node)
+
+        # Extract the needed properties
+        points = values['points']
+        width = values['width']
+        friction = values['friction']
+        elasticity = values['elasticity']
+
+        # Return an instance of the object
+        return Boundary(points=points, width=width,
+                        friction=friction, elasticity=elasticity)
+
+    @classmethod
+    def to_yaml(cls, dumper, instance):
+        '''A method used by YAML to represent an instance of this class'''
+        # Construct a dict containing only the properties (wrong word...)
+        # we want to use in the representation
+
+        mapping = {'points': instance._points,
+                   'width': instance._width,
+                   'friction': instance._friction,
+                   'elasticity': instance._elasticity}
+
+        # Use YAMLs default representation, but with the custom YAML-tag
+        # and using only the properties in out custom mapping
+        return dumper.represent_mapping(cls.yaml_tag, mapping)
