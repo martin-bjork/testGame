@@ -1,0 +1,60 @@
+background: !!python/tuple [150, 150, 150]
+
+gravity: 
+  - !!python/tuple [0.0, -900.0]
+
+player: 
+  - !Player
+    radius: 25
+    mass: 1.5
+    pos: !!python/tuple [300, 60]
+
+moving_objects:
+  - !Rectangle
+    width: 50
+    height: 50
+    pos: !!python/tuple [100, 30]
+    mass: 1
+    color: !!python/tuple [0, 250, 0]
+  - !Rectangle
+    width: 30
+    height: 70
+    pos: !!python/tuple [500, 70]
+    mass: 1.2
+    color: !!python/tuple [250, 0, 0]
+
+static_objects:
+  - !Boundary
+    points: !!python/tuple 
+      - !!python/tuple [0, 0]
+      - !!python/tuple [600, 0]
+    width: 5.0
+    friction: 1.0
+    elasticity: 0.8
+  - !Boundary
+    points: !!python/tuple
+      - !!python/tuple [0, 480]
+      - !!python/tuple [600, 480]
+    width: 5.0
+    friction: 1.0
+    elasticity: 0.8
+  - !Boundary
+    points: !!python/tuple
+      - !!python/tuple [600, 0]
+      - !!python/tuple [600, 480]
+    width: 5.0
+    friction: 1.0
+    elasticity: 0.8
+  - !Boundary
+    points: !!python/tuple
+      - !!python/tuple [0, 0]
+      - !!python/tuple [0, 480]
+    width: 5.0
+    friction: 1.0
+    elasticity: 0.8
+
+
+music:
+  -
+    file: trololo1.wav
+    vol: 0.8
