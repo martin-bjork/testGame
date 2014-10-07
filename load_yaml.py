@@ -15,6 +15,10 @@ def load_menu(file_name):
     # Get the full relative path of the YAML-file
     fullname = os.path.join('menu', 'menu_files', file_name)
 
+    # Load the YAML-file
+    with open(fullname, 'r') as stream:
+        item_dict = yaml.load(stream)
+
     # Create a screen and background
     info = pygame.display.Info()
     screen = pygame.display.get_surface()
@@ -28,19 +32,17 @@ def load_menu(file_name):
     # Create list for storing buttons
     buttons = []
 
-    # Load the YAML-file
-    with open(fullname, 'r') as stream:
-        item_list = yaml.load(stream)
-
     # Handle the output from the YAML-file
-    for item in item_list:
-        if isinstance(item, menu_items.Button):
-            screen.blit(item.get_text_object(), item.get_rect())
-            buttons.append(item)
-        elif isinstance(item, menu_items.TextBox):
-            screen.blit(item.get_text_object(), item.get_rect())
-        else:
-            print ('Unknown object found when loading menu: ', item)
+    for key in item_dict:
+        for item in item_dict[key]:
+            if key == 'buttons':
+                screen.blit(item.get_text_object(), item.get_rect())
+                buttons.append(item)
+            elif key == 'textboxes':
+                screen.blit(item.get_text_object(), item.get_rect())
+            else:
+                print ('Unknown key found when loading menu: ', item,
+                       ' with key: ', key)
 
     pygame.display.flip()
 
