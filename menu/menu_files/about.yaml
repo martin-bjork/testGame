@@ -6,7 +6,7 @@ textboxes:
     font_file: null
     font_size: 20
     pos: !!python/tuple [300, 150]
-    text: "This is a small test game for\nlearning game programming.\nMore to come!"
+    text: "This is a small test game for learning game programming. More to come!"
     text_color: !!python/tuple [0, 0, 0, 1]
 
 buttons:
@@ -19,3 +19,8 @@ buttons:
     pos: !!python/tuple [300, 280]
     text: Back
     text_color: !!python/tuple [0, 39, 41, 1]
+
+music:
+  -
+    file: synth_loop_2.wav
+    vol: 0.2

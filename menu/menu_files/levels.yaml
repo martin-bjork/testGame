@@ -20,3 +20,19 @@ buttons:
     pos: !!python/tuple [300, 280]
     text: Level 2
     text_color: !!python/tuple [0, 39, 41, 1]
+
+  - !Button
+    action: !!python/name:menu.menu_button_callbacks.goto_menu
+    action_args: [main_menu.yaml]
+    background_color: !!python/tuple [36, 101, 104, 1]
+    font_file: null
+    font_size: 50
+    pos: !!python/tuple [300, 360]
+    text: Back
+    text_color: !!python/tuple [0, 39, 41, 1]
+
+
+music:
+  -
+    file: synth_loop_1.wav
+    vol: 0.2

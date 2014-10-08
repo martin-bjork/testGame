@@ -50,6 +50,10 @@ def load_menu(file_name):
             elif key == 'textboxes':
                 # All textboxes are blitted to the screen
                 screen.blit(item.get_text_object(), item.get_rect())
+            elif key == 'music':
+                # Extract the info
+                music_file = item['file']
+                vol = item['vol']
             elif key == 'background':
                 # The background is already taken care of
                 pass
@@ -59,6 +63,16 @@ def load_menu(file_name):
                        item, ', with key: ', key)
 
     pygame.display.flip()
+
+    # Start the music
+    # TODO: Find a way to not restart the music if the currently
+    # playing file is to be loaded.
+    # TODO: Add smooth fading between songs.
+    if music_file is not None:
+        full_music_file = os.path.join('sound', 'sound_data', music_file)
+        pygame.mixer.music.load(full_music_file)
+        pygame.mixer.music.set_volume(vol)
+        pygame.mixer.music.play(-1)
 
     return buttons
 
