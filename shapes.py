@@ -7,8 +7,11 @@ import yaml
 
 import conversion
 import collision_callbacks as col_call
+import view
 
 # TODO: Add more classes, such as wall
+# TODO: Reduce code duplication by moving as much as possible
+# to the base classes
 
 
 class Shape(pygame.sprite.Sprite, yaml.YAMLObject):
@@ -110,14 +113,16 @@ class Rectangle(MovingShape):
     yaml_tag = '!Rectangle'
 
     def __init__(self, width=50, height=50, mass=1,
-                 position=(100, 100), color=(0, 0, 0)):
+                 position=(100, 100), color=(0, 0, 0),
+                 image_file=None):
 
         MovingShape.__init__(self)
 
         self._width = width
         self._height = height
         self._mass = mass
-        self._color = color
+        self._color = color             # Ignored if image_file is not None
+        self._image_file = image_file
 
         # Pymunk properties
         points = [(-width/2, -height/2), (width/2, -height/2),
@@ -134,14 +139,19 @@ class Rectangle(MovingShape):
         self._shape.__setattr__('obj', self)
 
         # Pygame properties
-        self._baseimage = pygame.Surface((width, height))
-        # Set the background color
-        self._baseimage.fill((255, 255, 255))
-        # Set the color that is ignored when blitting (like a green screen)
-        self._baseimage.set_colorkey((255, 255, 255))
-        # Draw the image we want to actually draw onto the surface
-        baserect = pygame.Rect(0, 0, width, height)
-        pygame.draw.rect(self._baseimage, self._color, baserect)
+        if image_file is not None:
+            self._baseimage = \
+                pygame.transform.scale(view.load_image(image_file),
+                                       (width, height))
+        else:
+            self._baseimage = pygame.Surface((width, height))
+            # Set the background color
+            self._baseimage.fill((255, 255, 255))
+            # Set the color that is ignored when blitting (like a green screen)
+            self._baseimage.set_colorkey((255, 255, 255))
+            # Draw the image we want to actually draw onto the surface
+            baserect = pygame.Rect(0, 0, width, height)
+            pygame.draw.rect(self._baseimage, self._color, baserect)
 
         self.image = self._baseimage
         self.rect = self.image.get_rect()
@@ -159,10 +169,11 @@ class Rectangle(MovingShape):
         mass = values['mass']
         position = values['pos']
         color = values['color']
+        image_file = values['image']
 
         # Return an instance of the object
         return Rectangle(width=width, height=height, mass=mass,
-                         position=position, color=color)
+                         position=position, color=color, image_file=image_file)
 
     @classmethod
     def to_yaml(cls, dumper, instance):
@@ -174,7 +185,8 @@ class Rectangle(MovingShape):
                    'height': instance._height,
                    'mass': instance._mass,
                    'pos': instance._body.position,
-                   'color': instance._color}
+                   'color': instance._color,
+                   'image': instance._image_file}
 
         # Use YAMLs default representation, but with the custom YAML-tag
         # and using only the properties in out custom mapping

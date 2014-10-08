@@ -16,6 +16,7 @@ moving_objects:
     pos: !!python/tuple [100, 30]
     mass: 1
     color: !!python/tuple [0, 250, 0]
+    image: null
 
 static_objects:
   - !Boundary

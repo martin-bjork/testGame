@@ -11,17 +11,19 @@ player:
 
 moving_objects:
   - !Rectangle
-    width: 50
+    width: 100
     height: 50
     pos: !!python/tuple [100, 30]
     mass: 1
-    color: !!python/tuple [0, 250, 0]
+    color: null
+    image: truck.png
   - !Rectangle
     width: 30
     height: 70
     pos: !!python/tuple [500, 70]
     mass: 1.2
     color: !!python/tuple [250, 0, 0]
+    image: null
 
 static_objects:
   - !Boundary
