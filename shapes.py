@@ -12,6 +12,8 @@ import view
 # TODO: Add more classes, such as wall
 # TODO: Reduce code duplication by moving as much as possible
 # to the base classes
+# TODO: Add properties such as friction and elasticity to the
+# constructors instead of hard-coding.
 
 
 class Shape(pygame.sprite.Sprite, yaml.YAMLObject):
@@ -105,6 +107,9 @@ class MovingShape(Shape):
         self.rect.center = conversion.pymunk_to_pygame_coords(
             self._body.position[0], self._body.position[1],
             game.get_screen_size()[1])
+
+    def set_position(self, position):
+        self._body.position = position
 
 
 class Rectangle(MovingShape):

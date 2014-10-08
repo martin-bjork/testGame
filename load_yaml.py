@@ -164,9 +164,10 @@ def load_level(file_name):
                     all_sprites.add(item)
                 elif key == 'player':
                     # Add the player to the game
-                    space.add(item.get_body(), item.get_shape())
+                    space.add(item.get_object().get_body(),
+                              item.get_object().get_shape())
                     game.set_player(item)
-                    all_sprites.add(item)
+                    all_sprites.add(item.get_object())
                 elif key == 'music':
                     # Extract the info
                     music_file = item['file']

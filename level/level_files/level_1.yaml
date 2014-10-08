@@ -7,9 +7,18 @@ gravity:
 
 player: 
   - !Player
-    radius: 20
-    mass: 1
-    pos: !!python/tuple [300, 30]
+    obj: !Circle
+      radius: 20
+      mass: 1
+      pos: !!python/tuple [300, 30]
+      color: null
+      image: smiley.png
+    move_impulse: 20
+    jump_impulse: 500
+    jump_sound_file: boing.wav
+    jump_sound_vol: 0.5
+    bounce_sound_file: bounce_3.wav
+    bounce_sound_vol: 0.5
 
 moving_objects:
   - !Rectangle
