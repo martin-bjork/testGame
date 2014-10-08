@@ -19,6 +19,12 @@ moving_objects:
     mass: 1
     color: !!python/tuple [0, 250, 0]
     image: null
+  - !Circle
+    radius: 30
+    mass: 1.5
+    pos: !!python/tuple [450, 100]
+    color: null
+    image: swirl.png
 
 static_objects:
   - !Boundary

@@ -172,8 +172,8 @@ class Rectangle(MovingShape):
         image_file = values['image']
 
         # Return an instance of the object
-        return Rectangle(width=width, height=height, mass=mass,
-                         position=position, color=color, image_file=image_file)
+        return cls(width=width, height=height, mass=mass,
+                   position=position, color=color, image_file=image_file)
 
     @classmethod
     def to_yaml(cls, dumper, instance):
@@ -183,6 +183,87 @@ class Rectangle(MovingShape):
 
         mapping = {'width': instance._width,
                    'height': instance._height,
+                   'mass': instance._mass,
+                   'pos': instance._body.position,
+                   'color': instance._color,
+                   'image': instance._image_file}
+
+        # Use YAMLs default representation, but with the custom YAML-tag
+        # and using only the properties in out custom mapping
+        return dumper.represent_mapping(cls.yaml_tag, mapping)
+
+
+class Circle(MovingShape):
+    '''A class for circles'''
+
+    yaml_tag = '!Circle'
+
+    def __init__(self, radius=20, mass=1, position=(100, 100),
+                 color=(0, 0, 0), image_file=None):
+
+        MovingShape.__init__(self)
+
+        self._radius = radius
+        self._mass = mass
+        self._position = position
+        self._color = color
+        self._image_file = image_file
+
+        # Pymunk properties
+        inertia = pymunk.moment_for_circle(mass, 0, radius, (0, 0))
+        self._body = pymunk.Body(mass, inertia)
+        self._shape = pymunk.Circle(self._body, radius, (0, 0))
+        self._body.position = position
+        self._shape.friction = self._friction
+        self._shape.elasticity = self._elasticity
+        self._shape.collision_type = self.collision_type
+
+        # A hack to be able to access the object via it's shape
+        self._shape.__setattr__('obj', self)
+
+        # Pygame properties
+        if image_file is not None:
+            self._baseimage = \
+                pygame.transform.scale(view.load_image(image_file),
+                                       (2*radius, 2*radius))
+        else:
+            self._baseimage = pygame.Surface((2*radius, 2*radius))
+            # Set the background color
+            self._baseimage.fill((255, 255, 255))
+            # Set the color that is ignored when blitting (like a green screen)
+            self._baseimage.set_colorkey((255, 255, 255))
+            # Draw the image we want to actually draw onto the surface
+            baserect = pygame.Rect(0, 0, 2*radius, 2*radius)
+            pygame.draw.ellipse(self._baseimage, self._color, baserect)
+
+        self.image = self._baseimage
+        self.rect = self.image.get_rect()
+
+    @classmethod
+    def from_yaml(cls, loader, node):
+        '''A constructor that YAML uses to create instances of this class'''
+        # Create a dict from the YAML code for the object,
+        # containing all its properties
+        values = loader.construct_mapping(node)
+
+        # Extract the needed properties
+        radius = values['radius']
+        mass = values['mass']
+        position = values['pos']
+        color = values['color']
+        image_file = values['image']
+
+        # Return an instance of the object
+        return cls(radius=radius, mass=mass, position=position,
+                   color=color, image_file=image_file)
+
+    @classmethod
+    def to_yaml(cls, dumper, instance):
+        '''A method used by YAML to represent an instance of this class'''
+        # Construct a dict containing only the properties (wrong word...)
+        # we want to use in the representation
+
+        mapping = {'radius': instance._radius,
                    'mass': instance._mass,
                    'pos': instance._body.position,
                    'color': instance._color,
@@ -225,8 +306,8 @@ class Boundary(StaticShape):
         elasticity = values['elasticity']
 
         # Return an instance of the object
-        return Boundary(points=points, width=width,
-                        friction=friction, elasticity=elasticity)
+        return cls(points=points, width=width,
+                   friction=friction, elasticity=elasticity)
 
     @classmethod
     def to_yaml(cls, dumper, instance):

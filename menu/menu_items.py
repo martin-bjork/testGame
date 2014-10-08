@@ -117,13 +117,13 @@ class Button(MenuItem, yaml.YAMLObject):
         action_args = values['action_args']
 
         # Return an instance of the object
-        return Button(text=text, x_pos=pos[0], y_pos=pos[1],
-                      text_color=text_color,
-                      background_color=background_color,
-                      font_size=font_size,
-                      font_file=font_file,
-                      action=action,
-                      action_args=action_args)
+        return cls(text=text, x_pos=pos[0], y_pos=pos[1],
+                   text_color=text_color,
+                   background_color=background_color,
+                   font_size=font_size,
+                   font_file=font_file,
+                   action=action,
+                   action_args=action_args)
 
     @classmethod
     def to_yaml(cls, dumper, instance):
@@ -204,11 +204,11 @@ class TextBox(MenuItem, yaml.YAMLObject):
         font_file = values['font_file']
 
         # Return an instance of the object
-        return TextBox(text=text, x_pos=pos[0], y_pos=pos[1],
-                       text_color=text_color,
-                       background_color=background_color,
-                       font_size=font_size,
-                       font_file=font_file)
+        return cls(text=text, x_pos=pos[0], y_pos=pos[1],
+                   text_color=text_color,
+                   background_color=background_color,
+                   font_size=font_size,
+                   font_file=font_file)
 
     @classmethod
     def to_yaml(cls, dumper, instance):
