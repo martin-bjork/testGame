@@ -21,6 +21,9 @@ class Player(shapes.MovingShape):
                  jump_sound_vol=0.5, bounce_sound_vol=0.5):
 
         self._object = obj
+        self._object.get_shape().collision_type = self.collision_type
+        # A hack to be able to access the player via the shape
+        self._object.get_shape().__setattr__('player', self)
 
         # Game properties
         # TODO: Set these via settings file

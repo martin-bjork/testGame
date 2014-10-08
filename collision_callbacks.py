@@ -12,7 +12,7 @@ def player_static(space, arbiter):
     # not sure if best method...
     for shape in arbiter.shapes:
         if shape.collision_type == PLAYER_TYPE:
-            player = shape.obj
+            player = shape.player
 
     player.set_jumping(False)
 
@@ -29,7 +29,7 @@ def player_moving(space, arbiter):
     # not sure if best method...
     for shape in arbiter.shapes:
         if shape.collision_type == PLAYER_TYPE:
-            player = shape.obj
+            player = shape.player
 
     player.set_jumping(False)
 
