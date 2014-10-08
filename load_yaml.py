@@ -6,6 +6,8 @@ import pymunk
 
 import gameclass
 import collision_callbacks as col_call
+import view
+
 # YAML needs these imports to be able to create the objects
 from menu import menu_items
 import shapes
@@ -27,11 +29,20 @@ def load_menu(file_name):
         item_dict = yaml.load(stream)
 
     # Create a screen and background
-    info = pygame.display.Info()
-    screen = pygame.display.get_surface()
-    background = pygame.Surface([info.current_w, info.current_h])
+    backgound_image_file = item_dict['background_file']
     background_color = item_dict['background']
-    background.fill(background_color)
+    info = pygame.display.Info()
+    width = info.current_w
+    height = info.current_h
+    screen = pygame.display.get_surface()
+
+    if backgound_image_file is not None:
+        background = pygame.transform\
+            .scale(view.load_image(backgound_image_file),
+                   (width, height))
+    else:
+        background = pygame.Surface([width, height])
+        background.fill(background_color)
 
     # Clear the screen and make the cursor visible
     screen.blit(background, (0, 0))
@@ -42,25 +53,24 @@ def load_menu(file_name):
 
     # Handle the objects from the YAML-file
     for key in item_dict:
-        for item in item_dict[key]:
-            if key == 'buttons':
-                # All buttons are blitted to the screen and added to the list
-                screen.blit(item.get_text_object(), item.get_rect())
-                buttons.append(item)
-            elif key == 'textboxes':
-                # All textboxes are blitted to the screen
-                screen.blit(item.get_text_object(), item.get_rect())
-            elif key == 'music':
-                # Extract the info
-                music_file = item['file']
-                vol = item['vol']
-            elif key == 'background':
-                # The background is already taken care of
-                pass
-            else:
-                # Something unknown encountered, print an error and ignore it
-                print ('Unknown object found when loading menu: ',
-                       item, ', with key: ', key)
+        if key == 'background':
+            pass
+        elif key == 'background_file':
+            pass
+        else:
+            for item in item_dict[key]:
+                if key == 'buttons':
+                    screen.blit(item.get_text_object(), item.get_rect())
+                    buttons.append(item)
+                elif key == 'textboxes':
+                    screen.blit(item.get_text_object(), item.get_rect())
+                elif key == 'music':
+                    music_file = item['file']
+                    vol = item['vol']
+                else:
+                    # Something unknown encountered, print an error and ignore
+                    print ('Unknown object found when loading menu: ',
+                           item, ', with key: ', key)
 
     pygame.display.flip()
 
@@ -93,13 +103,20 @@ def load_level(file_name):
     game = gameclass.Game()
 
     # Create a screen and background
+    backgound_image_file = item_dict['background_file']
+    background_color = item_dict['background']
     info = pygame.display.Info()
     width = info.current_w
     height = info.current_h
     screen = pygame.display.get_surface()
-    background = pygame.Surface([width, height])
-    background_color = item_dict['background']
-    background.fill(background_color)
+
+    if backgound_image_file is not None:
+        background = pygame.transform\
+            .scale(view.load_image(backgound_image_file),
+                   (width, height))
+    else:
+        background = pygame.Surface([width, height])
+        background.fill(background_color)
 
     # Create other game related objects
     FPS = 60
@@ -129,36 +146,38 @@ def load_level(file_name):
 
     # Handle the objects from the YAML-file
     for key in item_dict:
-        for item in item_dict[key]:
-            if key == 'static_objects':
-                # All static objects should be added to the space and the game
-                space.add(item.get_shape())
-                game.add_static_objects(item)
-            elif key == 'moving_objects':
-                # All moving objects should be added to the space,
-                # the game and the sprite group
-                space.add(item.get_body(), item.get_shape())
-                game.add_moving_objects(item)
-                all_sprites.add(item)
-            elif key == 'player':
-                # Add the player to the game
-                space.add(item.get_body(), item.get_shape())
-                game.set_player(item)
-                all_sprites.add(item)
-            elif key == 'music':
-                # Extract the info
-                music_file = item['file']
-                vol = item['vol']
-            elif key == 'gravity':
-                # Set the gravity of the level
-                space.gravity = item
-            elif key == 'background':
-                # The background is already taken care of
-                pass
-            else:
-                # Something unknown encountered, print an error and ignore it
-                print ('Unknown object found when loading menu: ',
-                       item, ', with key: ', key)
+        if key == 'background':
+            pass
+        elif key == 'background_file':
+            pass
+        else:
+            for item in item_dict[key]:
+                if key == 'static_objects':
+                    # All static objects should be added to the space and the game
+                    space.add(item.get_shape())
+                    game.add_static_objects(item)
+                elif key == 'moving_objects':
+                    # All moving objects should be added to the space,
+                    # the game and the sprite group
+                    space.add(item.get_body(), item.get_shape())
+                    game.add_moving_objects(item)
+                    all_sprites.add(item)
+                elif key == 'player':
+                    # Add the player to the game
+                    space.add(item.get_body(), item.get_shape())
+                    game.set_player(item)
+                    all_sprites.add(item)
+                elif key == 'music':
+                    # Extract the info
+                    music_file = item['file']
+                    vol = item['vol']
+                elif key == 'gravity':
+                    # Set the gravity of the level
+                    space.gravity = item
+                else:
+                    # Something unknown encountered, print an error and ignore
+                    print ('Unknown object found when loading menu: ',
+                           item, ', with key: ', key)
 
     # Clear the screen and hide the cursor
     screen.blit(background, (0, 0))

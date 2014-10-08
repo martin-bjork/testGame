@@ -1,5 +1,7 @@
 background: !!python/tuple [172, 61, 58]
 
+background_file: null
+
 buttons:
   - !Button
     action: !!python/name:menu.menu_button_callbacks.play_level_goto_menu

@@ -1,5 +1,7 @@
 background: !!python/tuple [200, 200, 200]
 
+background_file: mountain_background.jpg
+
 gravity: 
   - !!python/tuple [0.0, -900.0]
 

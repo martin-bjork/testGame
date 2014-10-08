@@ -1,5 +1,7 @@
 background: !!python/tuple [150, 150, 150]
 
+background_file: null
+
 gravity: 
   - !!python/tuple [0.0, -900.0]
 

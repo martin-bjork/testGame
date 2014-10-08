@@ -1,5 +1,7 @@
 background: !!python/tuple [172, 61, 58]
 
+background_file: null
+
 textboxes:
   - !TextBox
     background_color: !!python/tuple [149, 24, 21, 1]
