@@ -5,6 +5,8 @@ background_file: null
 textboxes:
   - !TextBox
     background_color: !!python/tuple [149, 24, 21, 1]
+    background_file: null
+    scale: 1
     font_file: null
     font_size: 20
     pos: !!python/tuple [300, 150]
@@ -16,6 +18,8 @@ buttons:
     action: !!python/name:menu.menu_button_callbacks.goto_menu
     action_args: [main_menu.yaml]
     background_color: !!python/tuple [36, 101, 104, 1]
+    background_file: null
+    scale: 1
     font_file: null
     font_size: 50
     pos: !!python/tuple [300, 280]

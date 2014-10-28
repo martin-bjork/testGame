@@ -60,10 +60,10 @@ def load_menu(file_name):
         else:
             for item in item_dict[key]:
                 if key == 'buttons':
-                    screen.blit(item.get_text_object(), item.get_rect())
+                    screen.blit(item.image, item.rect)
                     buttons.append(item)
                 elif key == 'textboxes':
-                    screen.blit(item.get_text_object(), item.get_rect())
+                    screen.blit(item.image, item.rect)
                 elif key == 'music':
                     music_file = item['file']
                     vol = item['vol']

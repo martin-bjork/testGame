@@ -1,6 +1,8 @@
 import pygame
 import yaml
 
+import view
+
 
 class MenuItem(pygame.sprite.Sprite):
     '''
@@ -10,6 +12,8 @@ class MenuItem(pygame.sprite.Sprite):
     def __init__(self, text='Default', x_pos=1, y_pos=1,
                  text_color=(0, 0, 0, 1),
                  background_color=(150, 150, 150, 1),
+                 background_file=None,
+                 scale=1,
                  font_size=20, font_file=None):
 
         pygame.sprite.Sprite.__init__(self)
@@ -18,15 +22,30 @@ class MenuItem(pygame.sprite.Sprite):
 
         self._text_color = text_color
         self._background_color = background_color     # None -> transparent
+        self._backgound_file = background_file
+        self._scale = scale
 
         self._font_size = font_size
         # A file describing the font (e.g. *.ttf), None -> default
         self._font_file = font_file
         font_obj = pygame.font.Font(font_file, font_size)
 
-        self._text_obj = font_obj.render(self._text, True, self._text_color,
+        if background_file is not None:
+            text_obj = font_obj.render(self._text, True,
+                                       self._text_color)
+            width, height = text_obj.get_size()
+            self.image = pygame.transform\
+                .scale(view.load_image(background_file),
+                       (int(width*scale), int(height*scale)))
+            self.rect = self.image.get_rect(center=self._pos)
+            self.image.blit(text_obj, (int(width*(scale-1)*0.5),
+                            int(height*(scale-1)*0.5)))
+
+        else:
+            self.image = font_obj.render(self._text, True,
+                                         self._text_color,
                                          self._background_color)
-        self._rect = self._text_obj.get_rect(center=self._pos)
+            self.rect = self.image.get_rect(center=self._pos)
 
     # Getters/setters
 
@@ -47,12 +66,6 @@ class MenuItem(pygame.sprite.Sprite):
 
     def get_font_file(self):
         return self._font_file
-
-    def get_text_object(self):
-        return self._text_obj
-
-    def get_rect(self):
-        return self._rect
 
     def set_pos(self, pos):
         self._pos = pos
@@ -85,12 +98,16 @@ class Button(MenuItem, yaml.YAMLObject):
     def __init__(self, text='Button', x_pos=1, y_pos=1,
                  text_color=(0, 0, 0, 1),
                  background_color=(150, 150, 150, 1),
+                 background_file=None,
+                 scale=1,
                  font_size=50, font_file=None,
                  action=None, action_args=None):
 
         MenuItem.__init__(self, text=text, x_pos=x_pos, y_pos=y_pos,
                           text_color=text_color,
                           background_color=background_color,
+                          background_file=background_file,
+                          scale=scale,
                           font_size=font_size,
                           font_file=font_file)
 
@@ -111,6 +128,8 @@ class Button(MenuItem, yaml.YAMLObject):
         pos = values['pos']
         text_color = values['text_color']
         background_color = values['background_color']
+        background_file = values['background_file']
+        scale = values['scale']
         font_size = values['font_size']
         font_file = values['font_file']
         action = values['action']
@@ -120,6 +139,8 @@ class Button(MenuItem, yaml.YAMLObject):
         return cls(text=text, x_pos=pos[0], y_pos=pos[1],
                    text_color=text_color,
                    background_color=background_color,
+                   background_file=background_file,
+                   scale=scale,
                    font_size=font_size,
                    font_file=font_file,
                    action=action,
@@ -134,6 +155,8 @@ class Button(MenuItem, yaml.YAMLObject):
                    'pos': instance._pos,
                    'text_color': instance._text_color,
                    'background_color': instance._background_color,
+                   'background_file': instance._backgound_file,
+                   'scale': instance._scale,
                    'font_size': instance._font_size,
                    'font_file': instance._font_file,
                    'action': instance._action,
@@ -150,7 +173,7 @@ class Button(MenuItem, yaml.YAMLObject):
             return self._action()
 
     def pressed(self, mouse_pos):
-        if self._rect.collidepoint(mouse_pos):
+        if self.rect.collidepoint(mouse_pos):
             return True
         else:
             return False
@@ -177,6 +200,8 @@ class TextBox(MenuItem, yaml.YAMLObject):
     def __init__(self, text='Button', x_pos=1, y_pos=1,
                  text_color=(0, 0, 0, 1),
                  background_color=(150, 150, 150, 1),
+                 background_file=None,
+                 scale=1,
                  font_size=20, font_file=None):
 
         # FIXME: Text boxes currently doesn't support
@@ -185,6 +210,8 @@ class TextBox(MenuItem, yaml.YAMLObject):
         MenuItem.__init__(self, text=text, x_pos=x_pos, y_pos=y_pos,
                           text_color=text_color,
                           background_color=background_color,
+                          background_file=background_file,
+                          scale=scale,
                           font_size=font_size,
                           font_file=font_file)
 
@@ -200,6 +227,8 @@ class TextBox(MenuItem, yaml.YAMLObject):
         pos = values['pos']
         text_color = values['text_color']
         background_color = values['background_color']
+        background_file = values['background_file']
+        scale = values['scale']
         font_size = values['font_size']
         font_file = values['font_file']
 
@@ -207,6 +236,8 @@ class TextBox(MenuItem, yaml.YAMLObject):
         return cls(text=text, x_pos=pos[0], y_pos=pos[1],
                    text_color=text_color,
                    background_color=background_color,
+                   background_file=background_file,
+                   scale=scale,
                    font_size=font_size,
                    font_file=font_file)
 
@@ -219,6 +250,8 @@ class TextBox(MenuItem, yaml.YAMLObject):
                    'pos': instance._pos,
                    'text_color': instance._text_color,
                    'background_color': instance._background_color,
+                   'background_file': instance._backgound_file,
+                   'scale': instance._scale,
                    'font_size': instance._font_size,
                    'font_file': instance._font_file}
 
