@@ -1,6 +1,6 @@
 background: !!python/tuple [172, 61, 58]
 
-background_file: null
+background_file: forest_background.jpg
 
 buttons:
   - !Button
@@ -19,8 +19,8 @@ buttons:
     action: !!python/name:menu.menu_button_callbacks.goto_menu
     action_args: [about.yaml]
     background_color: !!python/tuple [36, 101, 104, 1]
-    background_file: null
-    scale: 1
+    background_file: wood_sign.png
+    scale: 1.5
     font_file: null
     font_size: 50
     pos: !!python/tuple [300, 280]
