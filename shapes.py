@@ -101,8 +101,10 @@ class MovingShape(Shape):
         # are not initialized; Make sure all classes that inherit from this
         # class initializes all variables correctly
 
-        self.image = pygame.transform.rotate(self._baseimage,
-                                             self._body.angle*180/pi)
+        self.image = pygame.transform.rotozoom(self._baseimage,
+                                               self._body.angle*180/pi, 1)
+        # self.image = pygame.transform.rotate(self._baseimage,
+                                             # self._body.angle*180/pi)
         self.rect = self.image.get_rect()
         self.rect.center = conversion.pymunk_to_pygame_coords(
             self._body.position[0], self._body.position[1],

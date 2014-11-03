@@ -35,8 +35,8 @@ class MenuItem(pygame.sprite.Sprite):
                                        self._text_color)
             width, height = text_obj.get_size()
             self.image = pygame.transform\
-                .scale(view.load_image(background_file),
-                       (int(width*scale), int(height*scale)))
+                .smoothscale(view.load_image(background_file),
+                             (int(width*scale), int(height*scale)))
             self.rect = self.image.get_rect(center=self._pos)
             self.image.blit(text_obj, (int(width*(scale-1)*0.5),
                             int(height*(scale-1)*0.5)))
