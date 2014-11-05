@@ -8,11 +8,12 @@ buttons:
     action_args: [levels.yaml]
     background_color: !!python/tuple [36, 101, 104, 1]
     background_file: wood_sign.png
-    scale: 1.5
+    w_scale: 1.5
+    h_scale: 1.5
     font_file: null
     font_size: 50
     pos: !!python/tuple [300, 200]
-    text: Levels
+    text: "Levels"
     text_color: !!python/tuple [0, 39, 41, 1]
 
   - !Button
@@ -20,11 +21,12 @@ buttons:
     action_args: [about.yaml]
     background_color: !!python/tuple [36, 101, 104, 1]
     background_file: wood_sign.png
-    scale: 1.5
+    w_scale: 1.5
+    h_scale: 1.5
     font_file: null
     font_size: 50
     pos: !!python/tuple [300, 280]
-    text: About
+    text: "About"
     text_color: !!python/tuple [0, 39, 41, 1]
 
 music:

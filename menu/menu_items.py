@@ -13,7 +13,7 @@ class MenuItem(pygame.sprite.Sprite):
                  text_color=(0, 0, 0, 1),
                  background_color=(150, 150, 150, 1),
                  background_file=None,
-                 scale=1,
+                 w_scale=1, h_scale=1,
                  font_size=20, font_file=None):
 
         pygame.sprite.Sprite.__init__(self)
@@ -23,7 +23,9 @@ class MenuItem(pygame.sprite.Sprite):
         self._text_color = text_color
         self._background_color = background_color     # None -> transparent
         self._backgound_file = background_file
-        self._scale = scale
+        # TODO: Use padding in number of pixels instead?
+        self._w_scale = w_scale
+        self._h_scale = h_scale
 
         self._font_size = font_size
         # A file describing the font (e.g. *.ttf), None -> default
@@ -43,23 +45,26 @@ class MenuItem(pygame.sprite.Sprite):
 
         # Create a background
         if background_file is not None:
+            # Load the background image and scale to desired size
             self.image = pygame.transform\
                 .smoothscale(view.load_image(background_file),
-                             (int(tot_width*scale), int(tot_height*scale)))
+                             (int(tot_width*w_scale), int(tot_height*h_scale)))
         else:
-            self.image = pygame.Surface((int(tot_width*scale),
-                                        int(tot_height*scale)))
+            # Create a solid coloured rectangle of the desired size
+            self.image = pygame.Surface((int(tot_width*w_scale),
+                                        int(tot_height*h_scale)))
             self.image.fill(self._background_color)
 
+        # Get the rect of the background
         self.rect = self.image.get_rect(center=self._pos)
 
         # Blit the text to the background
         for i in range(len(rend_lines)):
             # Calculate the position of the upper left corner of the new line
-            y_pos = int(tot_height*(scale-1)*0.5
+            y_pos = int(tot_height*(h_scale - 1)*0.5
                         + i*rend_lines[0].get_height())
 
-            x_pos = int(tot_width*(scale-1)*0.5
+            x_pos = int(tot_width*(w_scale - 1)*0.5
                         + (tot_width - rend_lines[i].get_width())*0.5)
 
             self.image.blit(rend_lines[i], (x_pos, y_pos))
@@ -116,7 +121,7 @@ class Button(MenuItem, yaml.YAMLObject):
                  text_color=(0, 0, 0, 1),
                  background_color=(150, 150, 150, 1),
                  background_file=None,
-                 scale=1,
+                 w_scale=1, h_scale=1,
                  font_size=50, font_file=None,
                  action=None, action_args=None):
 
@@ -124,7 +129,7 @@ class Button(MenuItem, yaml.YAMLObject):
                           text_color=text_color,
                           background_color=background_color,
                           background_file=background_file,
-                          scale=scale,
+                          w_scale=w_scale, h_scale=h_scale,
                           font_size=font_size,
                           font_file=font_file)
 
@@ -146,7 +151,8 @@ class Button(MenuItem, yaml.YAMLObject):
         text_color = values['text_color']
         background_color = values['background_color']
         background_file = values['background_file']
-        scale = values['scale']
+        w_scale = values['w_scale']
+        h_scale = values['h_scale']
         font_size = values['font_size']
         font_file = values['font_file']
         action = values['action']
@@ -157,7 +163,8 @@ class Button(MenuItem, yaml.YAMLObject):
                    text_color=text_color,
                    background_color=background_color,
                    background_file=background_file,
-                   scale=scale,
+                   w_scale=w_scale,
+                   h_scale=h_scale,
                    font_size=font_size,
                    font_file=font_file,
                    action=action,
@@ -173,7 +180,8 @@ class Button(MenuItem, yaml.YAMLObject):
                    'text_color': instance._text_color,
                    'background_color': instance._background_color,
                    'background_file': instance._backgound_file,
-                   'scale': instance._scale,
+                   'w_scale': instance._w_scale,
+                   'h_scale': instance._h_scale,
                    'font_size': instance._font_size,
                    'font_file': instance._font_file,
                    'action': instance._action,
@@ -218,14 +226,14 @@ class TextBox(MenuItem, yaml.YAMLObject):
                  text_color=(0, 0, 0, 1),
                  background_color=(150, 150, 150, 1),
                  background_file=None,
-                 scale=1,
+                 w_scale=1, h_scale=1,
                  font_size=20, font_file=None):
 
         MenuItem.__init__(self, text=text, x_pos=x_pos, y_pos=y_pos,
                           text_color=text_color,
                           background_color=background_color,
                           background_file=background_file,
-                          scale=scale,
+                          w_scale=w_scale, h_scale=h_scale,
                           font_size=font_size,
                           font_file=font_file)
 
@@ -242,7 +250,8 @@ class TextBox(MenuItem, yaml.YAMLObject):
         text_color = values['text_color']
         background_color = values['background_color']
         background_file = values['background_file']
-        scale = values['scale']
+        w_scale = values['w_scale']
+        h_scale = values['h_scale']
         font_size = values['font_size']
         font_file = values['font_file']
 
@@ -251,7 +260,8 @@ class TextBox(MenuItem, yaml.YAMLObject):
                    text_color=text_color,
                    background_color=background_color,
                    background_file=background_file,
-                   scale=scale,
+                   w_scale=w_scale,
+                   h_scale=h_scale,
                    font_size=font_size,
                    font_file=font_file)
 
@@ -265,7 +275,8 @@ class TextBox(MenuItem, yaml.YAMLObject):
                    'text_color': instance._text_color,
                    'background_color': instance._background_color,
                    'background_file': instance._backgound_file,
-                   'scale': instance._scale,
+                   'w_scale': instance._w_scale,
+                   'h_scale': instance._h_scale,
                    'font_size': instance._font_size,
                    'font_file': instance._font_file}
 
