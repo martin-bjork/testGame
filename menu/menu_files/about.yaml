@@ -10,7 +10,7 @@ textboxes:
     font_file: null
     font_size: 20
     pos: !!python/tuple [300, 150]
-    text: "This is a small test game for learning game programming. More to come!"
+    text: "This is a small test game for learning game programming.\nMore to come!"
     text_color: !!python/tuple [0, 0, 0, 1]
 
 buttons:

@@ -30,22 +30,39 @@ class MenuItem(pygame.sprite.Sprite):
         self._font_file = font_file
         font_obj = pygame.font.Font(font_file, font_size)
 
+        # Get the individual lines of the text
+        lines = self._text.split('\n')
+        # Render each line
+        rend_lines = [font_obj.render(line, True, self._text_color)
+                      for line in lines]
+
+        # Get the width of the longest line
+        tot_width = max([line.get_width() for line in rend_lines])
+        # Get the total height of the lines
+        tot_height = sum([line.get_height() for line in rend_lines])
+
+        # Create a background
         if background_file is not None:
-            text_obj = font_obj.render(self._text, True,
-                                       self._text_color)
-            width, height = text_obj.get_size()
             self.image = pygame.transform\
                 .smoothscale(view.load_image(background_file),
-                             (int(width*scale), int(height*scale)))
-            self.rect = self.image.get_rect(center=self._pos)
-            self.image.blit(text_obj, (int(width*(scale-1)*0.5),
-                            int(height*(scale-1)*0.5)))
-
+                             (int(tot_width*scale), int(tot_height*scale)))
         else:
-            self.image = font_obj.render(self._text, True,
-                                         self._text_color,
-                                         self._background_color)
-            self.rect = self.image.get_rect(center=self._pos)
+            self.image = pygame.Surface((int(tot_width*scale),
+                                        int(tot_height*scale)))
+            self.image.fill(self._background_color)
+
+        self.rect = self.image.get_rect(center=self._pos)
+
+        # Blit the text to the background
+        for i in range(len(rend_lines)):
+            # Calculate the position of the upper left corner of the new line
+            y_pos = int(tot_height*(scale-1)*0.5
+                        + i*rend_lines[0].get_height())
+
+            x_pos = int(tot_width*(scale-1)*0.5
+                        + (tot_width - rend_lines[i].get_width())*0.5)
+
+            self.image.blit(rend_lines[i], (x_pos, y_pos))
 
     # Getters/setters
 
@@ -203,9 +220,6 @@ class TextBox(MenuItem, yaml.YAMLObject):
                  background_file=None,
                  scale=1,
                  font_size=20, font_file=None):
-
-        # FIXME: Text boxes currently doesn't support
-        # newlines, this must be fixed!
 
         MenuItem.__init__(self, text=text, x_pos=x_pos, y_pos=y_pos,
                           text_color=text_color,
