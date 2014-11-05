@@ -1,3 +1,5 @@
+import os
+
 import pygame
 import yaml
 
@@ -29,8 +31,11 @@ class MenuItem(pygame.sprite.Sprite):
 
         self._font_size = font_size
         # A file describing the font (e.g. *.ttf), None -> default
-        self._font_file = font_file
-        font_obj = pygame.font.Font(font_file, font_size)
+        if font_file is not None:
+            self._font_file = os.path.join('fonts', font_file)
+        else:
+            self._font_file = None
+        font_obj = pygame.font.Font(self._font_file, font_size)
 
         # Get the individual lines of the text
         lines = self._text.split('\n')

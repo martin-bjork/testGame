@@ -20,9 +20,9 @@ buttons:
     action_args: [main_menu.yaml]
     background_color: !!python/tuple [36, 101, 104, 1]
     background_file: null
-    w_scale: 1
-    h_scale: 1
-    font_file: null
+    w_scale: 1.1
+    h_scale: 0.8
+    font_file: Pacifico.ttf
     font_size: 50
     pos: !!python/tuple [300, 280]
     text: "Back"
