@@ -154,6 +154,9 @@ class MenuItem(pygame.sprite.Sprite):
     def get_background_color(self):
         return self._background_color
 
+    def get_background_file(self):
+        return self._background_file
+
     def get_font_size(self):
         return self._font_size
 
@@ -162,26 +165,31 @@ class MenuItem(pygame.sprite.Sprite):
 
     def set_pos(self, pos):
         self._pos = pos
+        self.rect = self.image.get_rect(center=self._pos)
 
     def set_text(self, text):
-        # TODO: Re-render the text object
         self._text = text
+        self.render()
 
     def set_text_color(self, color):
-        # TODO: Re-render the text object
         self._text_color = color
+        self.render()
 
     def set_background_color(self, color):
-        # TODO: Re-render the text object
         self._background_color = color
+        self.render()
+
+    def set_background_file(self, background_file):
+        self._background_file = background_file
+        self.render()
 
     def set_font_size(self, font_size):
-        # TODO: Re-render the text object
         self._font_size = font_size
+        self.render()
 
     def set_font_file(self, font_file):
-        # TODO: Re-render the text object
         self._font_file = font_file
+        self.render()
 
 
 class Button(MenuItem, yaml.YAMLObject):
