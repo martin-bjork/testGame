@@ -8,34 +8,99 @@ import view
 
 class MenuItem(pygame.sprite.Sprite):
     '''
-    An abstract base class for menu items, such as buttons, text areas etc
+    An abstract base class for menu items, such as buttons, text areas etc.
+    All other menu item classes inherit from this class.
+
+    Keyword arguments for the constructor:
+        * text: String
+            - The text to be displayed on the MenuItem.
+            - Default: 'Default'
+        * x_pos: Int
+            - The horizontal position of the center of the MenuItem,
+              given in pygame coordinates (pixels from upper left
+              corner of window).
+            - Default: 1
+        * y_pos: Int
+            - The vertical position of the center of the MenuItem,
+              given in pygame coordinates (pixels from upper left
+              corner of window).
+            - Default: 1
+        * text_color: 3- or 4-tuple of 3 ints and 0 or 1 float
+            - The colour of the text in rgb[a].
+              r, g and b are ints 0-255, a is a float 0-1.
+            - Default: (0, 0, 0, 1.0)
+        * background_color: 3- or 4-tuple of 3 ints and 0 or 1 float
+            - The colour of the background in rgb[a].
+              r, g and b are ints 0-255, a is a float 0-1.
+              If set to None, the background is transparent.
+              If a background image is specified via background_file,
+              the background colour will be ignored.
+            - Default: (255, 255, 255, 1.0)
+        * background_file: String
+            - The name of the file of the image to be used as background
+              for the MenuItem.
+              If set to None, no image will be used and the MenuItem uses
+              a solid background with colour defined by background_color.
+            - Default: None
+        * w_scale: Float
+            - A factor specifying how much wider the background should be
+              compared to the text.
+            - Default: 1.0
+        * h_scale: Float
+            - A factor specifying how much higher the background should be
+              compared to the text.
+            - Default: 1.0
+        * font_size: Int
+            - The font size of the text in the MenuItem.
+            - Default: 20
+        * font_file: String
+            - The name of the ttf-file defining the font to
+              be used in the MenuItem.
+              If set to None, it uses pygames default font.
+            - Default: None
     '''
+    # TODO: Use a tuple for pos instead of two arguments?
+    # TODO: Use a tuple for scale instead of two arguments?
+    # TODO: Specify padding in pixels instead of a scaling factor?
 
     def __init__(self, text='Default', x_pos=1, y_pos=1,
-                 text_color=(0, 0, 0, 1),
-                 background_color=(150, 150, 150, 1),
+                 text_color=(0, 0, 0, 1.0),
+                 background_color=(255, 255, 255, 1.0),
                  background_file=None,
-                 w_scale=1, h_scale=1,
+                 w_scale=1.0, h_scale=1.0,
                  font_size=20, font_file=None):
 
+        # Run the constructor of the Sprite-class that MenuItem inherits from
         pygame.sprite.Sprite.__init__(self)
-        self._pos = (x_pos, y_pos)
-        self._text = text
 
+        # Store the arguments for later use and to be able to store as YAML
+        self._text = text
+        self._pos = (x_pos, y_pos)
         self._text_color = text_color
-        self._background_color = background_color     # None -> transparent
-        self._backgound_file = background_file
-        # TODO: Use padding in number of pixels instead?
+        self._background_color = background_color
+        self._background_file = background_file
         self._w_scale = w_scale
         self._h_scale = h_scale
-
         self._font_size = font_size
-        # A file describing the font (e.g. *.ttf), None -> default
-        if font_file is not None:
-            self._font_file = os.path.join('fonts', font_file)
+        self._font_file = font_file
+
+        # Render the MenuItem
+        self.render()
+
+    def render(self):
+        '''
+        Renders the MenuItem by creating a pygame Surface defined by
+        the properties of the MenuItem, and assigning this and the
+        corresponding pygame Rect to self.image and self.rect, respectively.
+        Should be called from the constructor, as well as every time
+        the MenuItem is altered (e.g. if the text colour is changed).
+        '''
+        if self._font_file is not None:
+            font_file = os.path.join('fonts', self._font_file)
         else:
-            self._font_file = None
-        font_obj = pygame.font.Font(self._font_file, font_size)
+            font_file = None
+
+        font_obj = pygame.font.Font(font_file, self._font_size)
 
         # Get the individual lines of the text
         lines = self._text.split('\n')
@@ -49,15 +114,16 @@ class MenuItem(pygame.sprite.Sprite):
         tot_height = sum([line.get_height() for line in rend_lines])
 
         # Create a background
-        if background_file is not None:
+        if self._background_file is not None:
             # Load the background image and scale to desired size
             self.image = pygame.transform\
-                .smoothscale(view.load_image(background_file),
-                             (int(tot_width*w_scale), int(tot_height*h_scale)))
+                .smoothscale(view.load_image(self._background_file),
+                             (int(tot_width * self._w_scale),
+                              int(tot_height * self._h_scale)))
         else:
             # Create a solid coloured rectangle of the desired size
-            self.image = pygame.Surface((int(tot_width*w_scale),
-                                        int(tot_height*h_scale)))
+            self.image = pygame.Surface((int(tot_width * self._w_scale),
+                                        int(tot_height * self._h_scale)))
             self.image.fill(self._background_color)
 
         # Get the rect of the background
@@ -66,11 +132,11 @@ class MenuItem(pygame.sprite.Sprite):
         # Blit the text to the background
         for i in range(len(rend_lines)):
             # Calculate the position of the upper left corner of the new line
-            y_pos = int(tot_height*(h_scale - 1)*0.5
-                        + i*rend_lines[0].get_height())
+            y_pos = int(tot_height * (self._h_scale - 1) * 0.5
+                        + i * rend_lines[0].get_height())
 
-            x_pos = int(tot_width*(w_scale - 1)*0.5
-                        + (tot_width - rend_lines[i].get_width())*0.5)
+            x_pos = int(tot_width * (self._w_scale - 1) * 0.5
+                        + (tot_width - rend_lines[i].get_width()) * 0.5)
 
             self.image.blit(rend_lines[i], (x_pos, y_pos))
 
