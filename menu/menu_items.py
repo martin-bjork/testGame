@@ -59,6 +59,7 @@ class MenuItem(pygame.sprite.Sprite):
               If set to None, it uses pygames default font.
             - Default: None
     '''
+
     # TODO: Use a tuple for pos instead of two arguments?
     # TODO: Use a tuple for scale instead of two arguments?
     # TODO: Specify padding in pixels instead of a scaling factor?
@@ -95,11 +96,14 @@ class MenuItem(pygame.sprite.Sprite):
         Should be called from the constructor, as well as every time
         the MenuItem is altered (e.g. if the text colour is changed).
         '''
+
+        # Get the full path of the font file
         if self._font_file is not None:
             font_file = os.path.join('fonts', self._font_file)
         else:
             font_file = None
 
+        # Create a font object from the font file and size
         font_obj = pygame.font.Font(font_file, self._font_size)
 
         # Get the individual lines of the text
@@ -193,17 +197,37 @@ class MenuItem(pygame.sprite.Sprite):
 
 
 class Button(MenuItem, yaml.YAMLObject):
+    '''
+    A class for buttons: Clickable objects in menus that can execute
+    code when clicked.
+
+    Keyword arguments for constructor:
+    (Only the ones that differ from the ones described in MenuItem.
+     If only the default value is different, no description is added.)
+        * text: String
+            - Default: 'Button'
+        * font_size: Int
+            - Default: 50
+        * action: function
+            - The function that should be called when clicking the button.
+            - Default: None
+        * action_args: List
+            - A list containing the arguments that should be passed to the
+              action function when the button is being clicked.
+            - Default: None
+    '''
 
     yaml_tag = '!Button'
 
     def __init__(self, text='Button', x_pos=1, y_pos=1,
-                 text_color=(0, 0, 0, 1),
-                 background_color=(150, 150, 150, 1),
+                 text_color=(0, 0, 0, 1.0),
+                 background_color=(255, 255, 255, 1.0),
                  background_file=None,
-                 w_scale=1, h_scale=1,
+                 w_scale=1.0, h_scale=1.0,
                  font_size=50, font_file=None,
                  action=None, action_args=None):
 
+        # Call the constructor of the superclass
         MenuItem.__init__(self, text=text, x_pos=x_pos, y_pos=y_pos,
                           text_color=text_color,
                           background_color=background_color,
@@ -212,14 +236,16 @@ class Button(MenuItem, yaml.YAMLObject):
                           font_size=font_size,
                           font_file=font_file)
 
-        # A function the Button should call when activated
+        # Store the arguments for later use
         self._action = action
-        # The arguments needed for the function that is called when activated
         self._action_args = action_args
 
     @classmethod
     def from_yaml(cls, loader, node):
-        '''A constructor that YAML uses to create instances of this class'''
+        '''
+        A constructor that YAML uses to create instances of this class.
+        '''
+
         # Create a dict from the YAML code for the object,
         # containing all its properties
         values = loader.construct_mapping(node)
@@ -251,7 +277,10 @@ class Button(MenuItem, yaml.YAMLObject):
 
     @classmethod
     def to_yaml(cls, dumper, instance):
-        '''A method used by YAML to represent an instance of this class'''
+        '''
+        A method used by YAML to represent an instance of this class.
+        '''
+
         # Construct a dict containing only the properties (wrong word...)
         # we want to use in the representation
         mapping = {'text': instance._text,
@@ -271,12 +300,20 @@ class Button(MenuItem, yaml.YAMLObject):
         return dumper.represent_mapping(cls.yaml_tag, mapping)
 
     def perform_action(self):
+        '''
+        Call the function defined by self._action.
+        '''
+
         if self._action_args is not None:
             return self._action(*self._action_args)
         else:
             return self._action()
 
     def pressed(self, mouse_pos):
+        '''
+        Check if the point defined by mouse_pos is inside the button.
+        '''
+
         if self.rect.collidepoint(mouse_pos):
             return True
         else:
@@ -298,14 +335,23 @@ class Button(MenuItem, yaml.YAMLObject):
 
 
 class TextBox(MenuItem, yaml.YAMLObject):
+    '''
+    A class for text boxes: Non-interacting rectangles with text.
+
+    Keyword arguments for constructor:
+    (Only the ones that differ from the ones described in MenuItem.
+     If only the default value is different, no description is added.)
+        * text: String
+            - Default: 'Text box'
+    '''
 
     yaml_tag = '!TextBox'
 
-    def __init__(self, text='Button', x_pos=1, y_pos=1,
-                 text_color=(0, 0, 0, 1),
-                 background_color=(150, 150, 150, 1),
+    def __init__(self, text='Text box', x_pos=1, y_pos=1,
+                 text_color=(0, 0, 0, 1.0),
+                 background_color=(255, 255, 255, 1.0),
                  background_file=None,
-                 w_scale=1, h_scale=1,
+                 w_scale=1.0, h_scale=1.0,
                  font_size=20, font_file=None):
 
         MenuItem.__init__(self, text=text, x_pos=x_pos, y_pos=y_pos,
@@ -318,7 +364,10 @@ class TextBox(MenuItem, yaml.YAMLObject):
 
     @classmethod
     def from_yaml(cls, loader, node):
-        '''A constructor that YAML uses to create instances of this class'''
+        '''
+        A constructor that YAML uses to create instances of this class.
+        '''
+
         # Create a dict from the YAML code for the object,
         # containing all its properties
         values = loader.construct_mapping(node)
@@ -346,7 +395,10 @@ class TextBox(MenuItem, yaml.YAMLObject):
 
     @classmethod
     def to_yaml(cls, dumper, instance):
-        '''A method used by YAML to represent an instance of this class'''
+        '''
+        A method used by YAML to represent an instance of this class.
+        '''
+
         # Construct a dict containing only the properties
         # we want to use in the representation
         mapping = {'text': instance._text,
