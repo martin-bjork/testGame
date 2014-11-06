@@ -7,27 +7,35 @@ buttons:
     action: !!python/name:menu.menu_button_callbacks.goto_menu
     action_args: [levels.yaml]
     background_color: !!python/tuple [36, 101, 104, 1]
+    hov_background_color: !!python/tuple [36, 101, 104, 1]
     background_file: wood_sign.png
+    hov_background_file: wood_sign.png
     w_scale: 1.5
     h_scale: 1.5
     font_file: null
     font_size: 50
     pos: !!python/tuple [300, 200]
     text: "Levels"
+    hov_text: "Levels"
     text_color: !!python/tuple [0, 39, 41, 1]
+    hov_text_color: !!python/tuple [0, 39, 41, 1]
 
   - !Button
     action: !!python/name:menu.menu_button_callbacks.goto_menu
     action_args: [about.yaml]
     background_color: !!python/tuple [36, 101, 104, 1]
+    hov_background_color: !!python/tuple [36, 101, 104, 1]
     background_file: wood_sign.png
+    hov_background_file: wood_sign.png
     w_scale: 1.5
     h_scale: 1.5
     font_file: null
     font_size: 50
     pos: !!python/tuple [300, 280]
     text: "About"
+    hov_text: "About"
     text_color: !!python/tuple [0, 39, 41, 1]
+    hov_text_color: !!python/tuple [255, 255, 255, 1]
 
 music:
   -

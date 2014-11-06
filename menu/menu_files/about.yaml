@@ -19,14 +19,18 @@ buttons:
     action: !!python/name:menu.menu_button_callbacks.goto_menu
     action_args: [main_menu.yaml]
     background_color: !!python/tuple [36, 101, 104, 1]
+    hov_background_color: !!python/tuple [36, 101, 104, 1]
     background_file: null
+    hov_background_file: null
     w_scale: 1.1
     h_scale: 0.8
     font_file: Pacifico.ttf
     font_size: 50
     pos: !!python/tuple [300, 280]
     text: "Back"
+    hov_text: "Back"
     text_color: !!python/tuple [0, 39, 41, 1]
+    hov_text_color: !!python/tuple [0, 39, 41, 1]
 
 music:
   -

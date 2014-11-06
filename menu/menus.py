@@ -9,11 +9,11 @@ import load_yaml
 def run_menu(file_path):
 
     # Load the menu
-    buttons = load_yaml.load_menu(file_path)
+    buttons, obj_group, screen = load_yaml.load_menu(file_path)
 
     # Create clock item
     clock = pygame.time.Clock()
-    FPS = 30
+    FPS = 60
 
     # A reference to the button that has been pressed
     # (Needed since if a button has been pressed we want
@@ -33,13 +33,15 @@ def run_menu(file_path):
                     run = False
                     break
         else:
-            # TODO: Check if a button is being hovered
-            pass
-            # for button in buttons:
-            #     button.set_hovered(button.pressed(mouse_pos))
+            for button in buttons:
+                button.set_hovered(button.pressed(mouse_pos))
 
         # Keep the fps down
         clock.tick(FPS)
+
+        # Redraw the screen
+        dirty_rects = obj_group.draw(screen)
+        pygame.display.update(dirty_rects)
 
     # We have broken out of the loop, check if a button has
     # been pressed; if so, perform its action

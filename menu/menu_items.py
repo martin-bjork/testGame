@@ -6,7 +6,7 @@ import yaml
 import view
 
 
-class MenuItem(pygame.sprite.Sprite):
+class MenuItem(pygame.sprite.DirtySprite):
     '''
     An abstract base class for menu items, such as buttons, text areas etc.
     All other menu item classes inherit from this class.
@@ -63,6 +63,7 @@ class MenuItem(pygame.sprite.Sprite):
     # TODO: Use a tuple for pos instead of two arguments?
     # TODO: Use a tuple for scale instead of two arguments?
     # TODO: Specify padding in pixels instead of a scaling factor?
+    #       Could use both by setting int -> pixels, float -> scaling.
 
     def __init__(self, text='Default', x_pos=1, y_pos=1,
                  text_color=(0, 0, 0, 1.0),
@@ -72,7 +73,7 @@ class MenuItem(pygame.sprite.Sprite):
                  font_size=20, font_file=None):
 
         # Run the constructor of the Sprite-class that MenuItem inherits from
-        pygame.sprite.Sprite.__init__(self)
+        pygame.sprite.DirtySprite.__init__(self)
 
         # Store the arguments for later use and to be able to store as YAML
         self._text = text
@@ -87,14 +88,28 @@ class MenuItem(pygame.sprite.Sprite):
 
         # Render the MenuItem
         self.render()
+        self.dirty = 1
 
     def render(self):
         '''
-        Renders the MenuItem by creating a pygame Surface defined by
-        the properties of the MenuItem, and assigning this and the
-        corresponding pygame Rect to self.image and self.rect, respectively.
+        Renders the MenuItem and assigns the Surface and Rect to
+        self.image and self.rect.
         Should be called from the constructor, as well as every time
         the MenuItem is altered (e.g. if the text colour is changed).
+        '''
+        self.image, self.rect = self._render()
+
+    def _render(self):
+        '''
+        Renders the MenuItem by creating a pygame Surface defined by
+        the properties of the MenuItem, and returns this and the
+        corresponding pygame Rect.
+
+        Output:
+            * image: pygame.Surface
+                - The Surface defined by the MenuItems properties.
+            * rect: pygame.Rect
+                - The Rect correstponding to image
         '''
 
         # Get the full path of the font file
@@ -120,18 +135,18 @@ class MenuItem(pygame.sprite.Sprite):
         # Create a background
         if self._background_file is not None:
             # Load the background image and scale to desired size
-            self.image = pygame.transform\
+            image = pygame.transform\
                 .smoothscale(view.load_image(self._background_file),
                              (int(tot_width * self._w_scale),
                               int(tot_height * self._h_scale)))
         else:
             # Create a solid coloured rectangle of the desired size
-            self.image = pygame.Surface((int(tot_width * self._w_scale),
-                                        int(tot_height * self._h_scale)))
-            self.image.fill(self._background_color)
+            image = pygame.Surface((int(tot_width * self._w_scale),
+                                    int(tot_height * self._h_scale)))
+            image.fill(self._background_color)
 
         # Get the rect of the background
-        self.rect = self.image.get_rect(center=self._pos)
+        rect = image.get_rect(center=self._pos)
 
         # Blit the text to the background
         for i in range(len(rend_lines)):
@@ -142,7 +157,9 @@ class MenuItem(pygame.sprite.Sprite):
             x_pos = int(tot_width * (self._w_scale - 1) * 0.5
                         + (tot_width - rend_lines[i].get_width()) * 0.5)
 
-            self.image.blit(rend_lines[i], (x_pos, y_pos))
+            image.blit(rend_lines[i], (x_pos, y_pos))
+
+        return image, rect
 
     # Getters/setters
 
@@ -170,30 +187,37 @@ class MenuItem(pygame.sprite.Sprite):
     def set_pos(self, pos):
         self._pos = pos
         self.rect = self.image.get_rect(center=self._pos)
+        self.dirty = 1
 
     def set_text(self, text):
         self._text = text
         self.render()
+        self.dirty = 1
 
     def set_text_color(self, color):
         self._text_color = color
         self.render()
+        self.dirty = 1
 
     def set_background_color(self, color):
         self._background_color = color
         self.render()
+        self.dirty = 1
 
     def set_background_file(self, background_file):
         self._background_file = background_file
         self.render()
+        self.dirty = 1
 
     def set_font_size(self, font_size):
         self._font_size = font_size
         self.render()
+        self.dirty = 1
 
     def set_font_file(self, font_file):
         self._font_file = font_file
         self.render()
+        self.dirty = 1
 
 
 class Button(MenuItem, yaml.YAMLObject):
@@ -206,6 +230,29 @@ class Button(MenuItem, yaml.YAMLObject):
      If only the default value is different, no description is added.)
         * text: String
             - Default: 'Button'
+        * hov_text: String
+            - The text to be displayed on the MenuItem when
+              the mouse hovers over it.
+            - Default: 'Button'
+        * hov_text_color: 3- or 4-tuple of 3 ints and 0 or 1 float
+            - The colour of the text in rgb[a] when
+              the mouse hovers over it.
+              r, g and b are ints 0-255, a is a float 0-1.
+            - Default: (0, 0, 0, 1.0)
+        * hov_background_color: 3- or 4-tuple of 3 ints and 0 or 1 float
+            - The colour of the background in rgb[a] when
+              the mouse hovers over it.
+              r, g and b are ints 0-255, a is a float 0-1.
+              If set to None, the background is transparent.
+              If a background image is specified via background_file,
+              the background colour will be ignored.
+            - Default: (255, 255, 255, 1.0)
+        * hov_background_file: String
+            - The name of the file of the image to be used as background
+              for the MenuItem when the mouse hovers over it.
+              If set to None, no image will be used and the MenuItem uses
+              a solid background with colour defined by background_color.
+            - Default: None
         * font_size: Int
             - Default: 50
         * action: function
@@ -217,12 +264,24 @@ class Button(MenuItem, yaml.YAMLObject):
             - Default: None
     '''
 
+    # NOTE: It is possible that the button might flicker if the size
+    #       of the "hovered" rect is smaller than the "unhovered",
+    #       since this could lead to that the mouse can hover over
+    #       the unhovered rect but not the hovered. This would lead
+    #       to that the image for the button would change each frame,
+    #       leading to flickering. Until a solution for this has been
+    #       found, please try to make sure that the hovered rect is
+    #       always equal to or bigger than the unhovered rect.
+
     yaml_tag = '!Button'
 
-    def __init__(self, text='Button', x_pos=1, y_pos=1,
+    def __init__(self, text='Button', hov_text='Button', x_pos=1, y_pos=1,
                  text_color=(0, 0, 0, 1.0),
+                 hov_text_color=(0, 0, 0, 1.0),
                  background_color=(255, 255, 255, 1.0),
+                 hov_background_color=(255, 255, 255, 1.0),
                  background_file=None,
+                 hov_background_file=None,
                  w_scale=1.0, h_scale=1.0,
                  font_size=50, font_file=None,
                  action=None, action_args=None):
@@ -239,6 +298,30 @@ class Button(MenuItem, yaml.YAMLObject):
         # Store the arguments for later use
         self._action = action
         self._action_args = action_args
+        self._hov_text = hov_text
+        self._hov_text_color = hov_text_color
+        self._hov_background_color = hov_background_color
+        self._hov_background_file = hov_background_file
+
+        # Save the image and rect for when the button is not being hovered
+        self._base_image = self.image
+        self._base_rect = self.rect
+
+        # Create image and rect for when the button is being hovered
+        self._text = hov_text
+        self._text_color = hov_text_color
+        self._background_color = hov_background_color
+        self._background_file = hov_background_file
+
+        self._hov_image, self._hov_rect = self._render()
+
+        # Reset the properties
+        self._text = text
+        self._text_color = text_color
+        self._background_color = background_color
+        self._background_file = background_file
+
+        self._hovered = False
 
     @classmethod
     def from_yaml(cls, loader, node):
@@ -252,10 +335,14 @@ class Button(MenuItem, yaml.YAMLObject):
 
         # Extract the needed properties
         text = values['text']
+        hov_text = values['hov_text']
         pos = values['pos']
         text_color = values['text_color']
+        hov_text_color = values['hov_text_color']
         background_color = values['background_color']
+        hov_background_color = values['hov_background_color']
         background_file = values['background_file']
+        hov_background_file = values['hov_background_file']
         w_scale = values['w_scale']
         h_scale = values['h_scale']
         font_size = values['font_size']
@@ -264,10 +351,12 @@ class Button(MenuItem, yaml.YAMLObject):
         action_args = values['action_args']
 
         # Return an instance of the object
-        return cls(text=text, x_pos=pos[0], y_pos=pos[1],
-                   text_color=text_color,
+        return cls(text=text, hov_text=hov_text, x_pos=pos[0], y_pos=pos[1],
+                   text_color=text_color, hov_text_color=hov_text_color,
                    background_color=background_color,
+                   hov_background_color=hov_background_color,
                    background_file=background_file,
+                   hov_background_file=hov_background_file,
                    w_scale=w_scale,
                    h_scale=h_scale,
                    font_size=font_size,
@@ -284,10 +373,14 @@ class Button(MenuItem, yaml.YAMLObject):
         # Construct a dict containing only the properties (wrong word...)
         # we want to use in the representation
         mapping = {'text': instance._text,
+                   'hov_text': instance._hov_props['text'],
                    'pos': instance._pos,
                    'text_color': instance._text_color,
+                   'hov_text_color': instance._hov_props['text_color'],
                    'background_color': instance._background_color,
+                   'hov_background_color': instance._hov_props['background_color'],
                    'background_file': instance._backgound_file,
+                   'hov_background_file': instance._hov_props['background_file'],
                    'w_scale': instance._w_scale,
                    'h_scale': instance._h_scale,
                    'font_size': instance._font_size,
@@ -327,11 +420,80 @@ class Button(MenuItem, yaml.YAMLObject):
     def set_action_args(self, action_args):
         self._action_args = action_args
 
+    def set_hovered(self, hovered):
+        # TODO: Add docstring
+        if hovered != self._hovered:
+            self._hovered = hovered
+            if self._hovered:
+                self.image = self._hov_image
+                self.rect = self._hov_rect
+            else:
+                self.image = self._base_image
+                self.rect = self._base_rect
+            self.dirty = 1
+        else:
+            pass
+
+    def set_text(self, text):
+        self._text = text
+        self._base_image, self._base_rect = self._render()
+        self.dirty = 1
+
+    def set_hov_text(self, text):
+        self._hov_text = text
+        self._hov_image, self._hov_rect = self._render()
+        self.dirty = 1
+
+    def set_text_color(self, color):
+        self._text_color = color
+        self._base_image, self._base_rect = self._render()
+        self.dirty = 1
+
+    def set_hov_text_color(self, color):
+        self._hov_text_color = color
+        self._hov_image, self._hov_rect = self._render()
+        self.dirty = 1
+
+    def set_background_color(self, color):
+        self._background_color = color
+        self._base_image, self._base_rect = self._render()
+        self.dirty = 1
+
+    def set_hov_background_color(self, color):
+        self._hov_background_color = color
+        self._hov_image, self._hov_rect = self._render()
+        self.dirty = 1
+
+    def set_background_file(self, background_file):
+        self._background_file = background_file
+        self._base_image, self._base_rect = self._render()
+        self.dirty = 1
+
+    def set_hov_background_file(self, background_file):
+        self._hov_background_file = background_file
+        self._hov_image, self._hov_rect = self._render()
+        self.dirty = 1
+
+    def get_hov_text(self):
+        return self._hov_text
+
+    def get_hov_text_color(self):
+        return self._hov_text_color
+
+    def get_hov_background_color(self):
+        return self._hov_background_color
+
+    def get_hov_background_file(self):
+        return self._hov_background_file
+
     def get_action(self):
         return self._action
 
     def get_action_args(self):
         return self._action_args
+
+    def get_hovered(self):
+        return self._hovered
 
 
 class TextBox(MenuItem, yaml.YAMLObject):
@@ -361,6 +523,9 @@ class TextBox(MenuItem, yaml.YAMLObject):
                           w_scale=w_scale, h_scale=h_scale,
                           font_size=font_size,
                           font_file=font_file)
+
+        # Should always be redrawn
+        self.dirty = 2
 
     @classmethod
     def from_yaml(cls, loader, node):

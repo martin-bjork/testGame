@@ -48,8 +48,9 @@ def load_menu(file_name):
     screen.blit(background, (0, 0))
     pygame.mouse.set_visible(True)
 
-    # Create list for storing buttons
+    # Create lists for storing buttons and all objects that should be drawn
     buttons = []
+    objs = []
 
     # Handle the objects from the YAML-file
     for key in item_dict:
@@ -60,10 +61,12 @@ def load_menu(file_name):
         else:
             for item in item_dict[key]:
                 if key == 'buttons':
-                    screen.blit(item.image, item.rect)
+                    # screen.blit(item.image, item.rect)
                     buttons.append(item)
+                    objs.append(item)
                 elif key == 'textboxes':
                     screen.blit(item.image, item.rect)
+                    objs.append(item)
                 elif key == 'music':
                     music_file = item['file']
                     vol = item['vol']
@@ -71,6 +74,11 @@ def load_menu(file_name):
                     # Something unknown encountered, print an error and ignore
                     print ('Unknown object found when loading menu: ',
                            item, ', with key: ', key)
+
+    # Create a Sprite group for the objects
+    obj_group = pygame.sprite.LayeredDirty(*objs)
+    # Set the background of the Sprite group
+    obj_group.clear(screen, background)
 
     pygame.display.flip()
 
@@ -84,7 +92,7 @@ def load_menu(file_name):
         pygame.mixer.music.set_volume(vol)
         pygame.mixer.music.play(-1)
 
-    return buttons
+    return buttons, obj_group, screen
 
 
 def load_level(file_name):
@@ -140,7 +148,6 @@ def load_level(file_name):
                                 post_solve=col_call.player_static)
 
     # Initialize Sprite Groups
-    # (will be more useful when we have more moving sprites)
     all_sprites = pygame.sprite.RenderUpdates()
     game.set_sprite_group(all_sprites)
 

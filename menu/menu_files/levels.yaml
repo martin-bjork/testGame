@@ -7,40 +7,52 @@ buttons:
     action: !!python/name:menu.menu_button_callbacks.play_level_goto_menu
     action_args: [level_1.yaml, main_menu.yaml]
     background_color: !!python/tuple [36, 101, 104, 1]
+    hov_background_color: !!python/tuple [36, 101, 104, 1]
     background_file: null
+    hov_background_file: null
     w_scale: 1.1
     h_scale: 1
     font_file: null
     font_size: 50
     pos: !!python/tuple [300, 200]
     text: "Level 1"
+    hov_text: "Level 1"
     text_color: !!python/tuple [0, 39, 41, 1]
+    hov_text_color: !!python/tuple [0, 39, 41, 1]
 
   - !Button
     action: !!python/name:menu.menu_button_callbacks.play_level_goto_menu
     action_args: [level_2.yaml, main_menu.yaml]
     background_color: !!python/tuple [36, 101, 104, 1]
+    hov_background_color: !!python/tuple [36, 101, 104, 1]
     background_file: null
+    hov_background_file: null
     w_scale: 1.1
     h_scale: 1
     font_file: null
     font_size: 50
     pos: !!python/tuple [300, 280]
     text: "Level 2"
+    hov_text: "Level 2"
     text_color: !!python/tuple [0, 39, 41, 1]
+    hov_text_color: !!python/tuple [0, 39, 41, 1]
 
   - !Button
     action: !!python/name:menu.menu_button_callbacks.goto_menu
     action_args: [main_menu.yaml]
     background_color: !!python/tuple [36, 101, 104, 1]
+    hov_background_color: !!python/tuple [36, 101, 104, 1]
     background_file: null
+    hov_background_file: null
     w_scale: 1.1
     h_scale: 1
     font_file: null
     font_size: 50
     pos: !!python/tuple [300, 360]
     text: "Back"
+    hov_text: "Back"
     text_color: !!python/tuple [0, 39, 41, 1]
+    hov_text_color: !!python/tuple [0, 39, 41, 1]
 
 
 music:

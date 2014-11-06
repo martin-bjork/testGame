@@ -97,8 +97,6 @@ class Game:
         # TODO: Add more game logic
 
         # Clear the sprites
-        # NOTE: Is this necessary? This makes the whole business with
-        # dirty sprites unnecessary?
         self._sprite_group.clear(self._screen, self._background)
 
         # Take input
