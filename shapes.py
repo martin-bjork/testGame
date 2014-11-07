@@ -16,7 +16,7 @@ import view
 # constructors instead of hard-coding.
 
 
-class Shape(pygame.sprite.Sprite, yaml.YAMLObject):
+class Shape(pygame.sprite.DirtySprite, yaml.YAMLObject):
     '''An abstract base class for all other shapes in the game'''
     # TODO: Make abstract for real? With the abc module?
 
@@ -24,7 +24,7 @@ class Shape(pygame.sprite.Sprite, yaml.YAMLObject):
     collision_type = col_call.BASE_TYPE
 
     def __init__(self):
-        pygame.sprite.Sprite.__init__(self)
+        pygame.sprite.DirtySprite.__init__(self)
 
         # Pymunk properties
         self._body = None
@@ -36,6 +36,7 @@ class Shape(pygame.sprite.Sprite, yaml.YAMLObject):
         self._baseimage = None
         self.image = None
         self.rect = None
+        self.dirty = 1
         self._color = None
 
     def __repr__(self):
@@ -103,12 +104,13 @@ class MovingShape(Shape):
 
         self.image = pygame.transform.rotozoom(self._baseimage,
                                                self._body.angle*180/pi, 1)
-        # self.image = pygame.transform.rotate(self._baseimage,
-                                             # self._body.angle*180/pi)
         self.rect = self.image.get_rect()
         self.rect.center = conversion.pymunk_to_pygame_coords(
             self._body.position[0], self._body.position[1],
             game.get_screen_size()[1])
+        # TODO: Try to make this smarter; only set
+        #       dirty to 1 if it has actually moved.
+        self.dirty = 1
 
     def set_position(self, position):
         self._body.position = position

@@ -148,7 +148,7 @@ def load_level(file_name):
                                 post_solve=col_call.player_static)
 
     # Initialize Sprite Groups
-    all_sprites = pygame.sprite.RenderUpdates()
+    all_sprites = pygame.sprite.LayeredDirty()
     game.set_sprite_group(all_sprites)
 
     # Handle the objects from the YAML-file
@@ -186,6 +186,9 @@ def load_level(file_name):
                     # Something unknown encountered, print an error and ignore
                     print ('Unknown object found when loading menu: ',
                            item, ', with key: ', key)
+
+    # Define the background for the sprite group
+    all_sprites.clear(screen, background)
 
     # Clear the screen and hide the cursor
     screen.blit(background, (0, 0))

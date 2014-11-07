@@ -96,9 +96,6 @@ class Game:
 
         # TODO: Add more game logic
 
-        # Clear the sprites
-        self._sprite_group.clear(self._screen, self._background)
-
         # Take input
         run, direction, jump, toggle_pause = self.take_game_input()
 
