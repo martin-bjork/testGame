@@ -205,7 +205,7 @@ def load_level(file_name):
     return game
 
 
-def load_pop_up_menu(screen, file_name):
+def load_pop_up_menu(file_name):
     '''
     Loads the pop-up menu defined in the YAML-file named "file_name".
     '''
@@ -221,6 +221,7 @@ def load_pop_up_menu(screen, file_name):
     background_color = item_dict['background']
     width, height = item_dict['background_size']
     pos = item_dict['background_pos']
+    screen = pygame.display.get_surface()
 
     if background_image_file is not None:
         background = pygame.transform\
@@ -261,13 +262,15 @@ def load_pop_up_menu(screen, file_name):
 
     # Create a Sprite group for the objects
     obj_group = pygame.sprite.LayeredDirty(*objs)
-    # Set the background of the Sprite group
-    background_rect = background.get_rect(center=pos)
-    obj_group.clear(screen, background)
 
     # Blit background to screen, set mouse to visible
-    # screen.blit(background, background_rect)
+    background_rect = background.get_rect(center=pos)
+    screen.blit(background, background_rect)
     pygame.mouse.set_visible(True)
+
+    # Shift all objects to place them at the pop-up menus position
+    for obj in obj_group:
+        obj.add_pos(background_rect.topleft)
 
     pygame.display.flip()
 

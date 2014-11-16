@@ -161,6 +161,12 @@ class MenuItem(pygame.sprite.DirtySprite):
 
         return image, rect
 
+    def add_pos(self, pos):
+        '''Adds pos to the current position'''
+        self._pos = tuple(a+b for a, b in zip(pos, self._pos))
+        self.rect = self.image.get_rect(center=self._pos)
+        self.dirty = 1
+
     # Getters/setters
 
     def get_pos(self):
@@ -472,6 +478,37 @@ class Button(MenuItem, yaml.YAMLObject):
     def set_hov_background_file(self, background_file):
         self._hov_background_file = background_file
         self._hov_image, self._hov_rect = self._render()
+        self.dirty = 1
+
+    def set_pos(self, pos):
+        self._pos = pos
+        self._base_rect = self._base_image.get_rect(center=self._pos)
+        self._hov_rect = self._hov_image.get_rect(center=self._pos)
+
+        # Set self.image etc manually since self.render() isn't called
+        if self._hovered:
+            self.image = self._hov_image
+            self.rect = self._hov_rect
+        else:
+            self.image = self._base_image
+            self.rect = self._base_rect
+
+        self.dirty = 1
+
+    def add_pos(self, pos):
+        '''Adds pos to the current position'''
+        self._pos = tuple(a+b for a, b in zip(pos, self._pos))
+        self._base_rect = self._base_image.get_rect(center=self._pos)
+        self._hov_rect = self._hov_image.get_rect(center=self._pos)
+
+        # Set self.image etc manually since self.render() isn't called
+        if self._hovered:
+            self.image = self._hov_image
+            self.rect = self._hov_rect
+        else:
+            self.image = self._base_image
+            self.rect = self._base_rect
+
         self.dirty = 1
 
     def get_hov_text(self):

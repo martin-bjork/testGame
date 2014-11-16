@@ -32,9 +32,11 @@ def run_level(file_path):
         if open_pop_up:
             # The loop can be terminated from within run_pop_up_menu()
             # by e.g. loading another level/menu/closing the application.
-            menus.run_pop_up_menu(game.get_screen(), 'quit_level_pop_up.yaml')
+            menus.run_pop_up_menu('quit_level_pop_up.yaml')
             # Force all items to be redrawn to erase the pop-up menu
+            # and set the mouse to invisible
             game.redraw()
+            pygame.mouse.set_visible(False)
 
 
 # The magic!!

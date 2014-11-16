@@ -26,7 +26,7 @@ def run_menu(file_path):
         mouse_pos, clicked, open_pop_up = Game.take_menu_input()
 
         if open_pop_up:
-            run_pop_up_menu(screen, 'quit_game_pop_up.yaml')
+            run_pop_up_menu('quit_game_pop_up.yaml')
             # Redraw screen to erase pop-up menu
             redraw(screen, background, obj_group)
 
@@ -54,11 +54,13 @@ def run_menu(file_path):
         pressed_button.perform_action()
 
 
-def run_pop_up_menu(screen, file_path):
+def run_pop_up_menu(file_path):
 
     # Load the menu
     buttons, obj_group, background = load_yaml\
-        .load_pop_up_menu(screen, file_path)
+        .load_pop_up_menu(file_path)
+
+    screen = pygame.display.get_surface()
 
     # Create clock item
     clock = pygame.time.Clock()
