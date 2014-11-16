@@ -37,6 +37,23 @@ buttons:
     text_color: !!python/tuple [0, 39, 41, 1]
     hov_text_color: !!python/tuple [255, 255, 255, 1]
 
+  - !Button
+    action: !!python/name:menu.menu_button_callbacks.open_popup_menu
+    action_args: [quit_game_pop_up.yaml, main_menu.yaml]
+    background_color: !!python/tuple [36, 101, 104, 1]
+    hov_background_color: !!python/tuple [36, 101, 104, 1]
+    background_file: wood_sign.png
+    hov_background_file: wood_sign.png
+    w_scale: 1.5
+    h_scale: 1.5
+    font_file: null
+    font_size: 50
+    pos: !!python/tuple [300, 360]
+    text: "Quit"
+    hov_text: "Quit"
+    text_color: !!python/tuple [0, 39, 41, 1]
+    hov_text_color: !!python/tuple [255, 255, 255, 1]
+
 music:
   -
     file: synth_loop_1.wav

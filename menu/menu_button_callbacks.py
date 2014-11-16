@@ -25,6 +25,13 @@ def goto_menu(menu_file_path):
     menus.run_menu(menu_file_path)
 
 
+def open_popup_menu(popup_file_path, menu_file_path):
+    # Open pop-up menu
+    menus.run_pop_up_menu(popup_file_path)
+    # Open the other menu if the pop-up menu is closed
+    menus.run_menu(menu_file_path)
+
+
 def do_nothing():
     pass
 

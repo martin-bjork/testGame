@@ -15,7 +15,7 @@ def init_window():
     pygame.init()
 
     # Initialize the display
-    screen = pygame.display.set_mode([WIDTH, HEIGHT])
+    screen = pygame.display.set_mode([WIDTH, HEIGHT], pygame.NOFRAME)
 
     # Decorate window, hide cursor
     icon = load_image('smiley_small.png')
