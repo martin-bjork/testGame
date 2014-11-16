@@ -1,10 +1,10 @@
-background: !!python/tuple [172, 61, 58]
+background: !!python/tuple [172, 61, 58, 255]
 
 background_file: null
 
 textboxes:
   - !TextBox
-    background_color: !!python/tuple [149, 24, 21, 1]
+    background_color: !!python/tuple [149, 24, 21, 255]
     background_file: null
     w_scale: 1.01
     h_scale: 1.2
@@ -12,14 +12,14 @@ textboxes:
     font_size: 30
     pos: !!python/tuple [300, 150]
     text: "This is a small test game for learning game programming.\nMore to come!"
-    text_color: !!python/tuple [0, 0, 0, 1]
+    text_color: !!python/tuple [0, 0, 0, 255]
 
 buttons:
   - !Button
     action: !!python/name:menu.menu_button_callbacks.goto_menu
     action_args: [main_menu.yaml]
-    background_color: !!python/tuple [36, 101, 104, 1]
-    hov_background_color: !!python/tuple [36, 101, 104, 1]
+    background_color: !!python/tuple [36, 101, 104, 255]
+    hov_background_color: !!python/tuple [36, 101, 104, 255]
     background_file: null
     hov_background_file: null
     w_scale: 1.1
@@ -29,8 +29,8 @@ buttons:
     pos: !!python/tuple [300, 280]
     text: "Back"
     hov_text: "Back"
-    text_color: !!python/tuple [0, 39, 41, 1]
-    hov_text_color: !!python/tuple [0, 39, 41, 1]
+    text_color: !!python/tuple [0, 39, 41, 255]
+    hov_text_color: !!python/tuple [0, 39, 41, 255]
 
 music:
   -

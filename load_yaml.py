@@ -42,7 +42,12 @@ def load_menu(file_name):
             .smoothscale(view.load_image(background_image_file),
                          (width, height))
     else:
-        background = pygame.Surface([width, height])
+        if len(background_color) == 4:
+            # Alpha value specified
+            background = pygame.Surface([width, height], pygame.SRCALPHA)
+        else:
+            # Only RGB specified
+            background = pygame.Surface([width, height])
         background.fill(background_color)
 
     # Clear the screen and make the cursor visible
@@ -123,7 +128,12 @@ def load_level(file_name):
             .smoothscale(view.load_image(background_image_file),
                          (width, height))
     else:
-        background = pygame.Surface([width, height])
+        if len(background_color) == 4:
+            # Alpha value specified
+            background = pygame.Surface([width, height], pygame.SRCALPHA)
+        else:
+            # Only RGB specified
+            background = pygame.Surface([width, height])
         background.fill(background_color)
 
     # Create other game related objects
@@ -228,7 +238,12 @@ def load_pop_up_menu(file_name):
             .smoothscale(view.load_image(background_image_file),
                          (width, height))
     else:
-        background = pygame.Surface([width, height])
+        if len(background_color) == 4:
+            # Alpha value specified
+            background = pygame.Surface([width, height], pygame.SRCALPHA)
+        else:
+            # Only RGB specified
+            background = pygame.Surface([width, height])
         background.fill(background_color)
 
     # Create lists for storing buttons and all objects that should be drawn

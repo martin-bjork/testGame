@@ -153,7 +153,7 @@ class Rectangle(MovingShape):
                 pygame.transform.scale(view.load_image(image_file),
                                        (width, height))
         else:
-            self._baseimage = pygame.Surface((width, height))
+            self._baseimage = pygame.Surface((width, height), pygame.SRCALPHA)
             # Set the background color
             self._baseimage.fill((255, 255, 255))
             # Set the color that is ignored when blitting (like a green screen)
@@ -236,7 +236,8 @@ class Circle(MovingShape):
                 pygame.transform.scale(view.load_image(image_file),
                                        (2*radius, 2*radius))
         else:
-            self._baseimage = pygame.Surface((2*radius, 2*radius))
+            self._baseimage = pygame.Surface((2*radius, 2*radius),
+                                             pygame.SRCALPHA)
             # Set the background color
             self._baseimage.fill((255, 255, 255))
             # Set the color that is ignored when blitting (like a green screen)

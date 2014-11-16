@@ -5,6 +5,8 @@ import yaml
 
 import view
 
+# TODO: Make the alpha for text work - it is currently ignored
+
 
 class MenuItem(pygame.sprite.DirtySprite):
     '''
@@ -25,17 +27,17 @@ class MenuItem(pygame.sprite.DirtySprite):
               given in pygame coordinates (pixels from upper left
               corner of window).
             - Default: 1
-        * text_color: 3- or 4-tuple of 3 ints and 0 or 1 float
+        * text_color: 3- or 4-tuple of ints
             - The colour of the text in rgb[a].
-              r, g and b are ints 0-255, a is a float 0-1.
-            - Default: (0, 0, 0, 1.0)
-        * background_color: 3- or 4-tuple of 3 ints and 0 or 1 float
+              They are all ints 0-255.
+            - Default: (0, 0, 0, 255)
+        * background_color: 3- or 4-tuple of ints
             - The colour of the background in rgb[a].
-              r, g and b are ints 0-255, a is a float 0-1.
+              They are all ints 0-255.
               If set to None, the background is transparent.
               If a background image is specified via background_file,
               the background colour will be ignored.
-            - Default: (255, 255, 255, 1.0)
+            - Default: (255, 255, 255, 255)
         * background_file: String
             - The name of the file of the image to be used as background
               for the MenuItem.
@@ -66,8 +68,8 @@ class MenuItem(pygame.sprite.DirtySprite):
     #       Could use both by setting int -> pixels, float -> scaling.
 
     def __init__(self, text='Default', x_pos=1, y_pos=1,
-                 text_color=(0, 0, 0, 1.0),
-                 background_color=(255, 255, 255, 1.0),
+                 text_color=(0, 0, 0, 255),
+                 background_color=(255, 255, 255, 255),
                  background_file=None,
                  w_scale=1.0, h_scale=1.0,
                  font_size=20, font_file=None):
@@ -142,7 +144,8 @@ class MenuItem(pygame.sprite.DirtySprite):
         else:
             # Create a solid coloured rectangle of the desired size
             image = pygame.Surface((int(tot_width * self._w_scale),
-                                    int(tot_height * self._h_scale)))
+                                    int(tot_height * self._h_scale)),
+                                   pygame.SRCALPHA)
             image.fill(self._background_color)
 
         # Get the rect of the background
@@ -240,19 +243,19 @@ class Button(MenuItem, yaml.YAMLObject):
             - The text to be displayed on the MenuItem when
               the mouse hovers over it.
             - Default: 'Button'
-        * hov_text_color: 3- or 4-tuple of 3 ints and 0 or 1 float
+        * hov_text_color: 3- or 4-tuple of ints
             - The colour of the text in rgb[a] when
               the mouse hovers over it.
-              r, g and b are ints 0-255, a is a float 0-1.
-            - Default: (0, 0, 0, 1.0)
-        * hov_background_color: 3- or 4-tuple of 3 ints and 0 or 1 float
+              They are all ints 0-255.
+            - Default: (0, 0, 0, 255)
+        * hov_background_color: 3- or 4-tuple of ints
             - The colour of the background in rgb[a] when
               the mouse hovers over it.
-              r, g and b are ints 0-255, a is a float 0-1.
+              They are all ints 0-255.
               If set to None, the background is transparent.
               If a background image is specified via background_file,
               the background colour will be ignored.
-            - Default: (255, 255, 255, 1.0)
+            - Default: (255, 255, 255, 255)
         * hov_background_file: String
             - The name of the file of the image to be used as background
               for the MenuItem when the mouse hovers over it.
@@ -282,10 +285,10 @@ class Button(MenuItem, yaml.YAMLObject):
     yaml_tag = '!Button'
 
     def __init__(self, text='Button', hov_text='Button', x_pos=1, y_pos=1,
-                 text_color=(0, 0, 0, 1.0),
-                 hov_text_color=(0, 0, 0, 1.0),
-                 background_color=(255, 255, 255, 1.0),
-                 hov_background_color=(255, 255, 255, 1.0),
+                 text_color=(0, 0, 0, 255),
+                 hov_text_color=(0, 0, 0, 255),
+                 background_color=(255, 255, 255, 255),
+                 hov_background_color=(255, 255, 255, 255),
                  background_file=None,
                  hov_background_file=None,
                  w_scale=1.0, h_scale=1.0,
@@ -547,8 +550,8 @@ class TextBox(MenuItem, yaml.YAMLObject):
     yaml_tag = '!TextBox'
 
     def __init__(self, text='Text box', x_pos=1, y_pos=1,
-                 text_color=(0, 0, 0, 1.0),
-                 background_color=(255, 255, 255, 1.0),
+                 text_color=(0, 0, 0, 255),
+                 background_color=(255, 255, 255, 255),
                  background_file=None,
                  w_scale=1.0, h_scale=1.0,
                  font_size=20, font_file=None):
