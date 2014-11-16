@@ -4,8 +4,8 @@ background_file: null
 
 buttons:
   - !Button
-    action: !!python/name:menu.menu_button_callbacks.play_level_goto_menu
-    action_args: [level_1.yaml, main_menu.yaml]
+    action: !!python/name:menu.menu_button_callbacks.play_level
+    action_args: [level_1.yaml]
     background_color: !!python/tuple [36, 101, 104, 1]
     hov_background_color: !!python/tuple [36, 101, 104, 1]
     background_file: null
@@ -21,8 +21,8 @@ buttons:
     hov_text_color: !!python/tuple [0, 39, 41, 1]
 
   - !Button
-    action: !!python/name:menu.menu_button_callbacks.play_level_goto_menu
-    action_args: [level_2.yaml, main_menu.yaml]
+    action: !!python/name:menu.menu_button_callbacks.play_level
+    action_args: [level_2.yaml]
     background_color: !!python/tuple [36, 101, 104, 1]
     hov_background_color: !!python/tuple [36, 101, 104, 1]
     background_file: null
