@@ -10,6 +10,11 @@ def init_window():
     '''Initializes a pygame window, sets caption, icon and background.
     Returns the pygame display surface.'''
 
+    # set the position of the window on the screen
+    # (must be called before pygame.init())
+    pos = (500, 300)
+    os.environ['SDL_VIDEO_WINDOW_POS'] = str(pos[0]) + "," + str(pos[1])
+
     # Setup mixer to avoid sound lag (must be done before initializing pygame)
     pygame.mixer.pre_init(44100, -16, 2, 1024)
     pygame.init()
