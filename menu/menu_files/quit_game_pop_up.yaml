@@ -1,0 +1,59 @@
+background: !!python/tuple [172, 61, 58]
+
+background_file: null
+
+background_size: !!python/tuple [400, 300]
+
+background_pos: !!python/tuple [300, 240]
+
+buttons:
+  - !Button
+    action: !!python/name:menu.menu_button_callbacks.quit_game
+    action_args: null
+    background_color: !!python/tuple [36, 101, 104, 1]
+    hov_background_color: !!python/tuple [36, 101, 104, 1]
+    background_file: null
+    hov_background_file: null
+    w_scale: 1.1
+    h_scale: 1
+    font_file: null
+    font_size: 50
+    pos: !!python/tuple [100, 250]
+    text: "Quit"
+    hov_text: "Quit"
+    text_color: !!python/tuple [0, 39, 41, 1]
+    hov_text_color: !!python/tuple [0, 39, 41, 1]
+
+  - !Button
+    action: !!python/name:menu.menu_button_callbacks.do_nothing
+    action_args: null
+    background_color: !!python/tuple [36, 101, 104, 1]
+    hov_background_color: !!python/tuple [36, 101, 104, 1]
+    background_file: null
+    hov_background_file: null
+    w_scale: 1.1
+    h_scale: 1
+    font_file: null
+    font_size: 50
+    pos: !!python/tuple [280, 250]
+    text: "Cancel"
+    hov_text: "Cancel"
+    text_color: !!python/tuple [0, 39, 41, 1]
+    hov_text_color: !!python/tuple [0, 39, 41, 1]
+
+textboxes:
+  - !TextBox
+    background_color: !!python/tuple [149, 24, 21, 1]
+    background_file: null
+    w_scale: 1.01
+    h_scale: 1.2
+    font_file: null
+    font_size: 25
+    pos: !!python/tuple [200, 100]
+    text: "Are you sure that you want\nto quit the game?"
+    text_color: !!python/tuple [0, 0, 0, 1]
+
+music:
+  -
+    file: synth_loop_1.wav
+    vol: 0.2

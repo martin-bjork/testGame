@@ -524,9 +524,6 @@ class TextBox(MenuItem, yaml.YAMLObject):
                           font_size=font_size,
                           font_file=font_file)
 
-        # Should always be redrawn
-        self.dirty = 2
-
     @classmethod
     def from_yaml(cls, loader, node):
         '''

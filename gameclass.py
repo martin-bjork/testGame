@@ -7,6 +7,11 @@ import pygame.locals as loc
 
 class Game:
 
+    # These are set as class variables instead of instance variables
+    # in order to be able to access them from static methods.
+    _keys_pressed = None
+    _keys_pressed_last_frame = None
+
     def __init__(self):
         # TODO: Add more stuff
         self._player = None
@@ -21,83 +26,98 @@ class Game:
         # TODO: Add option for more sprite groups when needed
         self._sprite_group = None
 
-        self._keys_pressed = None
-        self._keys_pressed_last_frame = None
-
-    @staticmethod
-    def take_menu_input():
+    @classmethod
+    def take_menu_input(cls):
         '''Get input for the menu'''
 
-        run = True
         clicked = False
-        mouse_pos = pygame.mouse.get_pos()
+        open_pop_up = False
 
+        # --- Get input ---
+
+        cls._keys_pressed = pygame.key.get_pressed()
+        mouse_pos = pygame.mouse.get_pos()
         current_events = pygame.event.get()
 
+        # --- Handle non-keyboard events ---
+
         for event in current_events:
+            # Check if the user attempts to close the window,
+            # if so open the pop-up menu
             if event.type == loc.QUIT:
-                run = False
-            elif event.type == loc.KEYDOWN and event.key == loc.K_ESCAPE:
-                run = False
+                open_pop_up = True
+
+            # Check if the mouse has been clicked
             elif event.type == loc.MOUSEBUTTONDOWN:
                 clicked = True
 
-        return run, mouse_pos, clicked
+        # --- Handle keyboard events ---
+
+        # If the escape key is pressed, open pop-up menu
+        if cls._keys_pressed[loc.K_ESCAPE] and \
+                not cls._keys_pressed_last_frame[loc.K_ESCAPE]:
+            open_pop_up = True
+
+        # Save the keys that have been pressed this frame
+        cls._keys_pressed_last_frame = cls._keys_pressed
+
+        return mouse_pos, clicked, open_pop_up
 
     def take_game_input(self):
         '''Get input for the game loop and handle it.'''
 
-        run = True
+        open_pop_up = False
 
-        ### Get input
-        self._keys_pressed = pygame.key.get_pressed()
+        # --- Get input ---
+
+        self.__class__._keys_pressed = pygame.key.get_pressed()
         current_events = pygame.event.get()
         player_keys = self._player.get_keys()
 
-        ### Handle non-keyboard events
-        # Check if the window is closed, if so stop the game
+        # --- Handle non-keyboard events ---
+
+        # Check if the user attempts to close the window,
+        # if so open the pop-up menu
         for event in current_events:
             if event.type == loc.QUIT:
-                run = False
+                open_pop_up = True
 
-        ### Handle keyboard events
-        # If the escape key is pressed, stop the game
-        if self._keys_pressed[loc.K_ESCAPE]:
-            run = False
+        # --- Handle keyboard events ---
+
+        # If the escape key is pressed, open pop-up menu
+        if self.__class__._keys_pressed[loc.K_ESCAPE] and \
+                not self.__class__._keys_pressed_last_frame[loc.K_ESCAPE]:
+            open_pop_up = True
 
         # Check in which direction the player should move.
         # 1 means right, -1 means left, 0 means stay put.
-        direction = self._keys_pressed[player_keys['right']] -\
-            self._keys_pressed[player_keys['left']]
+        direction = self.__class__._keys_pressed[player_keys['right']] -\
+            self.__class__._keys_pressed[player_keys['left']]
 
         # Check if the player should jump
-        # NOTE: The "keys pressed last frame"-part is there to prevent
+        # The "keys pressed last frame"-part is there to prevent
         # multiple jump-calls from when you just press the button once.
-        if self._keys_pressed[player_keys['jump']] and \
-                not self._keys_pressed_last_frame[player_keys['jump']]:
+        if self.__class__._keys_pressed[player_keys['jump']] and not \
+                self.__class__._keys_pressed_last_frame[player_keys['jump']]:
             jump = True
         else:
             jump = False
 
-        # Check if the game should be paused
-        if self._keys_pressed[loc.K_p] and \
-                not self._keys_pressed_last_frame[loc.K_p]:
-            toggle_pause = True
-        else:
-            toggle_pause = False
+        # Save the keys that have been pressed this frame
+        self.__class__._keys_pressed_last_frame = self.__class__._keys_pressed
 
-        self._keys_pressed_last_frame = self._keys_pressed
-
-        return run, direction, jump, toggle_pause
+        return direction, jump, open_pop_up
 
     def game_loop(self):
         '''The game loop - handles everything that should happen
         in every frame of the game'''
 
         # TODO: Add more game logic
+        # NOTE: The game logic that is to be added perhaps belongs
+        #       in the collision callbacks and the update-calls instead?
 
         # Take input
-        run, direction, jump, toggle_pause = self.take_game_input()
+        direction, jump, open_pop_up = self.take_game_input()
 
         # Move the player according to input
         self._player.move(direction, jump)
@@ -115,21 +135,19 @@ class Game:
         # Keep the desired fps
         self._clock.tick(self._fps)
 
-        return run, toggle_pause
+        return open_pop_up
 
-    def pause_loop(self):
-        '''Everything that happens when the game is paused - it just waits
-            for input telling it not to pause any more'''
+    def redraw(self):
+        '''
+        Clears the screen, redraws the background and sets all sprites to dirty
+        '''
 
-        # TODO: Replace this with a pop-up menu
+        self._screen.blit(self._background, (0, 0))
 
-        # Take input
-        run, direction, jump, toggle_pause = self.take_game_input()
+        for sprite in self._sprite_group:
+            sprite.dirty = 1
 
-        # Keep the desired fps
-        self._clock.tick(self._fps)
-
-        return run, toggle_pause
+        pygame.display.flip()
 
     # Getters/setters
 
@@ -183,15 +201,13 @@ class Game:
         self._sprite_group = sprite_group
 
     def add_moving_objects(self, *objects):
-        for obj in objects:
-            self._moving_objects.append(obj)
+        self._moving_objects.extend(objects)
 
     def get_moving_objects(self):
         return self._moving_objects
 
     def add_static_objects(self, *objects):
-        for obj in objects:
-            self._static_objects.append(obj)
+        self._static_objects.extend(objects)
 
     def get_static_objects(self):
         return self._static_objects
