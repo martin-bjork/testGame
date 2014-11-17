@@ -6,6 +6,9 @@ import pygame.locals as loc
 
 
 class Game:
+    '''
+    A class for storing information about the current game session.
+    '''
 
     # These are set as class variables instead of instance variables
     # in order to be able to access them from static methods.
@@ -28,7 +31,18 @@ class Game:
 
     @classmethod
     def take_menu_input(cls):
-        '''Get input for the menu'''
+        '''
+        Retrieves input from the user and translates it into the information
+        that is needed to run the menu.
+
+        Output:
+            * mouse_pos: 2-tuple of ints
+                - The position of the mouse in screen coordinates.
+            * clicked: Bool
+                - Whether or not a mouse button has been clicked.
+            * open_pop_up: Bool
+                - Whether or not a pop-up menu should be opened.
+        '''
 
         clicked = False
         open_pop_up = False
@@ -64,7 +78,19 @@ class Game:
         return mouse_pos, clicked, open_pop_up
 
     def take_game_input(self):
-        '''Get input for the game loop and handle it.'''
+        '''
+        Retrieves input from the user and translates it into the information
+        that is needed to run the game.
+
+        Output:
+            * direction: Int
+                - The direction in which the player should be moving.
+                  1 -> right, -1 -> left, 0 -> no movement.
+            * jump: Bool
+                - Whether or not the player should jump.
+            * open_pop_up: Bool
+                - Whether or not a pop-up menu should be opened.
+        '''
 
         open_pop_up = False
 
@@ -109,8 +135,14 @@ class Game:
         return direction, jump, open_pop_up
 
     def game_loop(self):
-        '''The game loop - handles everything that should happen
-        in every frame of the game'''
+        '''
+        The game loop - handles everything that should happen
+        in every frame of the game.
+
+        Output:
+            * open_pop_up: Bool
+                - Whether or not a pop-up menu should be opened.
+        '''
 
         # TODO: Add more game logic
         # NOTE: The game logic that is to be added perhaps belongs

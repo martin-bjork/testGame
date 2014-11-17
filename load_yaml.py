@@ -1,3 +1,5 @@
+# Functions that handle YAML-files and load menus and levels from them.
+
 import os
 
 import yaml
@@ -19,8 +21,24 @@ import players
 
 def load_menu(file_name):
     '''
-    Loads the menu defined in the YAML-file named "file_name"
+    Loads the menu defined in the YAML-file named "file_name".
+
+    Input:
+        * file_name: String
+            - The name of the YAML-file describing the menu.
+    Output:
+        * buttons: List of menu_items.Button
+            - A list of all the buttons in the menu.
+        * obj_group: pygame.sprite.LayeredDirty
+            - A pygame Sprite Group containing the MenuItems in the menu.
+        * screen: pygame.Surface
+            - The screen of the menu.
+        * background: pygame.Surface
+            - The background of the menu.
     '''
+
+    # TODO: Remove "screen" from output? It can be referenced
+    #       directly via pygame.
 
     # Get the full relative path of the YAML-file
     fullname = os.path.join('menu', 'menu_files', file_name)
@@ -100,8 +118,11 @@ def load_menu(file_name):
 
 def load_level(file_name):
     '''
-    Loads the level from the YAML-file named "file_name".
-    Returns a game-object.
+    Loads the level defined in the YAML-file named "file_name".
+
+    Output:
+        * game: gameclass.Game
+            - A Game object containing all info about the level.
     '''
 
     # Get the full relative path of the YAML-file
@@ -216,7 +237,19 @@ def load_level(file_name):
 def load_pop_up_menu(file_name):
     '''
     Loads the pop-up menu defined in the YAML-file named "file_name".
+
+    Input:
+        * file_name: String
+            - The name of the YAML-file describing the menu.
+    Output:
+        * buttons: List of menu_items.Button
+            - A list of all the buttons in the menu.
+        * obj_group: pygame.sprite.LayeredDirty
+            - A pygame Sprite Group containing the MenuItems in the menu.
+        * background: pygame.Surface
+            - The background of the menu.
     '''
+
     # Get the full relative path of the YAML-file
     fullname = os.path.join('menu', 'menu_files', file_name)
 

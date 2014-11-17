@@ -1,3 +1,5 @@
+# The main file, from which the game is started.
+
 from __future__ import division
 import traceback
 import sys
@@ -5,12 +7,14 @@ import sys
 import pygame
 
 import view
-import load_yaml
 from menu import menus
 
 
 def main():
-    '''The main function for the game - everything starts here'''
+    '''
+    The main function of the game - everything starts here!
+    Initializes a window and loads the main menu.
+    '''
 
     # Initialize a window
     screen, background = view.init_window()
@@ -19,7 +23,7 @@ def main():
     menus.run_menu('main_menu.yaml')
 
 
-# The magic!!
+# Run the game and handle exceptions
 if __name__ == '__main__':
     try:
         main()
