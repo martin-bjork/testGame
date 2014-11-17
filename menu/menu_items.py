@@ -137,10 +137,9 @@ class MenuItem(pygame.sprite.DirtySprite):
         # Create a background
         if self._background_file is not None:
             # Load the background image and scale to desired size
-            image = pygame.transform\
-                .smoothscale(view.load_image(self._background_file),
-                             (int(tot_width * self._w_scale),
-                              int(tot_height * self._h_scale)))
+            image = view.load_and_scale(self._background_file,
+                                        (int(tot_width * self._w_scale),
+                                         int(tot_height * self._h_scale)))
         else:
             # Create a solid coloured rectangle of the desired size
             image = pygame.Surface((int(tot_width * self._w_scale),

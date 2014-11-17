@@ -27,11 +27,10 @@ def init_window():
     pygame.display.set_caption('Test window')
     pygame.display.set_icon(icon)
 
-    # TODO: Add more stuff here
+    # TODO: Add more stuff here (?)
 
     # Create background
     background = pygame.Surface((WIDTH, HEIGHT))
-    background.fill((200, 200, 200))    # TODO: Choose a better color
     screen.blit(background, (0, 0))
 
     # Draw window
@@ -41,13 +40,42 @@ def init_window():
 
 
 def load_image(file_name):
-    '''Loads an image into pygame. The image is found in the directory "images"
-    and has the file name "file_name". Returns a pygame Surface object.'''
+    '''
+    Loads the image named file_name.
+
+    Input:
+        * file_name: String
+            - The file name of the image that is to be loaded.
+    Output:
+        * surface: pygame.Surface
+            - A pygame Surface containing the image.
+    '''
+
     full_name = os.path.join('images', file_name)
+
     try:
         surface = pygame.image.load(full_name)
     except pygame.error:
         print 'Could not load image "{name}".\nError message: {message}'\
             .format(name=file_name, message=pygame.get_error())
         raise SystemExit
+
     return surface.convert_alpha()
+
+
+def load_and_scale(file_name, scale):
+    '''
+    Loads the image named file_name and scales it to the
+    size specified by scale.
+
+    Input:
+        * file_name: String
+            - The file name of the image that is to be loaded.
+        * scale: 2-Tuple of ints
+            - The wanted size of the image in pixels (width, height).
+    Output:
+        * surface: pygame.Surface
+            - A pygame Surface containing the image.
+    '''
+
+    return pygame.transform.smoothscale(load_image(file_name), scale)

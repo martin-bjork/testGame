@@ -38,9 +38,8 @@ def load_menu(file_name):
     screen = pygame.display.get_surface()
 
     if background_image_file is not None:
-        background = pygame.transform\
-            .smoothscale(view.load_image(background_image_file),
-                         (width, height))
+        background = view.load_and_scale(background_image_file,
+                                         (width, height))
     else:
         if len(background_color) == 4:
             # Alpha value specified
@@ -124,9 +123,8 @@ def load_level(file_name):
     screen = pygame.display.get_surface()
 
     if background_image_file is not None:
-        background = pygame.transform\
-            .smoothscale(view.load_image(background_image_file),
-                         (width, height))
+        background = view.load_and_scale(background_image_file,
+                                         (width, height))
     else:
         if len(background_color) == 4:
             # Alpha value specified
@@ -234,9 +232,8 @@ def load_pop_up_menu(file_name):
     screen = pygame.display.get_surface()
 
     if background_image_file is not None:
-        background = pygame.transform\
-            .smoothscale(view.load_image(background_image_file),
-                         (width, height))
+        background = view.load_and_scale(background_image_file,
+                                         (width, height))
     else:
         if len(background_color) == 4:
             # Alpha value specified
