@@ -26,7 +26,7 @@ def goto_menu(menu_file_name):
 def open_popup_menu(popup_file_name, menu_file_name):
     '''
     Loads the pop-up menu specified in the YAML-file named "popup_file_name".
-    When the pop-up mneu is closed, load the menu specified in
+    When the pop-up menu is closed, load the menu specified in
     the YAML-file named "menu_file_name".
     '''
 
