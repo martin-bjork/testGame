@@ -1,3 +1,5 @@
+# Classes for objects in menus, such as buttons and text boxes.
+
 import os
 
 import pygame
@@ -12,54 +14,6 @@ class MenuItem(pygame.sprite.DirtySprite):
     '''
     An abstract base class for menu items, such as buttons, text areas etc.
     All other menu item classes inherit from this class.
-
-    Keyword arguments for the constructor:
-        * text: String
-            - The text to be displayed on the MenuItem.
-            - Default: 'Default'
-        * x_pos: Int
-            - The horizontal position of the center of the MenuItem,
-              given in pygame coordinates (pixels from upper left
-              corner of window).
-            - Default: 1
-        * y_pos: Int
-            - The vertical position of the center of the MenuItem,
-              given in pygame coordinates (pixels from upper left
-              corner of window).
-            - Default: 1
-        * text_color: 3- or 4-tuple of ints
-            - The colour of the text in rgb[a].
-              They are all ints 0-255.
-            - Default: (0, 0, 0, 255)
-        * background_color: 3- or 4-tuple of ints
-            - The colour of the background in rgb[a].
-              They are all ints 0-255.
-              If set to None, the background is transparent.
-              If a background image is specified via background_file,
-              the background colour will be ignored.
-            - Default: (255, 255, 255, 255)
-        * background_file: String
-            - The name of the file of the image to be used as background
-              for the MenuItem.
-              If set to None, no image will be used and the MenuItem uses
-              a solid background with colour defined by background_color.
-            - Default: None
-        * w_scale: Float
-            - A factor specifying how much wider the background should be
-              compared to the text.
-            - Default: 1.0
-        * h_scale: Float
-            - A factor specifying how much higher the background should be
-              compared to the text.
-            - Default: 1.0
-        * font_size: Int
-            - The font size of the text in the MenuItem.
-            - Default: 20
-        * font_file: String
-            - The name of the ttf-file defining the font to
-              be used in the MenuItem.
-              If set to None, it uses pygames default font.
-            - Default: None
     '''
 
     # TODO: Use a tuple for pos instead of two arguments?
@@ -73,6 +27,57 @@ class MenuItem(pygame.sprite.DirtySprite):
                  background_file=None,
                  w_scale=1.0, h_scale=1.0,
                  font_size=20, font_file=None):
+        '''
+        Base constructor for all MenuItems.
+
+        Input:
+            * text: String
+                - The text to be displayed on the MenuItem.
+                - Default: 'Default'
+            * x_pos: Int
+                - The horizontal position of the center of the MenuItem,
+                  given in pygame coordinates (pixels from upper left
+                  corner of window).
+                - Default: 1
+            * y_pos: Int
+                - The vertical position of the center of the MenuItem,
+                  given in pygame coordinates (pixels from upper left
+                  corner of window).
+                - Default: 1
+            * text_color: 3- or 4-tuple of ints
+                - The colour of the text in rgb[a].
+                  They are all ints 0-255.
+                - Default: (0, 0, 0, 255)
+            * background_color: 3- or 4-tuple of ints
+                - The colour of the background in rgb[a].
+                  They are all ints 0-255.
+                  If set to None, the background is transparent.
+                  If a background image is specified via background_file,
+                  the background colour will be ignored.
+                - Default: (255, 255, 255, 255)
+            * background_file: String
+                - The name of the file of the image to be used as background
+                  for the MenuItem.
+                  If set to None, no image will be used and the MenuItem uses
+                  a solid background with colour defined by background_color.
+                - Default: None
+            * w_scale: Float
+                - A factor specifying how much wider the background should be
+                  compared to the text.
+                - Default: 1.0
+            * h_scale: Float
+                - A factor specifying how much higher the background should be
+                  compared to the text.
+                - Default: 1.0
+            * font_size: Int
+                - The font size of the text in the MenuItem.
+                - Default: 20
+            * font_file: String
+                - The name of the ttf-file defining the font to
+                  be used in the MenuItem.
+                  If set to None, it uses pygames default font.
+                - Default: None
+        '''
 
         # Run the constructor of the Sprite-class that MenuItem inherits from
         pygame.sprite.DirtySprite.__init__(self)
@@ -164,7 +169,10 @@ class MenuItem(pygame.sprite.DirtySprite):
         return image, rect
 
     def add_pos(self, pos):
-        '''Adds pos to the current position'''
+        '''
+        Adds pos to the current position.
+        '''
+
         self._pos = tuple(a+b for a, b in zip(pos, self._pos))
         self.rect = self.image.get_rect(center=self._pos)
         self.dirty = 1
@@ -232,44 +240,6 @@ class Button(MenuItem, yaml.YAMLObject):
     '''
     A class for buttons: Clickable objects in menus that can execute
     code when clicked.
-
-    Keyword arguments for constructor:
-    (Only the ones that differ from the ones described in MenuItem.
-     If only the default value is different, no description is added.)
-        * text: String
-            - Default: 'Button'
-        * hov_text: String
-            - The text to be displayed on the MenuItem when
-              the mouse hovers over it.
-            - Default: 'Button'
-        * hov_text_color: 3- or 4-tuple of ints
-            - The colour of the text in rgb[a] when
-              the mouse hovers over it.
-              They are all ints 0-255.
-            - Default: (0, 0, 0, 255)
-        * hov_background_color: 3- or 4-tuple of ints
-            - The colour of the background in rgb[a] when
-              the mouse hovers over it.
-              They are all ints 0-255.
-              If set to None, the background is transparent.
-              If a background image is specified via background_file,
-              the background colour will be ignored.
-            - Default: (255, 255, 255, 255)
-        * hov_background_file: String
-            - The name of the file of the image to be used as background
-              for the MenuItem when the mouse hovers over it.
-              If set to None, no image will be used and the MenuItem uses
-              a solid background with colour defined by background_color.
-            - Default: None
-        * font_size: Int
-            - Default: 50
-        * action: function
-            - The function that should be called when clicking the button.
-            - Default: None
-        * action_args: List
-            - A list containing the arguments that should be passed to the
-              action function when the button is being clicked.
-            - Default: None
     '''
 
     # NOTE: It is possible that the button might flicker if the size
@@ -293,6 +263,87 @@ class Button(MenuItem, yaml.YAMLObject):
                  w_scale=1.0, h_scale=1.0,
                  font_size=50, font_file=None,
                  action=None, action_args=None):
+        '''
+        Constructor for Button.
+
+        Input:
+            * text: String
+                - The text to be displayed on the MenuItem.
+                - Default: 'Button'
+            * hov_text: String
+                - The text to be displayed on the MenuItem when
+                  the mouse hovers over it.
+                - Default: 'Button'
+            * x_pos: Int
+                - The horizontal position of the center of the MenuItem,
+                  given in pygame coordinates (pixels from upper left
+                  corner of window).
+                - Default: 1
+            * y_pos: Int
+                - The vertical position of the center of the MenuItem,
+                  given in pygame coordinates (pixels from upper left
+                  corner of window).
+                - Default: 1
+            * text_color: 3- or 4-tuple of ints
+                - The colour of the text in rgb[a].
+                  They are all ints 0-255.
+                - Default: (0, 0, 0, 255)
+            * hov_text_color: 3- or 4-tuple of ints
+                - The colour of the text in rgb[a] when
+                  the mouse hovers over it.
+                  They are all ints 0-255.
+                - Default: (0, 0, 0, 255)
+            * background_color: 3- or 4-tuple of ints
+                - The colour of the background in rgb[a].
+                  They are all ints 0-255.
+                  If set to None, the background is transparent.
+                  If a background image is specified via background_file,
+                  the background colour will be ignored.
+                - Default: (255, 255, 255, 255)
+            * hov_background_color: 3- or 4-tuple of ints
+                - The colour of the background in rgb[a] when
+                  the mouse hovers over it.
+                  They are all ints 0-255.
+                  If set to None, the background is transparent.
+                  If a background image is specified via background_file,
+                  the background colour will be ignored.
+                - Default: (255, 255, 255, 255)
+            * background_file: String
+                - The name of the file of the image to be used as background
+                  for the MenuItem.
+                  If set to None, no image will be used and the MenuItem uses
+                  a solid background with colour defined by background_color.
+                - Default: None
+            * hov_background_file: String
+                - The name of the file of the image to be used as background
+                  for the MenuItem when the mouse hovers over it.
+                  If set to None, no image will be used and the MenuItem uses
+                  a solid background with colour defined by background_color.
+                - Default: None
+            * w_scale: Float
+                - A factor specifying how much wider the background should be
+                  compared to the text.
+                - Default: 1.0
+            * h_scale: Float
+                - A factor specifying how much higher the background should be
+                  compared to the text.
+                - Default: 1.0
+            * font_size: Int
+                - The font size of the text in the MenuItem.
+                - Default: 50
+            * font_file: String
+                - The name of the ttf-file defining the font to
+                  be used in the MenuItem.
+                  If set to None, it uses pygames default font.
+                - Default: None
+            * action: function
+                - The function that should be called when clicking the button.
+                - Default: None
+            * action_args: List
+                - A list containing the arguments that should be passed to the
+                  action function when the button is being clicked.
+                - Default: None
+        '''
 
         # Call the constructor of the superclass
         MenuItem.__init__(self, text=text, x_pos=x_pos, y_pos=y_pos,
@@ -538,12 +589,6 @@ class Button(MenuItem, yaml.YAMLObject):
 class TextBox(MenuItem, yaml.YAMLObject):
     '''
     A class for text boxes: Non-interacting rectangles with text.
-
-    Keyword arguments for constructor:
-    (Only the ones that differ from the ones described in MenuItem.
-     If only the default value is different, no description is added.)
-        * text: String
-            - Default: 'Text box'
     '''
 
     yaml_tag = '!TextBox'
@@ -554,6 +599,57 @@ class TextBox(MenuItem, yaml.YAMLObject):
                  background_file=None,
                  w_scale=1.0, h_scale=1.0,
                  font_size=20, font_file=None):
+        '''
+        Constructor for all TextBox.
+
+        Input:
+            * text: String
+                - The text to be displayed on the MenuItem.
+                - Default: 'Text box'
+            * x_pos: Int
+                - The horizontal position of the center of the MenuItem,
+                  given in pygame coordinates (pixels from upper left
+                  corner of window).
+                - Default: 1
+            * y_pos: Int
+                - The vertical position of the center of the MenuItem,
+                  given in pygame coordinates (pixels from upper left
+                  corner of window).
+                - Default: 1
+            * text_color: 3- or 4-tuple of ints
+                - The colour of the text in rgb[a].
+                  They are all ints 0-255.
+                - Default: (0, 0, 0, 255)
+            * background_color: 3- or 4-tuple of ints
+                - The colour of the background in rgb[a].
+                  They are all ints 0-255.
+                  If set to None, the background is transparent.
+                  If a background image is specified via background_file,
+                  the background colour will be ignored.
+                - Default: (255, 255, 255, 255)
+            * background_file: String
+                - The name of the file of the image to be used as background
+                  for the MenuItem.
+                  If set to None, no image will be used and the MenuItem uses
+                  a solid background with colour defined by background_color.
+                - Default: None
+            * w_scale: Float
+                - A factor specifying how much wider the background should be
+                  compared to the text.
+                - Default: 1.0
+            * h_scale: Float
+                - A factor specifying how much higher the background should be
+                  compared to the text.
+                - Default: 1.0
+            * font_size: Int
+                - The font size of the text in the MenuItem.
+                - Default: 20
+            * font_file: String
+                - The name of the ttf-file defining the font to
+                  be used in the MenuItem.
+                  If set to None, it uses pygames default font.
+                - Default: None
+        '''
 
         MenuItem.__init__(self, text=text, x_pos=x_pos, y_pos=y_pos,
                           text_color=text_color,

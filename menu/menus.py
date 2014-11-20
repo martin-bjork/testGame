@@ -1,13 +1,22 @@
+# Functions for running menus.
+
 import pygame
 
 from gameclass import Game as Game
 import load_yaml
 
 
-def run_menu(file_path):
+def run_menu(file_name):
+    '''
+    Runs the menu specified in the YAML-file called "file_name".
+
+    Input:
+        * file_name: String
+            - The name of the YAML-file describing the menu.
+    '''
 
     # Load the menu
-    buttons, obj_group, screen, background = load_yaml.load_menu(file_path)
+    buttons, obj_group, screen, background = load_yaml.load_menu(file_name)
 
     # Create clock item
     clock = pygame.time.Clock()
@@ -30,11 +39,18 @@ def run_menu(file_path):
         pressed_button.perform_action()
 
 
-def run_pop_up_menu(file_path):
+def run_pop_up_menu(file_name):
+    '''
+    Runs the pop-up menu specified in the YAML-file called "file_name".
+
+    Input:
+        * file_name: String
+            - The name of the YAML-file describing the pop-up menu.
+    '''
 
     # Load the menu
     buttons, obj_group, background = load_yaml\
-        .load_pop_up_menu(file_path)
+        .load_pop_up_menu(file_name)
 
     screen = pygame.display.get_surface()
 
@@ -55,6 +71,10 @@ def run_pop_up_menu(file_path):
 
 
 def menu_loop(buttons, clock, FPS, obj_group, screen):
+    '''
+    The code that should be run each iteration when running the menu.
+    Takes input, checks if buttons have been pressed and redraws the screen.
+    '''
 
     mouse_pos, clicked, open_pop_up = Game.take_menu_input()
 
@@ -83,9 +103,25 @@ def menu_loop(buttons, clock, FPS, obj_group, screen):
 
 
 def redraw(screen, background, obj_group):
+    '''
+    Redraws the everything on screen.
+
+    Input:
+        * screen: pygame.Surface
+            - The screen of the current window, onto which
+              everything is to be drawn.
+        * background: pygame.Surface
+            - The background image that is to be drawn on the screen.
+        * obj_group: pygame.sprite.SpriteGroup
+            - A container with all objects that are to be drawn on the screen.
+    '''
+
+    # Clear the screen
     screen.blit(background, (0, 0))
 
+    # Set all objects to dirty so they are redrawn.
     for obj in obj_group:
         obj.dirty = 1
 
+    # Update the window
     pygame.display.flip()
