@@ -160,7 +160,6 @@ def load_level(file_name):
     clock = pygame.time.Clock()
 
     # Add the objects to the game-object
-    game.set_screen(screen)
     game.set_background(background)
     game.set_clock(clock)
     game.set_fps(FPS)

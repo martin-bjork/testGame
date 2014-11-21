@@ -21,8 +21,6 @@ class Game:
         self._moving_objects = []
         self._static_objects = []
         self._clock = None
-        self._screen = None
-        self._screenrect = None
         self._space = None
         self._background = None
         self._fps = None
@@ -161,7 +159,7 @@ class Game:
         self._space.step(1 / self._fps)
 
         # Draw all sprites that have moved
-        dirty_sprites = self._sprite_group.draw(self._screen)
+        dirty_sprites = self._sprite_group.draw(pygame.display.get_surface())
         pygame.display.update(dirty_sprites)
 
         # Keep the desired fps
@@ -174,7 +172,7 @@ class Game:
         Clears the screen, redraws the background and sets all sprites to dirty
         '''
 
-        self._screen.blit(self._background, (0, 0))
+        pygame.display.get_surface().blit(self._background, (0, 0))
 
         for sprite in self._sprite_group:
             sprite.dirty = 1
@@ -194,19 +192,6 @@ class Game:
 
     def set_clock(self, clock):
         self._clock = clock
-
-    def get_screen(self):
-        return self._screen
-
-    def set_screen(self, screen):
-        self._screen = screen
-        self._screenrect = screen.get_rect()
-
-    def get_screenrect(self):
-        return self._screenrect
-
-    def get_screen_size(self):
-        return self._screen.get_size()
 
     def get_space(self):
         return self._space
