@@ -2,6 +2,8 @@ import os
 
 import pygame
 
+from sound import music
+
 WIDTH = 600
 HEIGHT = 480
 
@@ -18,6 +20,10 @@ def init_window():
     # Setup mixer to avoid sound lag (must be done before initializing pygame)
     pygame.mixer.pre_init(44100, -16, 2, 1024)
     pygame.init()
+
+    # A hack to add a "home made" music player to pygame in order to be able
+    # to access the name of the sond that is currently playing.
+    pygame.__setattr__('music_player', music.Music())
 
     # Initialize the display
     screen = pygame.display.set_mode([WIDTH, HEIGHT], pygame.NOFRAME)

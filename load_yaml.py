@@ -104,14 +104,24 @@ def load_menu(file_name):
     pygame.display.flip()
 
     # Start the music
-    # TODO: Find a way to not restart the music if the currently
-    # playing file is to be loaded.
     # TODO: Add smooth fading between songs.
     if music_file is not None:
+        # Get the full relative path of the music file
         full_music_file = os.path.join('sound', 'sound_data', music_file)
-        pygame.mixer.music.load(full_music_file)
-        pygame.mixer.music.set_volume(vol)
-        pygame.mixer.music.play(-1)
+        # Get the currently loaded song and whether it's playing
+        current_song, playing = pygame.music_player.get_playing()
+
+        if current_song == full_music_file and playing:
+            # The right song is already playing; do nothing
+            pass
+        elif current_song == full_music_file and not playing:
+            # The right song is loaded, but not playing; start the song
+            pygame.music_player.play()
+        else:
+            # The wrong song is loaded; load the right one and start it
+            pygame.music_player.load_and_play(full_music_file)
+
+        pygame.music_player.set_volume(vol)
 
     return buttons, obj_group, screen, background
 
@@ -225,10 +235,22 @@ def load_level(file_name):
 
     # Start the music
     if music_file is not None:
+        # Get the full relative path of the music file
         full_music_file = os.path.join('sound', 'sound_data', music_file)
-        pygame.mixer.music.load(full_music_file)
-        pygame.mixer.music.set_volume(vol)
-        pygame.mixer.music.play(-1)
+        # Get the currently loaded song and whether it's playing
+        current_song, playing = pygame.music_player.get_playing()
+
+        if current_song == full_music_file and playing:
+            # The right song is already playing; do nothing
+            pass
+        elif current_song == full_music_file and not playing:
+            # The right song is loaded, but not playing; start the song
+            pygame.music_player.play()
+        else:
+            # The wrong song is loaded; load the right one and start it
+            pygame.music_player.load_and_play(full_music_file)
+
+        pygame.music_player.set_volume(vol)
 
     return game
 
@@ -323,9 +345,21 @@ def load_pop_up_menu(file_name):
     #       playing file is to be loaded.
     # TODO: Add smooth fading between songs.
     if music_file is not None:
+        # Get the full relative path of the music file
         full_music_file = os.path.join('sound', 'sound_data', music_file)
-        pygame.mixer.music.load(full_music_file)
-        pygame.mixer.music.set_volume(vol)
-        pygame.mixer.music.play(-1)
+        # Get the currently loaded song and whether it's playing
+        current_song, playing = pygame.music_player.get_playing()
+
+        if current_song == full_music_file and playing:
+            # The right song is already playing; do nothing
+            pass
+        elif current_song == full_music_file and not playing:
+            # The right song is loaded, but not playing; start the song
+            pygame.music_player.play()
+        else:
+            # The wrong song is loaded; load the right one and start it
+            pygame.music_player.load_and_play(full_music_file)
+
+        pygame.music_player.set_volume(vol)
 
     return buttons, obj_group, background
