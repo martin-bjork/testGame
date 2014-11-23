@@ -1,5 +1,7 @@
 import pygame
 
+# TODO: Add handling of exceptions
+
 
 class Music():
     '''
@@ -18,9 +20,13 @@ class Music():
             * file_path: String
                 - The path to the file that is to be loaded.
         '''
-
-        pygame.mixer.music.load(file_path)
-        self._currently_loaded = file_path
+        try:
+            pygame.mixer.music.load(file_path)
+            self._currently_loaded = file_path
+        except pygame.error:
+            print 'Could not load sound "{name}"\nError message: {message}'\
+                .format(name=file_path, message=pygame.get_error())
+            pass
 
     def play(self, reps=-1):
         '''
@@ -33,8 +39,13 @@ class Music():
                   -1 -> repeat indefinitely.
                 - Default: -1
         '''
-
-        pygame.mixer.music.play(reps)
+        try:
+            pygame.mixer.music.play(reps)
+        except pygame.error:
+            print 'Could not play sound "{name}"\nError message: {message}'\
+                .format(name=self._currently_loaded,
+                        message=pygame.get_error())
+            pass
 
     def set_volume(self, vol):
         '''

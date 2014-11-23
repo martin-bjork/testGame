@@ -107,19 +107,19 @@ def load_menu(file_name):
     # TODO: Add smooth fading between songs.
     if music_file is not None:
         # Get the full relative path of the music file
-        full_music_file = os.path.join('sound', 'sound_data', music_file)
+        full_music_path = os.path.join('sound', 'sound_data', music_file)
         # Get the currently loaded song and whether it's playing
         current_song, playing = pygame.music_player.get_playing()
 
-        if current_song == full_music_file and playing:
+        if current_song == full_music_path and playing:
             # The right song is already playing; do nothing
             pass
-        elif current_song == full_music_file and not playing:
+        elif current_song == full_music_path and not playing:
             # The right song is loaded, but not playing; start the song
             pygame.music_player.play()
         else:
             # The wrong song is loaded; load the right one and start it
-            pygame.music_player.load_and_play(full_music_file)
+            pygame.music_player.load_and_play(full_music_path)
 
         pygame.music_player.set_volume(vol)
 
@@ -236,19 +236,19 @@ def load_level(file_name):
     # Start the music
     if music_file is not None:
         # Get the full relative path of the music file
-        full_music_file = os.path.join('sound', 'sound_data', music_file)
+        full_music_path = os.path.join('sound', 'sound_data', music_file)
         # Get the currently loaded song and whether it's playing
         current_song, playing = pygame.music_player.get_playing()
 
-        if current_song == full_music_file and playing:
+        if current_song == full_music_path and playing:
             # The right song is already playing; do nothing
             pass
-        elif current_song == full_music_file and not playing:
+        elif current_song == full_music_path and not playing:
             # The right song is loaded, but not playing; start the song
             pygame.music_player.play()
         else:
             # The wrong song is loaded; load the right one and start it
-            pygame.music_player.load_and_play(full_music_file)
+            pygame.music_player.load_and_play(full_music_path)
 
         pygame.music_player.set_volume(vol)
 
@@ -346,19 +346,19 @@ def load_pop_up_menu(file_name):
     # TODO: Add smooth fading between songs.
     if music_file is not None:
         # Get the full relative path of the music file
-        full_music_file = os.path.join('sound', 'sound_data', music_file)
+        full_music_path = os.path.join('sound', 'sound_data', music_file)
         # Get the currently loaded song and whether it's playing
         current_song, playing = pygame.music_player.get_playing()
 
-        if current_song == full_music_file and playing:
+        if current_song == full_music_path and playing:
             # The right song is already playing; do nothing
             pass
-        elif current_song == full_music_file and not playing:
+        elif current_song == full_music_path and not playing:
             # The right song is loaded, but not playing; start the song
             pygame.music_player.play()
         else:
             # The wrong song is loaded; load the right one and start it
-            pygame.music_player.load_and_play(full_music_file)
+            pygame.music_player.load_and_play(full_music_path)
 
         pygame.music_player.set_volume(vol)
 

@@ -18,7 +18,7 @@ buttons:
     text: "Levels"
     hov_text: "Levels"
     text_color: !!python/tuple [0, 39, 41, 255]
-    hov_text_color: !!python/tuple [0, 39, 41, 255]
+    hov_text_color: !!python/tuple [255, 255, 255, 255]
 
   - !Button
     action: !!python/name:menu.menu_button_callbacks.goto_menu
@@ -50,7 +50,7 @@ buttons:
     font_size: 50
     pos: !!python/tuple [300, 360]
     text: "Quit"
-    hov_text: "Quit"
+    hov_text: "Quit!"
     text_color: !!python/tuple [0, 39, 41, 255]
     hov_text_color: !!python/tuple [255, 255, 255, 255]
 
