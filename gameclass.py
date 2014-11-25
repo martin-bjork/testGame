@@ -24,6 +24,7 @@ class Game:
         self._space = None
         self._background = None
         self._fps = None
+        self._camera = None
         # TODO: Add option for more sprite groups when needed
         self._sprite_group = None
 
@@ -152,15 +153,18 @@ class Game:
         # Move the player according to input
         self._player.move(direction, jump)
 
-        # Update all sprites
-        self._sprite_group.update(self)
-
         # Update the world's physics
         self._space.step(1 / self._fps)
 
-        # Draw all sprites that have moved
-        dirty_sprites = self._sprite_group.draw(pygame.display.get_surface())
-        pygame.display.update(dirty_sprites)
+        # Update all sprites
+        self._sprite_group.update(self)
+
+        # Update the camera
+        self._camera.update(self)
+
+        # # Draw all sprites that have moved
+        # dirty_sprites = self._sprite_group.draw(pygame.display.get_surface())
+        # pygame.display.update(dirty_sprites)
 
         # Keep the desired fps
         self._clock.tick(self._fps)
@@ -172,12 +176,14 @@ class Game:
         Clears the screen, redraws the background and sets all sprites to dirty
         '''
 
-        pygame.display.get_surface().blit(self._background, (0, 0))
+        # pygame.display.get_surface().blit(self._background, (0, 0))
 
-        for sprite in self._sprite_group:
-            sprite.dirty = 1
+        # for sprite in self._sprite_group:
+        #     sprite.dirty = 1
 
-        pygame.display.flip()
+        # pygame.display.flip()
+        # TODO: Remove this function? It's pretty unnecessary...
+        self._camera.update(self)
 
     # Getters/setters
 
@@ -204,6 +210,12 @@ class Game:
 
     def set_background(self, background):
         self._background = background
+
+    def get_camera(self):
+        return self._camera
+
+    def set_camera(self, camera):
+        self._camera = camera
 
     def get_fps(self):
         return self._fps

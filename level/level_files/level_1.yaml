@@ -3,18 +3,26 @@ background: !!python/tuple [200, 200, 200]
 background_file: mountain_background.jpg
 
 gravity: 
-  - !!python/tuple [0.0, -900.0]
+  - !!python/tuple [0.0, -9.0]
+
+world_size: !!python/tuple [&x_size 10.0, &y_size 6.0]
+
+camera: !Camera
+  pos: !!python/tuple [2.0, 4.0]
+  zoom: &zoom 100.0
+  margin: 1.0
 
 player: 
   - !Player
     obj: !Circle
-      radius: 20
+      radius: 0.2
       mass: 1
-      pos: !!python/tuple [300, 30]
+      pos: !!python/tuple [6.0, 3.0]
       color: null
       image: smiley.png
-    move_impulse: 20
-    jump_impulse: 500
+      zoom: *zoom
+    move_impulse: 2
+    jump_impulse: 50
     jump_sound_file: boing.wav
     jump_sound_vol: 0.5
     bounce_sound_file: bounce_3.wav
@@ -22,45 +30,47 @@ player:
 
 moving_objects:
   - !Rectangle
-    width: 50
-    height: 50
-    pos: !!python/tuple [100, 30]
+    width: 0.5
+    height: 0.5
+    pos: !!python/tuple [2.0, 2.0]
     mass: 1
     color: !!python/tuple [0, 250, 0]
     image: null
+    zoom: *zoom
   - !Circle
-    radius: 30
+    radius: 0.5
     mass: 1.5
-    pos: !!python/tuple [450, 100]
+    pos: !!python/tuple [6.0, 1.0]
     color: null
     image: swirl.png
+    zoom: *zoom
 
 static_objects:
   - !Boundary
     points: !!python/tuple 
       - !!python/tuple [0, 0]
-      - !!python/tuple [600, 0]
+      - !!python/tuple [*x_size, 0]
+    width: 0.1
+    friction: 1.0
+    elasticity: 0.8
+  - !Boundary
+    points: !!python/tuple
+      - !!python/tuple [0, *y_size]
+      - !!python/tuple [*x_size, *y_size]
     width: 5.0
     friction: 1.0
     elasticity: 0.8
   - !Boundary
     points: !!python/tuple
-      - !!python/tuple [0, 480]
-      - !!python/tuple [600, 480]
-    width: 5.0
-    friction: 1.0
-    elasticity: 0.8
-  - !Boundary
-    points: !!python/tuple
-      - !!python/tuple [600, 0]
-      - !!python/tuple [600, 480]
+      - !!python/tuple [*x_size, 0]
+      - !!python/tuple [*x_size, *y_size]
     width: 5.0
     friction: 1.0
     elasticity: 0.8
   - !Boundary
     points: !!python/tuple
       - !!python/tuple [0, 0]
-      - !!python/tuple [0, 480]
+      - !!python/tuple [0, *y_size]
     width: 5.0
     friction: 1.0
     elasticity: 0.8
