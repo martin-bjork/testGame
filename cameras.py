@@ -36,7 +36,7 @@ class Camera(yaml.YAMLObject):
 
         self._pos = pos
         self._zoom = zoom
-        self._margin = margin
+        self._margin = 1.0
         info = pygame.display.Info()
         width = info.current_w / zoom
         height = info.current_h / zoom
@@ -133,7 +133,6 @@ class Camera(yaml.YAMLObject):
         # FIXME: This currently doesn't work as it should; the background and
         #        objects are displayed at the wrong position and the screen
         #        isn't cleared between frames. Fix asap.
-        print 'New round!'
 
         sprite_group = game.get_sprite_group()
         screen = pygame.display.get_surface()
@@ -145,10 +144,7 @@ class Camera(yaml.YAMLObject):
                                    self._pos[1] - 0.5 * self._size[1])
         player = game.get_player()
         player_pos = player.get_pos()
-        print '\tScreen pos: ', screen_rect.center
-        print '\tPlayer pos: ', player_pos
-        print '\tPlay 2 pos: ', player._object.rect.center
-        print '\tCamera pos: ', self._pos
+        # print 'Player pos: ', player_pos
 
         # Move the camera to the players position
         # TODO: Make sure the camera doesn't move beyond the edge of the world
@@ -156,54 +152,38 @@ class Camera(yaml.YAMLObject):
         dist = [0, 0]
         if player_pos[0] < self._pos[0] + self._margin:
             # The player is too far to the left
-            dist[0] = self._pos[0] + self._margin - player_pos[0]
-            print '\tMoving right'
-            print '\t\tdist = ', dist
+            dist[0] = player_pos[0] - (self._pos[0] + self._margin)
         elif player_pos[0] > self._pos[0] + self._size[0] - self._margin:
             # The player is too far to the right
-            dist[0] = (self._pos[0] + self._size[0]
-                       - self._margin - player_pos[0])
-            print '\tMoving left'
-            print '\t\tdist = ', dist
+            dist[0] = player_pos[0] - (self._pos[0] + self._size[0]
+                                       - self._margin)
         if player_pos[1] < self._pos[1] - self._size[1] + self._margin:
             # The player is too far down
-            dist[1] = (self._pos[1] - self._size[1]
-                       + self._margin - player_pos[1])
-            print '\tMoving up'
-            print '\t\tdist = ', dist
+            dist[1] = player_pos[1] - (self._pos[1] - self._size[1]
+                                       + self._margin)
         elif player_pos[1] > self._pos[1] - self._margin:
             # The player is too far up
-            dist[1] = self._pos[0] - self._margin - player_pos[0]
-            print '\tMoving down'
-            print '\t\tdist = ', dist
+            dist[1] = player_pos[1] - (self._pos[1] + self._margin)
 
         self.move(dist)
-
-
-        # Blit the background to the screen
-        # w = int(self._pos[0] * self._zoom)
-        # h = int(back_size[1] - self._pos[1] * self._zoom)
-        # print 'Back size: ', back_size
-        # print 'Blit position:'
-        # print '\tx: ', w
-        # print '\ty: ', h
-        # screen.blit(background, (-w, -h))
-        screen.blit(background, (0, 0), screen_rect)
 
         # Blit all objects to the background
         # TODO: Check if this can be optimized
         # TODO: Clear the sprites from last frame
         for sprite in sprite_group:
             # Make sure it actually is on screen before blitting
-            # moved_rect = sprite.rect.copy()
-            # moved_rect.center = 
             if screen_rect.colliderect(sprite.rect):
-                screen.blit(sprite.image, sprite.rect)
-        print '\tBoundaries:'
-        for obj in game._static_objects:
-            print '\t\tpos: ', obj.pos
-            obj.rect.center = self.world_to_screen_coords(*obj.pos)
-            screen.blit(obj.image, obj.rect)
+                background.blit(sprite.image, sprite.rect)
+
+        # Blit the background to the screen
+        w = int(self._pos[0] * self._zoom)
+        h = int(back_size[1] - self._pos[1] * self._zoom)
+        # print 'Back size: ', back_size
+        # print 'Camera pos: ', self._pos
+        # print 'Blit position:'
+        # print '\tx: ', w
+        # print '\ty: ', h
+        screen.blit(background, (-w, -h))
 
         # Flip the display
         pygame.display.flip()
