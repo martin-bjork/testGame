@@ -143,15 +143,13 @@ class MovingShape(Shape):
         # class initializes all variables correctly
 
         # Rotate and scale the image
-        scale = self.get_width() * game.get_camera().get_zoom()\
-            / self._baseimage.get_width()
         self.image = pygame.transform.rotozoom(self._baseimage,
-                                               self._body.angle*180/pi, scale)
+                                               self._body.angle*180/pi, 1)
         self.rect = self.image.get_rect()
 
         # Move the image to the right position
-        self.rect.center = game.get_camera().world_to_screen_coords(
-            *self._body.position)
+        self.rect.center = conversion.pymunk_to_pygame_coords(
+            self._body.position[0], self._body.position[1])
 
         # TODO: Try to make this smarter; only set
         #       dirty to 1 if it has actually moved.
@@ -159,9 +157,6 @@ class MovingShape(Shape):
 
     def set_pos(self, pos):
         self._body.position = pos
-
-    def get_pos(self):
-        return self._body.position
 
 
 class Rectangle(MovingShape):
@@ -171,25 +166,25 @@ class Rectangle(MovingShape):
 
     yaml_tag = '!Rectangle'
 
-    def __init__(self, width=1.0, height=1.0, mass=1.0,
-                 pos=(2.0, 2.0), color=(0, 0, 0),
-                 image_file=None, zoom=100.0):
+    def __init__(self, width=50, height=50, mass=1.0,
+                 pos=(100, 100), color=(0, 0, 0),
+                 image_file=None):
         '''
         Constructor for Rectangle.
 
         Input:
-            * width: Float
-                - The width of the rectangle in world units.
-                - Default: 1.0
-            * height: Float
-                - The height of the rectangle in world units.
-                - Default: 1.0
+            * width: Int
+                - The width of the rectangle.
+                - Default: 50
+            * height: Int
+                - The height of the rectangle.
+                - Default: 50
             * mass: Float
                 - The mass of the rectangle.
                 - Default: 1.0
-            * position: 2-tuple of floats
-                - The initial position of the rectangle in world coordinates.
-                - Default: (2.0, 2.0)
+            * position: 2-tuple of ints
+                - The initial position of the rectangle.
+                - Default: (100, 100)
             * color: 3-tuple of ints 0-255
                 - The color of the rectangle in rgb.
                   If "image_file" is specified, "color" is ignored.
@@ -200,10 +195,6 @@ class Rectangle(MovingShape):
                   If set to None, the colour specified in "color"
                   is used instead.
                 - Default: None
-            * zoom: Float
-                - The conversion factor between world and screen coordinates.
-                  1 world unit = zoom screen units; i.e. the scale is 1:zoom.
-                - Default: 100.0
         '''
 
         MovingShape.__init__(self)
@@ -230,18 +221,15 @@ class Rectangle(MovingShape):
 
         # Pygame properties
         if image_file is not None:
-            self._baseimage = view.load_and_scale(image_file,
-                                                  (int(width*zoom),
-                                                   int(height*zoom)))
+            self._baseimage = view.load_and_scale(image_file, (width, height))
         else:
-            self._baseimage = pygame.Surface((width*zoom, height*zoom),
-                                             pygame.SRCALPHA)
+            self._baseimage = pygame.Surface((width, height), pygame.SRCALPHA)
             # Set the background color
             self._baseimage.fill((255, 255, 255))
             # Set the color that is ignored when blitting (like a green screen)
             self._baseimage.set_colorkey((255, 255, 255))
             # Draw the image we want to actually draw onto the surface
-            baserect = pygame.Rect(0, 0, width*zoom, height*zoom)
+            baserect = pygame.Rect(0, 0, width, height)
             pygame.draw.rect(self._baseimage, self._color, baserect)
 
         self.image = self._baseimage
@@ -264,11 +252,10 @@ class Rectangle(MovingShape):
         pos = values['pos']
         color = values['color']
         image_file = values['image']
-        zoom = values['zoom']
 
         # Return an instance of the object
-        return cls(width=width, height=height, mass=mass, pos=pos,
-                   color=color, image_file=image_file, zoom=zoom)
+        return cls(width=width, height=height, mass=mass,
+                   pos=pos, color=color, image_file=image_file)
 
     @classmethod
     def to_yaml(cls, dumper, instance):
@@ -284,19 +271,11 @@ class Rectangle(MovingShape):
                    'mass': instance._mass,
                    'pos': instance._body.position,
                    'color': instance._color,
-                   'image': instance._image_file,
-                   'zoom': 100.0}
-        # NOTE: The initial zoom level can't be stored in the object;
-        #       if one wishes to dump all objects in the level using
-        #       YAML, the zoom level must be edited by hand afterwards.
-        # TODO: Check if this can weakness can be fixed.
+                   'image': instance._image_file}
 
         # Use YAMLs default representation, but with the custom YAML-tag
         # and using only the properties in out custom mapping
         return dumper.represent_mapping(cls.yaml_tag, mapping)
-
-    def get_width(self):
-        return self._width
 
 
 class Circle(MovingShape):
@@ -306,21 +285,21 @@ class Circle(MovingShape):
 
     yaml_tag = '!Circle'
 
-    def __init__(self, radius=0.5, mass=1.0, position=(2.0, 2.0),
-                 color=(0, 0, 0), image_file=None, zoom=100.0):
+    def __init__(self, radius=20, mass=1.0, position=(100, 100),
+                 color=(0, 0, 0), image_file=None):
         '''
         Constructor for Circle.
 
         Input:
-            * radius: Float
-                - The radius of the circle in world units.
-                - Default: 0.5
+            * radius: Int
+                - The radius of the circle.
+                - Default: 20
             * mass: Float
                 - The mass of the circle.
                 - Default: 1.0
-            * position: 2-tuple of floats
-                - The initial position of the circle in world coordinates.
-                - Default: (2.0, 2.0)
+            * position: 2-tuple of ints
+                - The initial position of the circle.
+                - Default: (100, 100)
             * color: 3-tuple of ints 0-255
                 - The color of the circle in rgb.
                   If "image_file" is specified, "color" is ignored.
@@ -331,10 +310,6 @@ class Circle(MovingShape):
                   If set to None, the colour specified in "color"
                   is used instead.
                 - Default: None
-            * zoom: Float
-                - The conversion factor between world and screen coordinates.
-                  1 world unit = zoom screen units; i.e. the scale is 1:zoom.
-                - Default: 100.0
         '''
 
         MovingShape.__init__(self)
@@ -360,17 +335,16 @@ class Circle(MovingShape):
         # Pygame properties
         if image_file is not None:
             self._baseimage = view.load_and_scale(image_file,
-                                                  (int(2*radius*zoom),
-                                                   int(2*radius*zoom)))
+                                                  (2*radius, 2*radius))
         else:
-            self._baseimage = pygame.Surface((2*radius*zoom, 2*radius*zoom),
+            self._baseimage = pygame.Surface((2*radius, 2*radius),
                                              pygame.SRCALPHA)
             # Set the background color
             self._baseimage.fill((255, 255, 255))
             # Set the color that is ignored when blitting (like a green screen)
             self._baseimage.set_colorkey((255, 255, 255))
             # Draw the image we want to actually draw onto the surface
-            baserect = pygame.Rect(0, 0, 2*radius*zoom, 2*radius*zoom)
+            baserect = pygame.Rect(0, 0, 2*radius, 2*radius)
             pygame.draw.ellipse(self._baseimage, self._color, baserect)
 
         self.image = self._baseimage
@@ -389,11 +363,10 @@ class Circle(MovingShape):
         position = values['pos']
         color = values['color']
         image_file = values['image']
-        zoom = values['zoom']
 
         # Return an instance of the object
         return cls(radius=radius, mass=mass, position=position,
-                   color=color, image_file=image_file, zoom=zoom)
+                   color=color, image_file=image_file)
 
     @classmethod
     def to_yaml(cls, dumper, instance):
@@ -405,19 +378,11 @@ class Circle(MovingShape):
                    'mass': instance._mass,
                    'pos': instance._body.position,
                    'color': instance._color,
-                   'image': instance._image_file,
-                   'zoom': 100.0}
-        # NOTE: The initial zoom level can't be stored in the object;
-        #       if one wishes to dump all objects in the level using
-        #       YAML, the zoom level must be edited by hand afterwards.
-        # TODO: Check if this can weakness can be fixed.
+                   'image': instance._image_file}
 
         # Use YAMLs default representation, but with the custom YAML-tag
         # and using only the properties in out custom mapping
         return dumper.represent_mapping(cls.yaml_tag, mapping)
-
-    def get_width(self):
-        return 2 * self._radius
 
 
 class Boundary(StaticShape):
@@ -428,16 +393,15 @@ class Boundary(StaticShape):
 
     yaml_tag = '!Boundary'
 
-    def __init__(self, points=[(0.0, 0.0), (1.0, 1.0)], width=0.1,
+    def __init__(self, points=[(0, 0), (1, 1)], width=5.0,
                  friction=1.0, elasticity=0.8):
         '''
         Constructor for Boundary.
 
         Input:
-            * points: List of two 2-tuples of floats
-                - The end-points of the line representing the boundary,
-                  in world coordinates.
-                - Default: [(0.0, 0.0), (1.0, 1.0)]
+            * points: List of two 2-tuples of ints
+                - The end-points of the line representing the boundary.
+                - Default: [(0, 0), (1, 1)]
             * width: Float
                 - The width of the boundary.
                   The width can in most cases be left as the default;
@@ -445,7 +409,7 @@ class Boundary(StaticShape):
                   that nothing passes through by accident, but thin
                   enough that strange effects like that it seems like
                   objects are "hovering" start occuring.
-                - Default: 0.1
+                - Default: 5.0
             * friction: Float 0.0 - inf
                 - The friction coefficient of the boundary (the mu-factor).
                   Higher value -> more friction.
