@@ -14,6 +14,7 @@ import view
 from menu import menu_items
 import shapes
 import players
+import cameras
 
 # TODO: Add a "To YAML"-function?
 # TODO: Better docstrings
@@ -168,11 +169,13 @@ def load_level(file_name):
     # Create other game related objects
     FPS = 60
     clock = pygame.time.Clock()
+    camera = cameras.Camera()
 
     # Add the objects to the game-object
     game.set_background(background)
     game.set_clock(clock)
     game.set_fps(FPS)
+    game.set_camera(camera)
 
     # Initialize the pymunk space
     space = pymunk.Space()
@@ -226,11 +229,12 @@ def load_level(file_name):
                            item, ', with key: ', key)
 
     # Define the background for the sprite group
-    all_sprites.clear(screen, background)
+    # all_sprites.clear(screen, background)
 
     # Clear the screen and hide the cursor
-    screen.blit(background, (0, 0))
-    pygame.display.flip()
+    # screen.blit(background, (0, 0))
+    # pygame.display.flip()
+    camera.update(game)
     pygame.mouse.set_visible(False)
 
     # Start the music

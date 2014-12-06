@@ -1,5 +1,7 @@
 from __future__ import division
 
+import pygame
+
 
 class Camera():
     '''
@@ -68,3 +70,23 @@ class Camera():
         y = self._pos[1] - h / self._zoom
 
         return x, y
+
+    def update(self, game):
+        '''
+        Updates the camera object to view the player,
+        draws everything to the screen and flips the screen.
+        '''
+
+        sprite_group = game.get_sprite_group()
+        screen = pygame.display.get_surface()
+        background = game.get_background()
+
+        # Clear the screen
+        screen.blit(background, (0, 0))
+
+        # Blit everything to the screen
+        for sprite in sprite_group:
+            screen.blit(sprite.image, sprite.rect)
+
+        # Flip the display
+        pygame.display.flip()

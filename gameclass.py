@@ -23,6 +23,7 @@ class Game:
         self._clock = None
         self._space = None
         self._background = None
+        self._camera = None
         self._fps = None
         # TODO: Add option for more sprite groups when needed
         self._sprite_group = None
@@ -159,8 +160,9 @@ class Game:
         self._space.step(1 / self._fps)
 
         # Draw all sprites that have moved
-        dirty_sprites = self._sprite_group.draw(pygame.display.get_surface())
-        pygame.display.update(dirty_sprites)
+        # dirty_sprites = self._sprite_group.draw(pygame.display.get_surface())
+        # pygame.display.update(dirty_sprites)
+        self._camera.update(self)
 
         # Keep the desired fps
         self._clock.tick(self._fps)
@@ -172,12 +174,13 @@ class Game:
         Clears the screen, redraws the background and sets all sprites to dirty
         '''
 
-        pygame.display.get_surface().blit(self._background, (0, 0))
+        self._camera.update(self)
+        # pygame.display.get_surface().blit(self._background, (0, 0))
 
-        for sprite in self._sprite_group:
-            sprite.dirty = 1
+        # for sprite in self._sprite_group:
+        #     sprite.dirty = 1
 
-        pygame.display.flip()
+        # pygame.display.flip()
 
     # Getters/setters
 
@@ -198,6 +201,12 @@ class Game:
 
     def set_space(self, space):
         self._space = space
+
+    def get_camera(self):
+        return self._camera
+
+    def set_camera(self, camera):
+        self._camera = camera
 
     def get_background(self):
         return self._background
