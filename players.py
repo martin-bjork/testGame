@@ -176,6 +176,3 @@ class Player(shapes.MovingShape):
 
     def set_jumping(self, jumping):
         self._jumping = jumping
-
-    def get_pos(self):
-        return self._object.get_pos()

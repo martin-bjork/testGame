@@ -14,7 +14,6 @@ import view
 from menu import menu_items
 import shapes
 import players
-import cameras
 
 # TODO: Add a "To YAML"-function?
 # TODO: Better docstrings
@@ -149,22 +148,21 @@ def load_level(file_name):
     # Create a screen and background
     background_image_file = item_dict['background_file']
     background_color = item_dict['background']
-    width, height = item_dict['world_size']
+    info = pygame.display.Info()
+    width = info.current_w
+    height = info.current_h
     screen = pygame.display.get_surface()
-    camera = item_dict['camera']
-    zoom = camera.get_zoom()
 
     if background_image_file is not None:
         background = view.load_and_scale(background_image_file,
-                                         (int(width*zoom), int(height*zoom)))
+                                         (width, height))
     else:
         if len(background_color) == 4:
             # Alpha value specified
-            background = pygame.Surface([width*zoom, height*zoom],
-                                        pygame.SRCALPHA)
+            background = pygame.Surface([width, height], pygame.SRCALPHA)
         else:
             # Only RGB specified
-            background = pygame.Surface([width*zoom, height*zoom])
+            background = pygame.Surface([width, height])
         background.fill(background_color)
 
     # Create other game related objects
@@ -175,7 +173,6 @@ def load_level(file_name):
     game.set_background(background)
     game.set_clock(clock)
     game.set_fps(FPS)
-    game.set_camera(camera)
 
     # Initialize the pymunk space
     space = pymunk.Space()
@@ -189,8 +186,7 @@ def load_level(file_name):
                                 post_solve=col_call.player_static)
 
     # Initialize Sprite Groups
-    # all_sprites = pygame.sprite.LayeredDirty()
-    all_sprites = pygame.sprite.Group()
+    all_sprites = pygame.sprite.LayeredDirty()
     game.set_sprite_group(all_sprites)
 
     # Handle the objects from the YAML-file
@@ -198,10 +194,6 @@ def load_level(file_name):
         if key == 'background':
             pass
         elif key == 'background_file':
-            pass
-        elif key == 'world_size':
-            pass
-        elif key == 'camera':
             pass
         else:
             for item in item_dict[key]:
@@ -234,12 +226,11 @@ def load_level(file_name):
                            item, ', with key: ', key)
 
     # Define the background for the sprite group
-    # all_sprites.clear(screen, background)
+    all_sprites.clear(screen, background)
 
     # Clear the screen and hide the cursor
-    # screen.blit(background, (0, 0))
-    # pygame.display.flip()
-    camera.update(game)
+    screen.blit(background, (0, 0))
+    pygame.display.flip()
     pygame.mouse.set_visible(False)
 
     # Start the music
