@@ -469,25 +469,6 @@ class Boundary(StaticShape):
         self._shape.friction = self._friction
         self._shape.elasticity = self._elasticity
 
-        self.image, self.rect, self.pos = self._draw()
-
-    def _draw(self):
-        '''Debug function to create a visualization of the boundary'''
-        zoom = 100
-        x1 = int(abs(self._points[0][0] - self._points[1][0])*zoom)
-        x2 = int(abs(self._points[0][1] - self._points[1][1])*zoom)
-        r = max(x1, x2)
-        baseimage = pygame.Surface((r, r),
-                                   pygame.SRCALPHA)
-        # Draw the image we want to actually draw onto the surface
-        pygame.draw.rect(baseimage, (255, 0, 0), baserect, 4)
-
-        rect = baseimage.get_rect()
-
-        pos = tuple((a+b)/2 for a, b in zip(*self._points))
-
-        return baseimage, rect, pos
-
     @classmethod
     def from_yaml(cls, loader, node):
         '''
