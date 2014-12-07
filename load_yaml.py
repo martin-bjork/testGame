@@ -149,10 +149,11 @@ def load_level(file_name):
     # Create a screen and background
     background_image_file = item_dict['background_file']
     background_color = item_dict['background']
-    info = pygame.display.Info()
-    width = info.current_w
-    height = info.current_h
-    screen = pygame.display.get_surface()
+    # info = pygame.display.Info()
+    # width = info.current_w
+    # height = info.current_h
+    width, height = item_dict['size']
+    # screen = pygame.display.get_surface()
 
     if background_image_file is not None:
         background = view.load_and_scale(background_image_file,
@@ -169,7 +170,7 @@ def load_level(file_name):
     # Create other game related objects
     FPS = 60
     clock = pygame.time.Clock()
-    camera = cameras.Camera()
+    camera = item_dict['camera']
 
     # Add the objects to the game-object
     game.set_background(background)
@@ -197,6 +198,10 @@ def load_level(file_name):
         if key == 'background':
             pass
         elif key == 'background_file':
+            pass
+        elif key == 'camera':
+            pass
+        elif key == 'size':
             pass
         else:
             for item in item_dict[key]:

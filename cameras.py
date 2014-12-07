@@ -1,9 +1,10 @@
 from __future__ import division
 
 import pygame
+import yaml
 
 
-class Camera():
+class Camera(yaml.YAMLObject):
     '''
     A class that handles the viewing of the world.
     It takes care of conversion between wolrd and screen coordinates,
@@ -11,15 +12,19 @@ class Camera():
     handles the updating of the screen.
     '''
 
-    def __init__(self, pos=(1.0, 1.0), zoom=1.0):
+    yaml_tag = '!Camera'
+
+    def __init__(self, pos=(0.0, 0.0), zoom=1.0, world_size=(600, 480),
+                 margin=100):
         '''
         Constructor for the Camera object.
 
         Input:
             * pos: 2-tuple of floats
-                - The position of the upper left corner of
-                  the screen in world coordinates.
-                - Default: (1.0, 1.0)
+                - The position of the upper left corner of the camera
+                  relative to the upper left corner of the background
+                  in screen coordinates.
+                - Default: (0.0, 0.0)
             * zoom: Float
                 - The conversion factor between world and screen coordinates.
                   1 world unit = zoom screen units; i.e. the scale is 1:zoom.
@@ -28,6 +33,50 @@ class Camera():
 
         self._pos = pos
         self._zoom = zoom
+        self._world_size = world_size
+        self._margin = margin
+        screen = pygame.display.get_surface()
+        self._size = screen.get_size()
+        self._screenrect = screen.get_rect()
+        self._screenrect.center = (self._size[0]/2, self._size[1]/2)
+        self._innerrect = self._screenrect.inflate(-margin, -margin)
+
+    @classmethod
+    def from_yaml(cls, loader, node):
+        '''
+        A constructor that YAML uses to create instances of this class.
+        '''
+
+        # Create a dict from the YAML code for the object,
+        # containing all its properties
+        values = loader.construct_mapping(node)
+
+        # Extract the needed properties
+        pos = values['pos']
+        zoom = values['zoom']
+        world_size = values['world_size']
+        margin = values['margin']
+
+        # Return an instance of the object
+        return cls(pos=pos, zoom=zoom, world_size=world_size, margin=margin)
+
+    @classmethod
+    def to_yaml(cls, dumper, instance):
+        '''
+        A method used by YAML to represent an instance of this class.
+        '''
+
+        # Construct a dict containing only the properties (wrong word...)
+        # we want to use in the representation
+
+        mapping = {'pos': instance._pos,
+                   'zoom': instance._zoom,
+                   'world_size': instance._world_size,
+                   'margin': instance._margin}
+
+        # Use YAMLs default representation, but with the custom YAML-tag
+        # and using only the properties in out custom mapping
+        return dumper.represent_mapping(cls.yaml_tag, mapping)
 
     def world_to_screen_coords(self, x, y):
         '''
@@ -45,8 +94,8 @@ class Camera():
                 - The corresponding screen y-coordinate.
         '''
 
-        w = int((x - self._pos[0]) * self._zoom)
-        h = int((self._pos[1] - y) * self._zoom)
+        w = int(x * self._zoom - self._pos[0])
+        h = int(self._world_size[1] - self._pos[1] - y)
 
         return w, h
 
@@ -66,10 +115,17 @@ class Camera():
                 - The corresponding world y-coordinate.
         '''
 
-        x = self._pos[0] + w / self._zoom
-        y = self._pos[1] - h / self._zoom
+        x = (w + self._pos[0]) / self._zoom
+        y = (h + self._pos[1] - self._world_size[1]) / self._zoom
 
         return x, y
+
+    def move(self, vec):
+        '''
+        Moves the camera the distance specified in vec
+        '''
+
+        self._pos = tuple(a + b for a, b in zip(self._pos, vec))
 
     def update(self, game):
         '''
@@ -80,9 +136,23 @@ class Camera():
         sprite_group = game.get_sprite_group()
         screen = pygame.display.get_surface()
         background = game.get_background()
+        player_obj = game.get_player().get_object()
+
+        # Calculate the new position for the camera
+        # Check if the player is inside the "inner rect"
+        if not self._innerrect.contains(player_obj.rect):
+            # TODO: Make sure the camera doesn't move past the edge of the world
+            # The player is too far to the edge of the screen
+            # Calculate the distance the camera must move to cover the player
+            old_pos = player_obj.rect.center
+            new_pos = player_obj.rect.clamp(self._innerrect).center
+            diff = tuple(old - new for old, new in zip(old_pos, new_pos))
+
+            # Move the camera to the new position
+            self.move(diff)
 
         # Clear the screen
-        screen.blit(background, (0, 0))
+        screen.blit(background, (-self._pos[0], -self._pos[1]))
 
         # Blit everything to the screen
         for sprite in sprite_group:

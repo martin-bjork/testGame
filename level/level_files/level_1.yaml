@@ -2,6 +2,18 @@ background: !!python/tuple [200, 200, 200]
 
 background_file: mountain_background.jpg
 
+size:
+  - &width 1000
+  - &height 600
+
+camera: !Camera
+  pos: !!python/tuple [200, 120]
+  zoom: 1.0
+  world_size:
+    - *width
+    - *height
+  margin: 250
+
 gravity: 
   - !!python/tuple [0.0, -900.0]
 
@@ -38,29 +50,45 @@ moving_objects:
 static_objects:
   - !Boundary
     points: !!python/tuple 
-      - !!python/tuple [0, 0]
-      - !!python/tuple [600, 0]
+      - !!python/tuple
+        - 0
+        - 0
+      - !!python/tuple
+        - *width
+        - 0
     width: 5.0
     friction: 1.0
     elasticity: 0.8
   - !Boundary
     points: !!python/tuple
-      - !!python/tuple [0, 480]
-      - !!python/tuple [600, 480]
+      - !!python/tuple
+        - 0
+        - *height
+      - !!python/tuple
+        - *width
+        - *height
     width: 5.0
     friction: 1.0
     elasticity: 0.8
   - !Boundary
     points: !!python/tuple
-      - !!python/tuple [600, 0]
-      - !!python/tuple [600, 480]
+      - !!python/tuple
+        - *width
+        - 0
+      - !!python/tuple
+        - *width
+        - *height
     width: 5.0
     friction: 1.0
     elasticity: 0.8
   - !Boundary
     points: !!python/tuple
-      - !!python/tuple [0, 0]
-      - !!python/tuple [0, 480]
+      - !!python/tuple
+        - 0
+        - 0
+      - !!python/tuple
+        - 0
+        - *height
     width: 5.0
     friction: 1.0
     elasticity: 0.8
