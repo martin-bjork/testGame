@@ -1,4 +1,5 @@
 from __future__ import division
+import math
 
 import pygame
 import yaml
@@ -39,7 +40,6 @@ class Camera(yaml.YAMLObject):
         self._size = screen.get_size()
         self._screenrect = screen.get_rect()
         self._screenrect.center = (self._size[0]/2, self._size[1]/2)
-        self._innerrect = self._screenrect.inflate(-margin, -margin)
 
     @classmethod
     def from_yaml(cls, loader, node):
@@ -132,24 +132,59 @@ class Camera(yaml.YAMLObject):
         Updates the camera object to view the player,
         draws everything to the screen and flips the screen.
         '''
+        # FIXME: When moving very fast, the camera moves slightly past
+        #        the edge of the world - this must be fixed.
 
         sprite_group = game.get_sprite_group()
         screen = pygame.display.get_surface()
         background = game.get_background()
         player_obj = game.get_player().get_object()
 
-        # Calculate the new position for the camera
-        # Check if the player is inside the "inner rect"
-        if not self._innerrect.contains(player_obj.rect):
-            # TODO: Make sure the camera doesn't move past the edge of the world
-            # The player is too far to the edge of the screen
-            # Calculate the distance the camera must move to cover the player
-            old_pos = player_obj.rect.center
-            new_pos = player_obj.rect.clamp(self._innerrect).center
-            diff = tuple(old - new for old, new in zip(old_pos, new_pos))
+        # Calculate the position of the player relative to
+        # the center of the screen
+        rel_pos = [a - b for a, b in zip(player_obj.rect.center,
+                                         screen.get_rect().center)]
+        diff = [0, 0]
 
-            # Move the camera to the new position
-            self.move(diff)
+        # Calculate how far the camera must move to
+        # make sure the player is on-screen
+        if rel_pos[0] > self._size[0]/2 - self._margin:
+            # The player is too far to the right
+            diff[0] = rel_pos[0] - (self._size[0]/2 - self._margin)
+        elif rel_pos[0] < -(self._size[0]/2 - self._margin):
+            # The player is too far to the left
+            diff[0] = rel_pos[0] + (self._size[0]/2 - self._margin)
+
+        if rel_pos[1] > self._size[1]/2 - self._margin:
+            # The player is too far down
+            diff[1] = rel_pos[1] - (self._size[1]/2 - self._margin)
+        elif rel_pos[1] < -(self._size[1]/2 - self._margin):
+            # The player is too far up
+            diff[1] = rel_pos[1] + (self._size[1]/2 - self._margin)
+
+        # Make sure the camera doesn't move past the edge of the world
+        if diff[0] > 0 and self._pos[0] + self._size[0] >= \
+                self._world_size[0]:
+            # Camera wants to move to the right but has reached the right
+            # edge of the world; don't move to the right
+            diff[0] = 0
+        elif diff[0] < 0 and self._pos[0] <= 0:
+            # Camera wants to move to the left but has reached the left
+            # edge of the world; don't move to the left
+            diff[0] = 0
+
+        if diff[1] > 0 and self._pos[1] + self._size[1] >= \
+                self._world_size[1]:
+            # Camera wants to move down but has reached the lower
+            # edge of the world; don't move down
+            diff[1] = 0
+        elif diff[1] < 0 and self._pos[1] <= 0:
+            # Camera wants to move up but has reached the upper
+            # edge of the world; don't move up
+            diff[1] = 0
+
+        # Move the camera to the new position
+        self.move(diff)
 
         # Clear the screen
         screen.blit(background, (-self._pos[0], -self._pos[1]))

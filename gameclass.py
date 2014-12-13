@@ -159,9 +159,7 @@ class Game:
         # Update the world's physics
         self._space.step(1 / self._fps)
 
-        # Draw all sprites that have moved
-        # dirty_sprites = self._sprite_group.draw(pygame.display.get_surface())
-        # pygame.display.update(dirty_sprites)
+        # Update the camera
         self._camera.update(self)
 
         # Keep the desired fps
@@ -174,6 +172,7 @@ class Game:
         Clears the screen, redraws the background and sets all sprites to dirty
         '''
 
+        # TODO: Remove this function and use camera.update() directly instead
         self._camera.update(self)
         # pygame.display.get_surface().blit(self._background, (0, 0))
 

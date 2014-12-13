@@ -233,13 +233,10 @@ def load_level(file_name):
                     print ('Unknown object found when loading menu: ',
                            item, ', with key: ', key)
 
-    # Define the background for the sprite group
-    # all_sprites.clear(screen, background)
+    # Update all moving objects
+    all_sprites.update(game)
 
-    # Clear the screen and hide the cursor
-    # screen.blit(background, (0, 0))
-    # pygame.display.flip()
-    camera.update(game)
+    # Hide the cursor
     pygame.mouse.set_visible(False)
 
     # Start the music

@@ -9,10 +9,10 @@ size:
 camera: !Camera
   pos: !!python/tuple [200, 120]
   zoom: 1.0
-  world_size:
+  world_size: !!python/tuple
     - *width
     - *height
-  margin: 250
+  margin: 150
 
 gravity: 
   - !!python/tuple [0.0, -900.0]
