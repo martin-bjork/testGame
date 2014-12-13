@@ -148,10 +148,7 @@ def load_level(file_name):
     # Create a screen and background
     background_image_file = item_dict['background_file']
     background_color = item_dict['background']
-    info = pygame.display.Info()
-    width = info.current_w
-    height = info.current_h
-    screen = pygame.display.get_surface()
+    width, height = item_dict['size']
 
     if background_image_file is not None:
         background = view.load_and_scale(background_image_file,
@@ -168,6 +165,7 @@ def load_level(file_name):
     # Create other game related objects
     FPS = 60
     clock = pygame.time.Clock()
+    camera = item_dict['camera']
 
     # Add the objects to the game-object
     game.set_background(background)
@@ -194,6 +192,10 @@ def load_level(file_name):
         if key == 'background':
             pass
         elif key == 'background_file':
+            pass
+        elif key == 'camera':
+            pass
+        elif key == 'size':
             pass
         else:
             for item in item_dict[key]:
@@ -225,12 +227,10 @@ def load_level(file_name):
                     print ('Unknown object found when loading menu: ',
                            item, ', with key: ', key)
 
-    # Define the background for the sprite group
-    all_sprites.clear(screen, background)
+    # Update all moving objects
+    all_sprites.update(game)
 
-    # Clear the screen and hide the cursor
-    screen.blit(background, (0, 0))
-    pygame.display.flip()
+    # Hide the cursor
     pygame.mouse.set_visible(False)
 
     # Start the music

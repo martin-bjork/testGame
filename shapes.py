@@ -148,7 +148,7 @@ class MovingShape(Shape):
         self.rect = self.image.get_rect()
 
         # Move the image to the right position
-        self.rect.center = conversion.pymunk_to_pygame_coords(
+        self.rect.center = game.get_camera().world_to_screen_coords(
             self._body.position[0], self._body.position[1])
 
         # TODO: Try to make this smarter; only set
