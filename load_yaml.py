@@ -14,6 +14,7 @@ import view
 from menu import menu_items
 import shapes
 import players
+import cameras
 
 # TODO: Add a "To YAML"-function?
 # TODO: Better docstrings
@@ -171,6 +172,7 @@ def load_level(file_name):
     game.set_background(background)
     game.set_clock(clock)
     game.set_fps(FPS)
+    game.set_camera(camera)
 
     # Initialize the pymunk space
     space = pymunk.Space()
