@@ -1,17 +1,22 @@
+defaults:
+  - &default_boundary
+    points: !!python/tuple
+      - !!python/tuple [0.0, 0.0]
+      - !!python/tuple [1.0, 1.0]
+    width: 5.0
+    friction: 1.0
+    elasticity: 0.8
+
 background: !!python/tuple [200, 200, 200]
 
 background_file: mountain_background.jpg
 
-size:
-  - &width 1000
-  - &height 600
+size: [&width 1000, &height 600]
 
 camera: !Camera
   pos: !!python/tuple [200, 120]
   zoom: 1.0
-  world_size: !!python/tuple
-    - *width
-    - *height
+  world_size: !!python/tuple [*width, *height]
   margin: 150
 
 gravity: 
@@ -49,50 +54,25 @@ moving_objects:
 
 static_objects:
   - !Boundary
+    <<: *default_boundary
     points: !!python/tuple 
-      - !!python/tuple
-        - 0
-        - 0
-      - !!python/tuple
-        - *width
-        - 0
-    width: 5.0
-    friction: 1.0
-    elasticity: 0.8
+      - !!python/tuple [0, 0]
+      - !!python/tuple [*width, 0]
   - !Boundary
+    <<: *default_boundary
     points: !!python/tuple
-      - !!python/tuple
-        - 0
-        - *height
-      - !!python/tuple
-        - *width
-        - *height
-    width: 5.0
-    friction: 1.0
-    elasticity: 0.8
+      - !!python/tuple [0, *height]
+      - !!python/tuple [*width, *height]
   - !Boundary
+    <<: *default_boundary
     points: !!python/tuple
-      - !!python/tuple
-        - *width
-        - 0
-      - !!python/tuple
-        - *width
-        - *height
-    width: 5.0
-    friction: 1.0
-    elasticity: 0.8
+      - !!python/tuple [*width, 0]
+      - !!python/tuple [*width, *height]
   - !Boundary
+    <<: *default_boundary
     points: !!python/tuple
-      - !!python/tuple
-        - 0
-        - 0
-      - !!python/tuple
-        - 0
-        - *height
-    width: 5.0
-    friction: 1.0
-    elasticity: 0.8
-
+      - !!python/tuple [0, 0]
+      - !!python/tuple [0, *height]
 
 music:
   -

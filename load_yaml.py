@@ -78,9 +78,12 @@ def load_menu(file_name):
 
     # Handle the objects from the YAML-file
     for key in item_dict:
+        # A bunch of keys that have already been handled
         if key == 'background':
             pass
         elif key == 'background_file':
+            pass
+        elif key == 'defaults':
             pass
         else:
             for item in item_dict[key]:
@@ -191,6 +194,7 @@ def load_level(file_name):
 
     # Handle the objects from the YAML-file
     for key in item_dict:
+        # A bunch of keys that have already been handled
         if key == 'background':
             pass
         elif key == 'background_file':
@@ -199,10 +203,15 @@ def load_level(file_name):
             pass
         elif key == 'size':
             pass
+        elif key == 'defaults':
+            pass
         else:
             for item in item_dict[key]:
                 if key == 'static_objects':
-                    # All static objects should be added to the space and the game
+                    # All static objects should be added to
+                    # the space and the game
+                    # TODO: Static, viewable objects should be added to the
+                    #       sprite grounp aswell
                     space.add(item.get_shape())
                     game.add_static_objects(item)
                 elif key == 'moving_objects':
@@ -305,6 +314,7 @@ def load_pop_up_menu(file_name):
 
     # Handle the objects from the YAML-file
     for key in item_dict:
+        # A bunch of keys that have already been handled
         if key == 'background':
             pass
         elif key == 'background_file':
@@ -312,6 +322,8 @@ def load_pop_up_menu(file_name):
         elif key == 'background_size':
             pass
         elif key == 'background_pos':
+            pass
+        elif key == 'defaults':
             pass
         else:
             for item in item_dict[key]:

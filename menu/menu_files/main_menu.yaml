@@ -1,58 +1,49 @@
+defaults:
+    - &default_button
+        action: !!python/name:menu.menu_button_callbacks.do_nothing
+        action_args: null
+        background_color: !!python/tuple [255, 255, 255, 255]
+        hov_background_color: !!python/tuple [255, 255, 255, 255]
+        background_file: wood_sign.png
+        hov_background_file: wood_sign.png
+        w_scale: 1.5
+        h_scale: 1.5
+        font_file: null
+        font_size: 50
+        pos: !!python/tuple [0, 0]
+        text: "Default"
+        hov_text: "Default"
+        text_color: !!python/tuple [0, 39, 41, 255]
+        hov_text_color: !!python/tuple [255, 255, 255, 255]
+
 background: !!python/tuple [172, 61, 58, 255]
 
 background_file: forest_background.jpg
 
 buttons:
   - !Button
+    <<: *default_button
     action: !!python/name:menu.menu_button_callbacks.goto_menu
     action_args: [levels.yaml]
-    background_color: !!python/tuple [36, 101, 104, 255]
-    hov_background_color: !!python/tuple [36, 101, 104, 255]
-    background_file: wood_sign.png
-    hov_background_file: wood_sign.png
-    w_scale: 1.5
-    h_scale: 1.5
-    font_file: null
-    font_size: 50
     pos: !!python/tuple [300, 200]
     text: "Levels"
     hov_text: "Levels"
-    text_color: !!python/tuple [0, 39, 41, 255]
-    hov_text_color: !!python/tuple [0, 39, 41, 255]
 
   - !Button
+    <<: *default_button
     action: !!python/name:menu.menu_button_callbacks.goto_menu
     action_args: [about.yaml]
-    background_color: !!python/tuple [36, 101, 104, 255]
-    hov_background_color: !!python/tuple [36, 101, 104, 255]
-    background_file: wood_sign.png
-    hov_background_file: wood_sign.png
-    w_scale: 1.5
-    h_scale: 1.5
-    font_file: null
-    font_size: 50
     pos: !!python/tuple [300, 280]
     text: "About"
     hov_text: "About"
-    text_color: !!python/tuple [0, 39, 41, 255]
-    hov_text_color: !!python/tuple [255, 255, 255, 255]
 
   - !Button
+    <<: *default_button
     action: !!python/name:menu.menu_button_callbacks.open_popup_menu
     action_args: [quit_game_pop_up.yaml, main_menu.yaml]
-    background_color: !!python/tuple [36, 101, 104, 255]
-    hov_background_color: !!python/tuple [36, 101, 104, 255]
-    background_file: wood_sign.png
-    hov_background_file: wood_sign.png
-    w_scale: 1.5
-    h_scale: 1.5
-    font_file: null
-    font_size: 50
     pos: !!python/tuple [300, 360]
     text: "Quit"
     hov_text: "Quit"
-    text_color: !!python/tuple [0, 39, 41, 255]
-    hov_text_color: !!python/tuple [255, 255, 255, 255]
 
 music:
   -
