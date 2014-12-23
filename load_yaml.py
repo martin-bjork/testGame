@@ -18,6 +18,8 @@ import cameras
 
 # TODO: Add a "To YAML"-function?
 # TODO: Better docstrings
+# TODO: Move the menu functions to the menu module and
+#       the level function to the level module?
 
 
 def load_menu(file_name):

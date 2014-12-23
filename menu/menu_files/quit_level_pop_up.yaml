@@ -45,6 +45,7 @@ buttons:
 
   - !Button
     <<: *default_button
+    action: !!python/name:menu.menu_button_callbacks.exit_menu
     pos: !!python/tuple [280, 250]
     text: "Resume"
     hov_text: "Resume"

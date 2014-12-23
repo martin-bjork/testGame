@@ -12,8 +12,10 @@ def init_window():
     '''Initializes a pygame window, sets caption, icon and background.
     Returns the pygame display surface.'''
 
-    # set the position of the window on the screen
+    # Set the position of the window on the screen
     # (must be called before pygame.init())
+    # FIXME: Apparently, this causes the program to crash on Mac.
+    #        Check why and fix.
     pos = (500, 300)
     os.environ['SDL_VIDEO_WINDOW_POS'] = str(pos[0]) + "," + str(pos[1])
 
@@ -22,13 +24,14 @@ def init_window():
     pygame.init()
 
     # A hack to add a "home made" music player to pygame in order to be able
-    # to access the name of the sond that is currently playing.
+    # to access the name of the sound that is currently playing.
     pygame.__setattr__('music_player', music.Music())
 
     # Initialize the display
     screen = pygame.display.set_mode([WIDTH, HEIGHT], pygame.NOFRAME)
 
     # Decorate window, hide cursor
+    # NOTE: Unnecessary if we use pygame.NOFRAME
     icon = load_image('smiley_small.png')
     pygame.display.set_caption('Test window')
     pygame.display.set_icon(icon)

@@ -40,7 +40,7 @@ buttons:
   - !Button
     <<: *default_button
     action: !!python/name:menu.menu_button_callbacks.open_popup_menu
-    action_args: [quit_game_pop_up.yaml, main_menu.yaml]
+    action_args: [quit_game_pop_up.yaml]
     pos: !!python/tuple [300, 360]
     text: "Quit"
     hov_text: "Quit"
