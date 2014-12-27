@@ -1,5 +1,6 @@
 # Classes for objects in menus, such as buttons and text boxes.
 
+from __future__ import division
 import os
 
 import pygame
@@ -8,6 +9,7 @@ import yaml
 import view
 
 # TODO: Make the alpha for text work - it is currently ignored
+# TODO: Update docstrings
 
 
 class MenuItem(pygame.sprite.DirtySprite):
@@ -21,12 +23,12 @@ class MenuItem(pygame.sprite.DirtySprite):
     # TODO: Specify padding in pixels instead of a scaling factor?
     #       Could use both by setting int -> pixels, float -> scaling.
 
-    def __init__(self, text='Default', x_pos=1, y_pos=1,
+    def __init__(self, text='Default', pos=(0.0, 0.0),
                  text_color=(0, 0, 0, 255),
                  background_color=(255, 255, 255, 255),
                  background_file=None,
-                 w_scale=1.0, h_scale=1.0,
-                 font_size=20, font_file=None):
+                 font_size = 0.1, margin=(1.0, 1.0),
+                 font_file=None):
         '''
         Base constructor for all MenuItems.
 
@@ -84,13 +86,12 @@ class MenuItem(pygame.sprite.DirtySprite):
 
         # Store the arguments for later use and to be able to store as YAML
         self._text = text
-        self._pos = (x_pos, y_pos)
+        self._pos = pos
         self._text_color = text_color
         self._background_color = background_color
         self._background_file = background_file
-        self._w_scale = w_scale
-        self._h_scale = h_scale
         self._font_size = font_size
+        self._margin = margin
         self._font_file = font_file
 
         # Render the MenuItem
@@ -119,14 +120,17 @@ class MenuItem(pygame.sprite.DirtySprite):
                 - The Rect correstponding to image
         '''
 
+        screen_size = pygame.display.get_surface().get_size()
+
         # Get the full path of the font file
         if self._font_file is not None:
             font_file = os.path.join('fonts', self._font_file)
         else:
             font_file = None
 
-        # Create a font object from the font file and size
-        font_obj = pygame.font.Font(font_file, self._font_size)
+        # Create a font object from the font file
+        font_size = self._font_size * screen_size[1] * 3/4
+        font_obj = pygame.font.Font(font_file, font_size)
 
         # Get the individual lines of the text
         lines = self._text.split('\n')
@@ -141,30 +145,31 @@ class MenuItem(pygame.sprite.DirtySprite):
 
         # Create a background
         if self._background_file is not None:
-            # Load the background image and scale to desired size
+            # Load the background image and margin to desired size
             image = view.load_and_scale(self._background_file,
-                                        (int(tot_width * self._w_scale),
-                                         int(tot_height * self._h_scale)))
+                                        (int(tot_width * self._margin[0]),
+                                         int(tot_height * self._margin[1])))
         else:
             # Create a solid coloured rectangle of the desired size
-            image = pygame.Surface((int(tot_width * self._w_scale),
-                                    int(tot_height * self._h_scale)),
+            image = pygame.Surface((int(tot_width * self._margin[0]),
+                                    int(tot_height * self._margin[1])),
                                    pygame.SRCALPHA)
             image.fill(self._background_color)
-
-        # Get the rect of the background
-        rect = image.get_rect(center=self._pos)
 
         # Blit the text to the background
         for i in range(len(rend_lines)):
             # Calculate the position of the upper left corner of the new line
-            y_pos = int(tot_height * (self._h_scale - 1) * 0.5
+            y_pos = int(tot_height * (self._margin[1] - 1) * 0.5
                         + i * rend_lines[0].get_height())
 
-            x_pos = int(tot_width * (self._w_scale - 1) * 0.5
+            x_pos = int(tot_width * (self._margin[0] - 1) * 0.5
                         + (tot_width - rend_lines[i].get_width()) * 0.5)
 
             image.blit(rend_lines[i], (x_pos, y_pos))
+
+        # Get the rect of the image
+        pos = (self._pos[0]*screen_size[0], self._pos[1]*screen_size[1])
+        rect = image.get_rect(center=pos)
 
         return image, rect
 
@@ -178,6 +183,7 @@ class MenuItem(pygame.sprite.DirtySprite):
         self.dirty = 1
 
     # Getters/setters
+    # TODO: Fix the getters/setters to work with the new structure
 
     def get_pos(self):
         return self._pos
@@ -253,15 +259,15 @@ class Button(MenuItem, yaml.YAMLObject):
 
     yaml_tag = '!Button'
 
-    def __init__(self, text='Button', hov_text='Button', x_pos=1, y_pos=1,
+    def __init__(self, text='Button', hov_text='Button', pos=(0.0, 0.0),
                  text_color=(0, 0, 0, 255),
                  hov_text_color=(0, 0, 0, 255),
                  background_color=(255, 255, 255, 255),
                  hov_background_color=(255, 255, 255, 255),
                  background_file=None,
                  hov_background_file=None,
-                 w_scale=1.0, h_scale=1.0,
-                 font_size=50, font_file=None,
+                 font_size=0.1, margin=(1.0, 1.0),
+                 font_file=None,
                  action=None, action_args=None):
         '''
         Constructor for Button.
@@ -346,13 +352,12 @@ class Button(MenuItem, yaml.YAMLObject):
         '''
 
         # Call the constructor of the superclass
-        MenuItem.__init__(self, text=text, x_pos=x_pos, y_pos=y_pos,
+        MenuItem.__init__(self, text=text, pos=pos,
                           text_color=text_color,
                           background_color=background_color,
                           background_file=background_file,
-                          w_scale=w_scale, h_scale=h_scale,
-                          font_size=font_size,
-                          font_file=font_file)
+                          margin=margin,
+                          font_size=font_size, font_file=font_file)
 
         # Store the arguments for later use
         self._action = action
@@ -402,26 +407,21 @@ class Button(MenuItem, yaml.YAMLObject):
         hov_background_color = values['hov_background_color']
         background_file = values['background_file']
         hov_background_file = values['hov_background_file']
-        w_scale = values['w_scale']
-        h_scale = values['h_scale']
+        margin = values['margin']
         font_size = values['font_size']
         font_file = values['font_file']
         action = values['action']
         action_args = values['action_args']
 
         # Return an instance of the object
-        return cls(text=text, hov_text=hov_text, x_pos=pos[0], y_pos=pos[1],
+        return cls(text=text, hov_text=hov_text, pos=pos,
                    text_color=text_color, hov_text_color=hov_text_color,
                    background_color=background_color,
                    hov_background_color=hov_background_color,
                    background_file=background_file,
                    hov_background_file=hov_background_file,
-                   w_scale=w_scale,
-                   h_scale=h_scale,
-                   font_size=font_size,
-                   font_file=font_file,
-                   action=action,
-                   action_args=action_args)
+                   margin=margin, font_size=font_size, font_file=font_file,
+                   action=action, action_args=action_args)
 
     @classmethod
     def to_yaml(cls, dumper, instance):
@@ -440,8 +440,7 @@ class Button(MenuItem, yaml.YAMLObject):
                    'hov_background_color': instance._hov_props['background_color'],
                    'background_file': instance._backgound_file,
                    'hov_background_file': instance._hov_props['background_file'],
-                   'w_scale': instance._w_scale,
-                   'h_scale': instance._h_scale,
+                   'margin': instance._margin,
                    'font_size': instance._font_size,
                    'font_file': instance._font_file,
                    'action': instance._action,
@@ -593,12 +592,12 @@ class TextBox(MenuItem, yaml.YAMLObject):
 
     yaml_tag = '!TextBox'
 
-    def __init__(self, text='Text box', x_pos=1, y_pos=1,
+    def __init__(self, text='Text box', pos=(0.0, 0.0),
                  text_color=(0, 0, 0, 255),
                  background_color=(255, 255, 255, 255),
                  background_file=None,
-                 w_scale=1.0, h_scale=1.0,
-                 font_size=20, font_file=None):
+                 margin=(1.0, 1.0), font_size=0.1,
+                 font_file=None):
         '''
         Constructor for all TextBox.
 
@@ -651,12 +650,11 @@ class TextBox(MenuItem, yaml.YAMLObject):
                 - Default: None
         '''
 
-        MenuItem.__init__(self, text=text, x_pos=x_pos, y_pos=y_pos,
+        MenuItem.__init__(self, text=text, pos=pos,
                           text_color=text_color,
                           background_color=background_color,
                           background_file=background_file,
-                          w_scale=w_scale, h_scale=h_scale,
-                          font_size=font_size,
+                          margin=margin, font_size=font_size,
                           font_file=font_file)
 
     @classmethod
@@ -675,19 +673,16 @@ class TextBox(MenuItem, yaml.YAMLObject):
         text_color = values['text_color']
         background_color = values['background_color']
         background_file = values['background_file']
-        w_scale = values['w_scale']
-        h_scale = values['h_scale']
+        margin = values['margin']
         font_size = values['font_size']
         font_file = values['font_file']
 
         # Return an instance of the object
-        return cls(text=text, x_pos=pos[0], y_pos=pos[1],
+        return cls(text=text, pos=pos,
                    text_color=text_color,
                    background_color=background_color,
                    background_file=background_file,
-                   w_scale=w_scale,
-                   h_scale=h_scale,
-                   font_size=font_size,
+                   margin=margin, font_size=font_size,
                    font_file=font_file)
 
     @classmethod
@@ -703,8 +698,7 @@ class TextBox(MenuItem, yaml.YAMLObject):
                    'text_color': instance._text_color,
                    'background_color': instance._background_color,
                    'background_file': instance._backgound_file,
-                   'w_scale': instance._w_scale,
-                   'h_scale': instance._h_scale,
+                   'margin': instance._margin,
                    'font_size': instance._font_size,
                    'font_file': instance._font_file}
 

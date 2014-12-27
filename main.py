@@ -17,7 +17,7 @@ def main():
     '''
 
     # Initialize a window
-    screen, background = view.init_window()
+    view.init_window()
 
     # Load the main menu
     menus.run_menu('main_menu.yaml')

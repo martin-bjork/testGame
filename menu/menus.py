@@ -1,5 +1,7 @@
 # Functions for running menus.
 
+import sys
+
 import pygame
 
 from gameclass import Game as Game
@@ -24,8 +26,11 @@ def run_menu(file_name):
 
     while True:
 
-        pressed_button, open_pop_up = menu_loop(buttons, clock, FPS,
-                                                obj_group, screen)
+        quit, pressed_button, open_pop_up = menu_loop(buttons, clock, FPS,
+                                                      obj_group, screen)
+
+        if quit:
+            sys.exit()
 
         if pressed_button is not None:
             return_val = pressed_button.perform_action()
@@ -61,8 +66,11 @@ def run_pop_up_menu(file_name):
 
     while True:
 
-        pressed_button, open_pop_up = menu_loop(buttons, clock, FPS,
-                                                obj_group, screen)
+        quit, pressed_button, open_pop_up = menu_loop(buttons, clock, FPS,
+                                                      obj_group, screen)
+
+        if quit:
+            sys.exit()
 
         if pressed_button is not None:
             return_val = pressed_button.perform_action()
@@ -76,7 +84,7 @@ def menu_loop(buttons, clock, FPS, obj_group, screen):
     Takes input, checks if buttons have been pressed and redraws the screen.
     '''
 
-    mouse_pos, clicked, open_pop_up = Game.take_menu_input()
+    quit, mouse_pos, clicked, open_pop_up = Game.take_menu_input()
 
     pressed_button = None
 
@@ -97,7 +105,7 @@ def menu_loop(buttons, clock, FPS, obj_group, screen):
     dirty_rects = obj_group.draw(screen)
     pygame.display.update(dirty_rects)
 
-    return pressed_button, open_pop_up
+    return quit, pressed_button, open_pop_up
 
 
 def redraw(screen, background, obj_group):

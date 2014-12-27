@@ -45,6 +45,7 @@ class Game:
 
         clicked = False
         open_pop_up = False
+        quit = False
 
         # --- Get input ---
 
@@ -56,9 +57,9 @@ class Game:
 
         for event in current_events:
             # Check if the user attempts to close the window,
-            # if so open the pop-up menu
+            # if so quit the game
             if event.type == loc.QUIT:
-                open_pop_up = True
+                quit = True
 
             # Check if the mouse has been clicked
             elif event.type == loc.MOUSEBUTTONDOWN:
@@ -74,7 +75,7 @@ class Game:
         # Save the keys that have been pressed this frame
         cls._keys_pressed_last_frame = cls._keys_pressed
 
-        return mouse_pos, clicked, open_pop_up
+        return quit, mouse_pos, clicked, open_pop_up
 
     def take_game_input(self):
         '''

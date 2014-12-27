@@ -6,10 +6,9 @@ defaults:
         hov_background_color: !!python/tuple [36, 101, 104, 255]
         background_file: null
         hov_background_file: null
-        w_scale: 1.1
-        h_scale: 1
+        margin: !!python/tuple [1.1, 1]
         font_file: null
-        font_size: 50
+        font_size: 0.1
         pos: !!python/tuple [0, 0]
         text: "Default"
         hov_text: "Default"
@@ -18,10 +17,9 @@ defaults:
     - &default_textbox
         background_color: !!python/tuple [149, 24, 21, 255]
         background_file: null
-        w_scale: 1.01
-        h_scale: 1.2
+        margin: !!python/tuple [1.01, 1.2]
         font_file: null
-        font_size: 25
+        font_size: 0.05
         pos: !!python/tuple [0, 0]
         text: "Default"
         text_color: !!python/tuple [0, 0, 0, 255]
@@ -30,30 +28,30 @@ background: !!python/tuple [172, 61, 58, 200]
 
 background_file: null
 
-background_size: !!python/tuple [400, 300]
+background_size: !!python/tuple [0.6, 0.6]
 
-background_pos: !!python/tuple [300, 240]
+background_pos: !!python/tuple [0.5, 0.5]
 
 buttons:
   - !Button
     <<: *default_button
     action: !!python/name:menu.menu_button_callbacks.goto_menu
     action_args: [main_menu.yaml]
-    pos: !!python/tuple [100, 250]
+    pos: !!python/tuple [0.3, 0.6]
     text: "Exit"
     hov_text: "Exit"
 
   - !Button
     <<: *default_button
     action: !!python/name:menu.menu_button_callbacks.exit_menu
-    pos: !!python/tuple [280, 250]
+    pos: !!python/tuple [0.7, 0.6]
     text: "Resume"
     hov_text: "Resume"
 
 textboxes:
   - !TextBox
     <<: *default_textbox
-    pos: !!python/tuple [200, 100]
+    pos: !!python/tuple [0.5, 0.3]
     text: "Are you sure that you want\nto exit to the main menu?"
 
 music:

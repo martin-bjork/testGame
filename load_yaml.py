@@ -1,5 +1,6 @@
 # Functions that handle YAML-files and load menus and levels from them.
 
+from __future__ import division
 import os
 
 import yaml
@@ -53,21 +54,18 @@ def load_menu(file_name):
     # Create a screen and background
     background_image_file = item_dict['background_file']
     background_color = item_dict['background']
-    info = pygame.display.Info()
-    width = info.current_w
-    height = info.current_h
     screen = pygame.display.get_surface()
+    size = screen.get_size()
 
     if background_image_file is not None:
-        background = view.load_and_scale(background_image_file,
-                                         (width, height))
+        background = view.load_and_scale(background_image_file, size)
     else:
         if len(background_color) == 4:
             # Alpha value specified
-            background = pygame.Surface([width, height], pygame.SRCALPHA)
+            background = pygame.Surface(size, pygame.SRCALPHA)
         else:
             # Only RGB specified
-            background = pygame.Surface([width, height])
+            background = pygame.Surface(size)
         background.fill(background_color)
 
     # Clear the screen and make the cursor visible
@@ -284,6 +282,11 @@ def load_pop_up_menu(file_name):
             - The background of the menu.
     '''
 
+    # FIXME: Menu items' position is calculated as fractions of the entire
+    #        screen, but should be as fractions of the pop-up window. This
+    #        causes them to be rendered at the wrong position, often entirely
+    #        off-screen.
+
     # Get the full relative path of the YAML-file
     fullname = os.path.join('menu', 'menu_files', file_name)
 
@@ -297,17 +300,19 @@ def load_pop_up_menu(file_name):
     width, height = item_dict['background_size']
     pos = item_dict['background_pos']
     screen = pygame.display.get_surface()
+    size = screen.get_size()
 
     if background_image_file is not None:
         background = view.load_and_scale(background_image_file,
-                                         (width, height))
+                                         (width*size[0], height*size[1]))
     else:
         if len(background_color) == 4:
             # Alpha value specified
-            background = pygame.Surface([width, height], pygame.SRCALPHA)
+            background = pygame.Surface([width*size[0], height*size[1]],
+                                        pygame.SRCALPHA)
         else:
             # Only RGB specified
-            background = pygame.Surface([width, height])
+            background = pygame.Surface([width*size[0], height*size[1]])
         background.fill(background_color)
 
     # Create lists for storing buttons and all objects that should be drawn
@@ -346,7 +351,8 @@ def load_pop_up_menu(file_name):
     obj_group = pygame.sprite.LayeredDirty(*objs)
 
     # Blit background to screen, set mouse to visible
-    background_rect = background.get_rect(center=pos)
+    background_rect = background.get_rect(center=(pos[0]*size[0],
+                                                  pos[1]*size[1]))
     screen.blit(background, background_rect)
     pygame.mouse.set_visible(True)
 

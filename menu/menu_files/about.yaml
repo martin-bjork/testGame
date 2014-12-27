@@ -6,11 +6,10 @@ textboxes:
   - !TextBox
     background_color: !!python/tuple [149, 24, 21, 255]
     background_file: null
-    w_scale: 1.01
-    h_scale: 1.2
+    margin: !!python/tuple [1.01, 1.2]
     font_file: null
-    font_size: 30
-    pos: !!python/tuple [300, 150]
+    font_size: 0.05
+    pos: !!python/tuple [0.5, 0.3]
     text: "This is a small test game for learning game programming.\nMore to come!"
     text_color: !!python/tuple [0, 0, 0, 255]
 
@@ -22,11 +21,10 @@ buttons:
     hov_background_color: !!python/tuple [36, 101, 104, 255]
     background_file: null
     hov_background_file: null
-    w_scale: 1.1
-    h_scale: 0.8
+    margin: !!python/tuple [1.1, 0.8]
     font_file: Pacifico.ttf
-    font_size: 50
-    pos: !!python/tuple [300, 280]
+    font_size: 0.2
+    pos: !!python/tuple [0.5, 0.6]
     text: "Back"
     hov_text: "Back"
     text_color: !!python/tuple [0, 39, 41, 255]
