@@ -2,7 +2,7 @@ import os
 
 import pygame
 
-from sound import music
+from Sound import music
 
 WIDTH = 600
 HEIGHT = 480
@@ -60,7 +60,8 @@ def load_image(file_name):
             - A pygame Surface containing the image.
     '''
 
-    full_name = os.path.join('images', file_name)
+    base_dir = os.path.join('Data', 'images')
+    full_name = os.path.join(base_dir, file_name)
 
     try:
         surface = pygame.image.load(full_name)

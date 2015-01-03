@@ -2,8 +2,8 @@
 
 import pygame
 
-from gameclass import Game as Game
-import load_yaml
+from GamePlay.gameclass import Game as Game
+from Tools import load_yaml
 
 
 def run_menu(file_name):

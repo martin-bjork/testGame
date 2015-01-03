@@ -6,15 +6,14 @@ import yaml
 import pygame
 import pymunk
 
-import gameclass
-import collision_callbacks as col_call
-import view
+from GamePlay import gameclass
+from Physics import collision_callbacks as col_call
+from Graphics import view
 
 # YAML needs these imports to be able to create the objects
-from menu import menu_items
-import shapes
-import players
-import cameras
+from UI import menu_items
+from GamePlay import shapes, players
+from Graphics import cameras
 
 # TODO: Add a "To YAML"-function?
 # TODO: Better docstrings
@@ -44,7 +43,8 @@ def load_menu(file_name):
     #       directly via pygame.
 
     # Get the full relative path of the YAML-file
-    fullname = os.path.join('menu', 'menu_files', file_name)
+    base_dir = os.path.join('Data', 'menu_files')
+    fullname = os.path.join(base_dir, file_name)
 
     # Load the YAML-file
     with open(fullname, 'r') as stream:
@@ -112,20 +112,18 @@ def load_menu(file_name):
     # Start the music
     # TODO: Add smooth fading between songs.
     if music_file is not None:
-        # Get the full relative path of the music file
-        full_music_file = os.path.join('sound', 'sound_data', music_file)
         # Get the currently loaded song and whether it's playing
         current_song, playing = pygame.music_player.get_playing()
 
-        if current_song == full_music_file and playing:
+        if current_song == music_file and playing:
             # The right song is already playing; do nothing
             pass
-        elif current_song == full_music_file and not playing:
+        elif current_song == music_file and not playing:
             # The right song is loaded, but not playing; start the song
             pygame.music_player.play()
         else:
             # The wrong song is loaded; load the right one and start it
-            pygame.music_player.load_and_play(full_music_file)
+            pygame.music_player.load_and_play(music_file)
 
         pygame.music_player.set_volume(vol)
 
@@ -142,7 +140,8 @@ def load_level(file_name):
     '''
 
     # Get the full relative path of the YAML-file
-    fullname = os.path.join('level', 'level_files', file_name)
+    base_dir = os.path.join('Data', 'level_files')
+    fullname = os.path.join(base_dir, file_name)
 
     # Load the YAML-file
     with open(fullname, 'r') as stream:
@@ -248,20 +247,18 @@ def load_level(file_name):
 
     # Start the music
     if music_file is not None:
-        # Get the full relative path of the music file
-        full_music_file = os.path.join('sound', 'sound_data', music_file)
         # Get the currently loaded song and whether it's playing
         current_song, playing = pygame.music_player.get_playing()
 
-        if current_song == full_music_file and playing:
+        if current_song == music_file and playing:
             # The right song is already playing; do nothing
             pass
-        elif current_song == full_music_file and not playing:
+        elif current_song == music_file and not playing:
             # The right song is loaded, but not playing; start the song
             pygame.music_player.play()
         else:
             # The wrong song is loaded; load the right one and start it
-            pygame.music_player.load_and_play(full_music_file)
+            pygame.music_player.load_and_play(music_file)
 
         pygame.music_player.set_volume(vol)
 
@@ -285,7 +282,8 @@ def load_pop_up_menu(file_name):
     '''
 
     # Get the full relative path of the YAML-file
-    fullname = os.path.join('menu', 'menu_files', file_name)
+    base_dir = os.path.join('Data', 'menu_files')
+    fullname = os.path.join(base_dir, file_name)
 
     # Load the YAML-file
     with open(fullname, 'r') as stream:
@@ -361,20 +359,18 @@ def load_pop_up_menu(file_name):
     #       playing file is to be loaded.
     # TODO: Add smooth fading between songs.
     if music_file is not None:
-        # Get the full relative path of the music file
-        full_music_file = os.path.join('sound', 'sound_data', music_file)
         # Get the currently loaded song and whether it's playing
         current_song, playing = pygame.music_player.get_playing()
 
-        if current_song == full_music_file and playing:
+        if current_song == music_file and playing:
             # The right song is already playing; do nothing
             pass
-        elif current_song == full_music_file and not playing:
+        elif current_song == music_file and not playing:
             # The right song is loaded, but not playing; start the song
             pygame.music_player.play()
         else:
             # The wrong song is loaded; load the right one and start it
-            pygame.music_player.load_and_play(full_music_file)
+            pygame.music_player.load_and_play(music_file)
 
         pygame.music_player.set_volume(vol)
 

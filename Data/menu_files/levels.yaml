@@ -1,6 +1,6 @@
 defaults:
     - &default_button
-        action: !!python/name:menu.menu_button_callbacks.do_nothing
+        action: !!python/name:UI.menu_button_callbacks.do_nothing
         action_args: null
         background_color: !!python/tuple [36, 101, 104, 255]
         hov_background_color: !!python/tuple [36, 101, 104, 255]
@@ -23,7 +23,7 @@ background_file: null
 buttons:
   - !Button
     <<: *default_button
-    action: !!python/name:menu.menu_button_callbacks.play_level
+    action: !!python/name:UI.menu_button_callbacks.play_level
     action_args: [level_1.yaml]
     pos: !!python/tuple [300, 200]
     text: "Level 1"
@@ -31,7 +31,7 @@ buttons:
 
   - !Button
     <<: *default_button
-    action: !!python/name:menu.menu_button_callbacks.play_level
+    action: !!python/name:UI.menu_button_callbacks.play_level
     action_args: [level_2.yaml]
     pos: !!python/tuple [300, 280]
     text: "Level 2"
@@ -39,7 +39,7 @@ buttons:
 
   - !Button
     <<: *default_button
-    action: !!python/name:menu.menu_button_callbacks.goto_menu
+    action: !!python/name:UI.menu_button_callbacks.goto_menu
     action_args: [main_menu.yaml]
     pos: !!python/tuple [300, 360]
     text: "Back"

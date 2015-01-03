@@ -3,8 +3,8 @@
 
 import sys
 
-from menu import menus
-from level import levels
+from UI import menus
+from GamePlay import levels
 
 # TODO: Decide if we should use better return values (e.g. a dict?)
 
@@ -68,7 +68,8 @@ class ReturnVal():
     doesn't exist instead of throwing an exception.
     '''
 
-    # TODO: Inherit from dict instead?
+    # NOTE: This is unnecessary since this functionality is already
+    #       built in in dicts...
 
     def __init__(self, dictionary):
         self._dict = dictionary

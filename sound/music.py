@@ -1,4 +1,8 @@
+import os
+
 import pygame
+
+# TODO: Add exception handling
 
 
 class Music():
@@ -10,17 +14,20 @@ class Music():
     def __init__(self):
         self._currently_loaded = None
 
-    def load(self, file_path):
+    def load(self, file_name):
         '''
-        Load the file found at "file_path".
+        Load the file named "file_name".
 
         Input:
-            * file_path: String
-                - The path to the file that is to be loaded.
+            * file_name: String
+                - The name of the file that is to be loaded.
         '''
 
-        pygame.mixer.music.load(file_path)
-        self._currently_loaded = file_path
+        base_dir = os.path.join('Data', 'sound')
+        full_name = os.path.join(base_dir, file_name)
+
+        pygame.mixer.music.load(full_name)
+        self._currently_loaded = file_name
 
     def play(self, reps=-1):
         '''

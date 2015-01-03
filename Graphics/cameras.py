@@ -1,5 +1,4 @@
 from __future__ import division
-import math
 
 import pygame
 import yaml

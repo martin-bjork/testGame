@@ -2,9 +2,9 @@ from __future__ import division
 
 import pygame.locals as loc
 
-from sound import sound_effects
-import shapes
-import collision_callbacks as col_call
+from Sound import sound_effects
+from GamePlay import shapes
+from Physics import collision_callbacks as col_call
 
 
 class Player(shapes.MovingShape):

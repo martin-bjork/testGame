@@ -18,7 +18,8 @@ def load_sound(file_name):
         return DummySound()
 
     # Get the full path to the sound file.
-    fullname = os.path.join('sound', 'sound_data', file_name)
+    base_dir = os.path.join('Data', 'sound')
+    fullname = os.path.join(base_dir, file_name)
 
     # Try to load the sound file. If an error occurs, print the error
     # and return a dummy sound object.

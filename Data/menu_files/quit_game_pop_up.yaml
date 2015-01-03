@@ -1,6 +1,6 @@
 defaults:
     - &default_button
-        action: !!python/name:menu.menu_button_callbacks.do_nothing
+        action: !!python/name:UI.menu_button_callbacks.do_nothing
         action_args: null
         background_color: !!python/tuple [36, 101, 104, 255]
         hov_background_color: !!python/tuple [36, 101, 104, 255]
@@ -37,14 +37,14 @@ background_pos: !!python/tuple [300, 240]
 buttons:
   - !Button
     <<: *default_button
-    action: !!python/name:menu.menu_button_callbacks.quit_game
+    action: !!python/name:UI.menu_button_callbacks.quit_game
     pos: !!python/tuple [100, 250]
     text: "Quit"
     hov_text: "Quit"
 
   - !Button
     <<: *default_button
-    action: !!python/name:menu.menu_button_callbacks.exit_menu
+    action: !!python/name:UI.menu_button_callbacks.exit_menu
     pos: !!python/tuple [280, 250]
     text: "Cancel"
     hov_text: "Cancel"

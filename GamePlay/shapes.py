@@ -8,9 +8,8 @@ import pygame
 import pymunk
 import yaml
 
-import conversion
-import collision_callbacks as col_call
-import view
+from Physics import collision_callbacks as col_call
+from Graphics import view
 
 # TODO: Add properties such as friction and elasticity to the
 # constructors instead of hard-coding.

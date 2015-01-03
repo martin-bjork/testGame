@@ -5,7 +5,7 @@ import os
 import pygame
 import yaml
 
-import view
+from Graphics import view
 
 # TODO: Make the alpha for text work - it is currently ignored
 
@@ -121,7 +121,8 @@ class MenuItem(pygame.sprite.DirtySprite):
 
         # Get the full path of the font file
         if self._font_file is not None:
-            font_file = os.path.join('fonts', self._font_file)
+            base_dir = os.path.join('Data', 'fonts')
+            font_file = os.path.join(base_dir, self._font_file)
         else:
             font_file = None
 

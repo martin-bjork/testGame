@@ -16,7 +16,7 @@ textboxes:
 
 buttons:
   - !Button
-    action: !!python/name:menu.menu_button_callbacks.goto_menu
+    action: !!python/name:UI.menu_button_callbacks.goto_menu
     action_args: [main_menu.yaml]
     background_color: !!python/tuple [36, 101, 104, 255]
     hov_background_color: !!python/tuple [36, 101, 104, 255]

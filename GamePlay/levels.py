@@ -2,8 +2,8 @@
 
 import pygame
 
-import load_yaml
-from menu import menus
+from Tools import load_yaml
+from UI import menus
 
 
 def run_level(file_path):

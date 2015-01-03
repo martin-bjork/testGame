@@ -1,6 +1,6 @@
 defaults:
     - &default_button
-        action: !!python/name:menu.menu_button_callbacks.do_nothing
+        action: !!python/name:UI.menu_button_callbacks.do_nothing
         action_args: null
         background_color: !!python/tuple [36, 101, 104, 255]
         hov_background_color: !!python/tuple [36, 101, 104, 255]
@@ -37,7 +37,7 @@ background_pos: !!python/tuple [300, 240]
 buttons:
   - !Button
     <<: *default_button
-    action: !!python/name:menu.menu_button_callbacks.goto_menu
+    action: !!python/name:UI.menu_button_callbacks.goto_menu
     action_args: [main_menu.yaml]
     pos: !!python/tuple [100, 250]
     text: "Exit"
@@ -45,7 +45,7 @@ buttons:
 
   - !Button
     <<: *default_button
-    action: !!python/name:menu.menu_button_callbacks.exit_menu
+    action: !!python/name:UI.menu_button_callbacks.exit_menu
     pos: !!python/tuple [280, 250]
     text: "Resume"
     hov_text: "Resume"

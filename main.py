@@ -6,8 +6,8 @@ import sys
 
 import pygame
 
-import view
-from menu import menus
+from Graphics import view
+from UI import menus
 
 
 def main():
